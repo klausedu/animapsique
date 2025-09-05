@@ -1,9 +1,21 @@
 <?php
 require_once '../../config.php';
 require_once '../../includes/auth_paciente.php'; // Segurança
+require_once '../../includes/db.php';
 
-// Pega a URL da sala diretamente da sessão do utilizador
-$roomUrl = $_SESSION['paciente_whereby_url'] ?? null;
+$roomUrl = null;
+
+try {
+    $pdo = conectar();
+    $stmt = $pdo->prepare("SELECT whereby_room_url FROM pacientes WHERE id = ?");
+    $stmt->execute([$paciente_id]);
+    $paciente = $stmt->fetch();
+    if ($paciente) {
+        $roomUrl = $paciente['whereby_room_url'];
+    }
+} catch(Exception $e) {
+    die('Erro ao buscar a sala de atendimento.');
+}
 
 // Validação para garantir que a URL é do Whereby
 if (!$roomUrl || !preg_match('/^https:\/\/.*\.whereby\.com\/.*/', $roomUrl)) {
