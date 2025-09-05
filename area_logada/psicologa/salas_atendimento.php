@@ -1,6 +1,6 @@
 <?php
 require_once '../../config.php';
-require_once '../../includes/auth_psicologa.php';
+require_once '../../includes/auth_psicologa.php'; // Fornece a variável $psicologa_nome
 require_once '../../includes/db.php';
 
 $page_title = 'Salas de Atendimento';
@@ -35,7 +35,13 @@ try {
                         </div>
                         <div class="shrink-0 flex items-center gap-x-4">
                             <?php if (!empty($paciente['whereby_room_url'])): ?>
-                                <a href="<?php echo htmlspecialchars($paciente['whereby_room_url']); ?>" target="_blank" class="entrar-sala-link inline-flex items-center rounded-md bg-teal-600 px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-teal-700">
+                                <?php
+                                    // **INÍCIO DA CORREÇÃO**
+                                    // Adiciona o nome da psicóloga logada ao URL da sala
+                                    $sala_url_psicologa = $paciente['whereby_room_url'] . '&displayName=' . urlencode($psicologa_nome);
+                                    // **FIM DA CORREÇÃO**
+                                ?>
+                                <a href="<?php echo htmlspecialchars($sala_url_psicologa); ?>" target="_blank" class="entrar-sala-link inline-flex items-center rounded-md bg-teal-600 px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-teal-700">
                                     Entrar na Sala
                                 </a>
                                 <button type="button" class="remover-sala-btn text-sm font-medium text-red-600 hover:text-red-800" data-paciente-id="<?php echo $paciente['id']; ?>">
@@ -55,6 +61,7 @@ try {
 </div>
 
 <script>
+// O JavaScript permanece o mesmo, não precisa de ser alterado.
 document.addEventListener('DOMContentLoaded', function() {
     
     function handleHabilitarClick(event) {
@@ -68,7 +75,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
         const formData = new FormData();
         formData.append('paciente_id', pacienteId);
-        formData.append('action', 'create_room'); // Adiciona a ação
+        formData.append('action', 'create_room');
 
         fetch('processa_whereby.php', {
             method: 'POST',
@@ -78,8 +85,11 @@ document.addEventListener('DOMContentLoaded', function() {
         .then(data => {
             if (data.success && data.roomUrl) {
                 const buttonContainer = button.parentElement;
+                const psicologaNome = <?php echo json_encode($psicologa_nome); ?>;
+                const finalUrl = data.roomUrl + '&displayName=' + encodeURIComponent(psicologaNome);
+                
                 buttonContainer.innerHTML = `
-                    <a href="${data.roomUrl}" target="_blank" class="entrar-sala-link inline-flex items-center rounded-md bg-teal-600 px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-teal-700">
+                    <a href="${finalUrl}" target="_blank" class="entrar-sala-link inline-flex items-center rounded-md bg-teal-600 px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-teal-700">
                         Entrar na Sala
                     </a>
                     <button type="button" class="remover-sala-btn text-sm font-medium text-red-600 hover:text-red-800" data-paciente-id="${pacienteId}">
@@ -115,7 +125,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
         const formData = new FormData();
         formData.append('paciente_id', pacienteId);
-        formData.append('action', 'remove_room'); // Adiciona a ação
+        formData.append('action', 'remove_room');
 
         fetch('processa_whereby.php', {
             method: 'POST',
@@ -144,7 +154,6 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
     
-    // Adiciona os "ouvintes" de eventos ao contentor da lista para gerir cliques
     const listContainer = document.querySelector('ul[role="list"]');
     if (listContainer) {
         listContainer.addEventListener('click', handleHabilitarClick);
