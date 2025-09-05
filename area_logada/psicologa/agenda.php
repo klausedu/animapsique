@@ -99,12 +99,26 @@ try {
 </div>
 
 <div id="deleteRecorrenciaModal" class="fixed z-20 inset-0 overflow-y-auto hidden">
+    <div class="flex items-end justify-center min-h-screen pt-4 px-4 pb-20 text-center sm:block sm:p-0">
+        <div class="fixed inset-0 bg-gray-500 bg-opacity-75 transition-opacity"></div>
+        <span class="hidden sm:inline-block sm:align-middle sm:h-screen">&#8203;</span>
+        <div class="inline-block align-bottom bg-white rounded-lg text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle sm:max-w-lg sm:w-full">
+            <div class="bg-white px-4 pt-5 pb-4 sm:p-6 sm:pb-4">
+                <h3 class="text-lg leading-6 font-medium text-gray-900">Excluir Agendamento Recorrente</h3>
+                <div class="mt-2"><p class="text-sm text-gray-500">Este evento faz parte de uma série. Como deseja excluí-lo?</p></div>
+            </div>
+            <div class="bg-gray-50 px-4 py-3 sm:px-6 sm:flex sm:flex-row-reverse">
+                <button type="button" id="deleteSerieBtn" class="w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-red-600 text-base font-medium text-white hover:bg-red-700 sm:ml-3 sm:w-auto sm:text-sm">Toda a série</button>
+                <button type="button" id="deleteOcorrenciaBtn" class="mt-3 w-full inline-flex justify-center rounded-md border border-gray-300 shadow-sm px-4 py-2 bg-white text-base font-medium text-gray-700 hover:bg-gray-50 sm:mt-0 sm:ml-3 sm:w-auto sm:text-sm">Apenas esta ocorrência</button>
+                <button type="button" id="cancelDeleteBtn" class="mt-3 w-full inline-flex justify-center rounded-md border border-gray-300 shadow-sm px-4 py-2 bg-white text-base font-medium text-gray-700 hover:bg-gray-50 sm:mt-0 sm:w-auto sm:text-sm">Cancelar</button>
+            </div>
+        </div>
     </div>
+</div>
 
 
 <script>
 document.addEventListener('DOMContentLoaded', function() {
-    // ... (declaração de constantes, não precisa de alteração) ...
     const calendarEl = document.getElementById('calendar');
     const modal = document.getElementById('agendaModal');
     const form = document.getElementById('agendaForm');
@@ -114,26 +128,30 @@ document.addEventListener('DOMContentLoaded', function() {
     const recorrenciaFimContainer = document.getElementById('recorrencia_fim_container');
     const dataFimRecorrenciaInput = document.getElementById('data_fim_recorrencia');
     const statusContainer = document.getElementById('status_container');
+    
     const deleteRecorrenciaModal = document.getElementById('deleteRecorrenciaModal');
     const deleteSerieBtn = document.getElementById('deleteSerieBtn');
     const deleteOcorrenciaBtn = document.getElementById('deleteOcorrenciaBtn');
     const cancelDeleteBtn = document.getElementById('cancelDeleteBtn');
 
-    // ... (listener do checkbox, não precisa de alteração) ...
-    recorrenteCheckbox.addEventListener('change', function() {
-        if (this.checked) {
-            recorrenciaFimContainer.classList.remove('hidden');
-            dataFimRecorrenciaInput.required = true;
-            statusContainer.classList.add('hidden');
-        } else {
-            recorrenciaFimContainer.classList.add('hidden');
-            dataFimRecorrenciaInput.required = false;
-            statusContainer.classList.remove('hidden');
-        }
-    });
+    // **INÍCIO DA CORREÇÃO**
+    // Adicionamos uma verificação para garantir que os elementos existem antes de adicionar os "listeners"
+    if (recorrenteCheckbox) {
+        recorrenteCheckbox.addEventListener('change', function() {
+            if (this.checked) {
+                recorrenciaFimContainer.classList.remove('hidden');
+                dataFimRecorrenciaInput.required = true;
+                statusContainer.classList.add('hidden');
+            } else {
+                recorrenciaFimContainer.classList.add('hidden');
+                dataFimRecorrenciaInput.required = false;
+                statusContainer.classList.remove('hidden');
+            }
+        });
+    }
+    // **FIM DA CORREÇÃO**
 
     const calendar = new FullCalendar.Calendar(calendarEl, {
-        // ... (configurações do calendário, não precisam de alteração) ...
         initialView: 'timeGridWeek',
         headerToolbar: {
             left: 'prev,next today',
@@ -146,8 +164,10 @@ document.addEventListener('DOMContentLoaded', function() {
         dateClick: function(info) {
             form.reset();
             document.getElementById('sala_reuniao_container').classList.add('hidden');
-            recorrenteCheckbox.checked = false;
-            recorrenteCheckbox.dispatchEvent(new Event('change'));
+            if (recorrenteCheckbox) {
+                recorrenteCheckbox.checked = false;
+                recorrenteCheckbox.dispatchEvent(new Event('change'));
+            }
             document.getElementById('modal-title').innerText = 'Novo Agendamento';
             document.getElementById('action').value = 'create';
             deleteButton.classList.add('hidden');
@@ -162,8 +182,10 @@ document.addEventListener('DOMContentLoaded', function() {
         
         eventClick: function(info) {
             form.reset();
-            recorrenteCheckbox.checked = false;
-            recorrenteCheckbox.dispatchEvent(new Event('change'));
+            if (recorrenteCheckbox) {
+                recorrenteCheckbox.checked = false;
+                recorrenteCheckbox.dispatchEvent(new Event('change'));
+            }
             document.getElementById('modal-title').innerText = 'Editar Agendamento';
             document.getElementById('action').value = 'update';
             document.getElementById('eventId').value = info.event.id;
@@ -179,8 +201,7 @@ document.addEventListener('DOMContentLoaded', function() {
             if(info.event.end) {
                 document.getElementById('hora_fim').value = dayjs(info.event.end).format('HH:mm');
             }
-
-            // INÍCIO: Exibir o link da sala
+            
             const salaUrl = info.event.extendedProps.salaUrl;
             const salaContainer = document.getElementById('sala_reuniao_container');
             const salaLink = document.getElementById('sala_reuniao_link');
@@ -192,7 +213,6 @@ document.addEventListener('DOMContentLoaded', function() {
             } else {
                 salaContainer.classList.add('hidden');
             }
-            // FIM: Exibir o link da sala
             
             modal.classList.remove('hidden');
         },
@@ -202,40 +222,77 @@ document.addEventListener('DOMContentLoaded', function() {
 
     calendar.render();
 
-    closeModalBtn.addEventListener('click', () => modal.classList.add('hidden'));
-    cancelDeleteBtn.addEventListener('click', () => deleteRecorrenciaModal.classList.add('hidden'));
+    if(closeModalBtn) closeModalBtn.addEventListener('click', () => modal.classList.add('hidden'));
+    if(cancelDeleteBtn) cancelDeleteBtn.addEventListener('click', () => deleteRecorrenciaModal.classList.add('hidden'));
 
-    form.addEventListener('submit', function(e) {
-        e.preventDefault();
-        const formData = new FormData(form);
-        
+    if(form) {
+        form.addEventListener('submit', function(e) {
+            e.preventDefault();
+            const formData = new FormData(form);
+            
+            fetch('processa_agenda.php', { method: 'POST', body: formData })
+            .then(response => response.json())
+            .then(data => {
+                if(data.success) {
+                    modal.classList.add('hidden');
+                    calendar.refetchEvents();
+                } else {
+                    alert('Erro: ' + (data.message || 'Não foi possível guardar o agendamento.'));
+                }
+            })
+            .catch(error => console.error("Erro ao submeter o formulário:", error));
+        });
+    }
+
+    if (deleteButton) {
+        deleteButton.addEventListener('click', function() {
+            const eventId = document.getElementById('eventId').value;
+            
+            if (eventId.startsWith('rec_')) {
+                deleteRecorrenciaModal.classList.remove('hidden');
+            } else {
+                if (confirm('Tem a certeza de que deseja excluir este agendamento?')) {
+                    performDelete({ action: 'delete_evento', eventId: eventId });
+                }
+            }
+        });
+    }
+
+    if (deleteSerieBtn) {
+        deleteSerieBtn.addEventListener('click', function() {
+            const eventId = document.getElementById('eventId').value;
+            const recorrenciaId = eventId.split('_')[1];
+            performDelete({ action: 'delete_serie', recorrenciaId: recorrenciaId });
+        });
+    }
+
+    if (deleteOcorrenciaBtn) {
+        deleteOcorrenciaBtn.addEventListener('click', function() {
+            const eventId = document.getElementById('eventId').value;
+            const dataOcorrencia = dayjs(document.getElementById('data').value).format('YYYY-MM-DD');
+            const recorrenciaId = eventId.split('_')[1];
+            performDelete({ action: 'delete_ocorrencia', recorrenciaId: recorrenciaId, data: dataOcorrencia });
+        });
+    }
+
+    function performDelete(data) {
+        const formData = new FormData();
+        for (const key in data) {
+            formData.append(key, data[key]);
+        }
+
         fetch('processa_agenda.php', { method: 'POST', body: formData })
         .then(response => response.json())
-        .then(data => {
-            if(data.success) {
+        .then(result => {
+            if (result.success) {
                 modal.classList.add('hidden');
+                deleteRecorrenciaModal.classList.add('hidden');
                 calendar.refetchEvents();
             } else {
-                alert('Erro: ' + (data.message || 'Não foi possível guardar o agendamento.'));
+                alert('Erro ao excluir: ' + (result.message || 'Erro desconhecido.'));
             }
         })
-        .catch(error => console.error("Erro ao submeter o formulário:", error));
-    });
-
-    deleteButton.addEventListener('click', function() {
-        // ... (código de exclusão, não precisa de alteração) ...
-    });
-
-    deleteSerieBtn.addEventListener('click', function() {
-        // ... (código de exclusão, não precisa de alteração) ...
-    });
-
-    deleteOcorrenciaBtn.addEventListener('click', function() {
-        // ... (código de exclusão, não precisa de alteração) ...
-    });
-    
-    function performDelete(data) {
-        // ... (código de exclusão, não precisa de alteração) ...
+        .catch(error => console.error("Erro ao excluir:", error));
     }
 });
 </script>
