@@ -1,5 +1,4 @@
 <?php
-
 require_once '../../config.php';
 require_once '../../includes/auth_paciente.php';
 require_once '../../includes/db.php';
@@ -9,27 +8,18 @@ require_once 'templates/header.php';
 
 try {
     $pdo = conectar();
-    
-    // Buscar próxima sessão agendada e o link da sala
-    $stmt_agenda = $pdo->prepare(
-        "SELECT data_hora_inicio, sala_reuniao_url FROM agenda WHERE paciente_id = ? AND data_hora_inicio >= NOW() AND status = 'planejado' ORDER BY data_hora_inicio ASC LIMIT 1"
-    );
+    // Busca a próxima sessão agendada
+    $stmt_agenda = $pdo->prepare("SELECT data_hora_inicio FROM agenda WHERE paciente_id = ? AND data_hora_inicio >= NOW() AND status = 'planejado' ORDER BY data_hora_inicio ASC LIMIT 1");
     $stmt_agenda->execute([$paciente_id]);
     $proxima_sessao_info = $stmt_agenda->fetch();
-
-    // Contar mensagens não lidas
-    $stmt_msgs = $pdo->prepare(
-        "SELECT COUNT(*) FROM mensagens_status WHERE usuario_id = ? AND tipo_usuario = 'paciente' AND lida = 0"
-    );
-    $stmt_msgs->execute([$paciente_id]);
-    $mensagens_nao_lidas = $stmt_msgs->fetchColumn();
 
 } catch (PDOException $e) {
     error_log("Erro no painel do paciente: " . $e->getMessage());
     $proxima_sessao_info = null;
-    $mensagens_nao_lidas = 0;
 }
 
+// Pega a URL da sala da sessão, guardada no login
+$sala_url = $_SESSION['paciente_whereby_url'] ?? null;
 ?>
 
 <div class="container mx-auto px-4 sm:px-6 lg:px-8">
@@ -40,7 +30,20 @@ try {
 
     <div class="grid grid-cols-1 gap-6 sm:grid-cols-2">
         <div class="overflow-hidden rounded-lg bg-white shadow p-5">
-            <dt class="truncate text-sm font-medium text-gray-500">Próxima Sessão</dt>
+            <dt class="truncate text-sm font-medium text-gray-500">Sua Sala de Atendimento</dt>
+            <dd class="mt-2">
+                <?php if ($sala_url): ?>
+                    <a href="sala_atendimento.php" target="_blank" class="inline-flex items-center rounded-md border border-transparent bg-teal-600 px-6 py-3 text-base font-medium text-white shadow-sm hover:bg-teal-700">
+                        Entrar na Sessão Online
+                    </a>
+                <?php else: ?>
+                    <p class="text-gray-600">A sua sala de atendimento online ainda não está configurada.</p>
+                <?php endif; ?>
+            </dd>
+        </div>
+
+        <div class="overflow-hidden rounded-lg bg-white shadow p-5">
+            <dt class="truncate text-sm font-medium text-gray-500">Próxima Sessão Agendada</dt>
             <dd class="mt-1 text-3xl font-semibold tracking-tight text-gray-900">
                 <?php if ($proxima_sessao_info): ?>
                     <?php 
@@ -51,25 +54,8 @@ try {
                     Nenhuma sessão agendada
                 <?php endif; ?>
             </dd>
-            <?php if ($proxima_sessao_info && !empty($proxima_sessao_info['sala_reuniao_url'])): ?>
-                <div class="mt-4">
-                    <a href="sala_atendimento.php?room=<?php echo urlencode($proxima_sessao_info['sala_reuniao_url']); ?>" target="_blank" class="inline-flex items-center rounded-md border border-transparent bg-teal-600 px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-teal-700">
-                        Entrar na Sala de Atendimento
-                    </a>
-                </div>
-            <?php endif; ?>
             <div class="mt-4">
-                <a href="agenda.php" class="font-medium text-teal-700 hover:text-teal-900">Ver minha agenda completa &rarr;</a>
-            </div>
-        </div>
-
-        <div class="overflow-hidden rounded-lg bg-white shadow p-5">
-            <dt class="truncate text-sm font-medium text-gray-500">Mensagens Novas</dt>
-            <dd class="mt-1 text-3xl font-semibold tracking-tight text-gray-900">
-                <?php echo $mensagens_nao_lidas; ?>
-            </dd>
-            <div class="mt-4">
-                 <a href="mensagens.php" class="font-medium text-teal-700 hover:text-teal-900">Acessar caixa de entrada &rarr;</a>
+                <a href="agenda.php" class="font-medium text-teal-700 hover:text-teal-900">Ver agenda completa &rarr;</a>
             </div>
         </div>
     </div>
