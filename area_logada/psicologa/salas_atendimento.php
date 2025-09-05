@@ -18,7 +18,7 @@ try {
 
 <div class="container mx-auto px-4 sm:px-6 lg:px-8">
     <div class="bg-white p-6 rounded-lg shadow-md">
-        <h2 class="text-2xl font-bold text-gray-800 mb-6">Salas de Atendimento Virtuais</h2>
+        <h2 class="text-2xl font-bold text-gray-800 mb-6">Painel de Controlo de Salas Virtuais</h2>
 
         <?php if (isset($error_message)): ?>
             <p class="text-red-500"><?php echo htmlspecialchars($error_message); ?></p>
@@ -27,7 +27,7 @@ try {
         <?php else: ?>
             <ul role="list" class="divide-y divide-gray-200">
                 <?php foreach ($pacientes as $paciente): ?>
-                    <li class="flex justify-between gap-x-6 py-5">
+                    <li class="flex justify-between items-center gap-x-6 py-5" id="paciente-<?php echo $paciente['id']; ?>">
                         <div class="flex min-w-0 gap-x-4">
                             <div class="min-w-0 flex-auto">
                                 <p class="text-lg font-semibold leading-6 text-gray-900"><?php echo htmlspecialchars($paciente['nome']); ?></p>
@@ -39,17 +39,66 @@ try {
                                     Entrar na Sala
                                 </a>
                             <?php else: ?>
-                                <span class="inline-flex items-center rounded-md bg-gray-300 px-4 py-2 text-sm font-medium text-gray-600">
-                                    Sala não disponível
-                                </span>
+                                <button type="button" class="habilitar-sala-btn inline-flex items-center rounded-md bg-blue-600 px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-blue-700" data-paciente-id="<?php echo $paciente['id']; ?>">
+                                    Habilitar Sala Whereby
+                                </button>
                             <?php endif; ?>
                         </div>
                     </li>
                 <?php endforeach; ?>
             </ul>
         <?php endif; ?>
-
     </div>
 </div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    document.querySelectorAll('.habilitar-sala-btn').forEach(button => {
+        button.addEventListener('click', function() {
+            const pacienteId = this.dataset.pacienteId;
+            const button = this;
+
+            button.textContent = 'A criar...';
+            button.disabled = true;
+
+            const formData = new FormData();
+            formData.append('paciente_id', pacienteId);
+
+            fetch('processa_whereby.php', {
+                method: 'POST',
+                body: formData
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success && data.roomUrl) {
+                    const listItem = document.getElementById('paciente-' + pacienteId);
+                    const buttonContainer = listItem.querySelector('.shrink-0');
+                    
+                    // Remove o botão antigo
+                    button.remove();
+                    
+                    // Cria e adiciona o novo botão "Entrar na Sala"
+                    const newLink = document.createElement('a');
+                    newLink.href = data.roomUrl;
+                    newLink.target = '_blank';
+                    newLink.className = 'inline-flex items-center rounded-md bg-teal-600 px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-teal-700';
+                    newLink.textContent = 'Entrar na Sala';
+                    buttonContainer.appendChild(newLink);
+                } else {
+                    alert('Erro ao criar a sala: ' + data.message);
+                    button.textContent = 'Habilitar Sala Whereby';
+                    button.disabled = false;
+                }
+            })
+            .catch(error => {
+                console.error('Fetch error:', error);
+                alert('Ocorreu um erro de comunicação com o servidor.');
+                button.textContent = 'Habilitar Sala Whereby';
+                button.disabled = false;
+            });
+        });
+    });
+});
+</script>
 
 <?php require_once 'templates/footer.php'; ?>
