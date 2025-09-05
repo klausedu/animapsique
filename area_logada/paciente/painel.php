@@ -6,8 +6,20 @@ require_once '../../includes/db.php';
 $page_title = 'Painel de Controle';
 require_once 'templates/header.php';
 
+$proxima_sessao_info = null;
+$sala_url = null;
+
 try {
     $pdo = conectar();
+    
+    // **CORREÇÃO: Busca a URL da sala diretamente da base de dados do paciente**
+    $stmt_paciente = $pdo->prepare("SELECT whereby_room_url FROM pacientes WHERE id = ?");
+    $stmt_paciente->execute([$paciente_id]);
+    $paciente_data = $stmt_paciente->fetch();
+    if ($paciente_data) {
+        $sala_url = $paciente_data['whereby_room_url'];
+    }
+
     // Busca a próxima sessão agendada
     $stmt_agenda = $pdo->prepare("SELECT data_hora_inicio FROM agenda WHERE paciente_id = ? AND data_hora_inicio >= NOW() AND status = 'planejado' ORDER BY data_hora_inicio ASC LIMIT 1");
     $stmt_agenda->execute([$paciente_id]);
@@ -15,11 +27,7 @@ try {
 
 } catch (PDOException $e) {
     error_log("Erro no painel do paciente: " . $e->getMessage());
-    $proxima_sessao_info = null;
 }
-
-// Pega a URL da sala da sessão, guardada no login
-$sala_url = $_SESSION['paciente_whereby_url'] ?? null;
 ?>
 
 <div class="container mx-auto px-4 sm:px-6 lg:px-8">
@@ -33,7 +41,7 @@ $sala_url = $_SESSION['paciente_whereby_url'] ?? null;
             <dt class="truncate text-sm font-medium text-gray-500">Sua Sala de Atendimento</dt>
             <dd class="mt-2">
                 <?php if ($sala_url): ?>
-                    <a href="sala_atendimento.php" target="_blank" class="inline-flex items-center rounded-md border border-transparent bg-teal-600 px-6 py-3 text-base font-medium text-white shadow-sm hover:bg-teal-700">
+                    <a href="sala_atendimento.php?room=<?php echo urlencode($sala_url); ?>" target="_blank" class="inline-flex items-center rounded-md border border-transparent bg-teal-600 px-6 py-3 text-base font-medium text-white shadow-sm hover:bg-teal-700">
                         Entrar na Sessão Online
                     </a>
                 <?php else: ?>
