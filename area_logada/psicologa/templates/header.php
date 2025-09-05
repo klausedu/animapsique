@@ -1,8 +1,12 @@
 <?php
-$cor_primaria = '#38b2ac'; 
+// Tenta buscar a cor primária da base de dados.
+$cor_primaria = '#38b2ac'; // Cor padrão (teal-500)
 try {
-    // Inclui a conexão de forma robusta a partir deste diretório
-    require_once __DIR__ . '/../../../includes/db.php';
+    // A função conectar() deve estar disponível a partir do ficheiro que inclui este header.
+    if (!function_exists('conectar')) {
+       // O caminho precisa de ser ajustado para subir três níveis a partir de /area_logada/psicologa/templates/
+       require_once __DIR__ . '/../../../includes/db.php';
+    }
     $pdo_header = conectar();
     $stmt_header = $pdo_header->prepare("SELECT texto FROM conteudo_site WHERE secao = ?");
     $stmt_header->execute(['site_cor_primaria']);
@@ -10,24 +14,29 @@ try {
     if ($resultado && !empty($resultado['texto'])) {
         $cor_primaria = htmlspecialchars($resultado['texto']);
     }
-} catch (Exception $e) { /* Usa cor padrão */ }
+} catch (Exception $e) {
+    // Se houver um erro, simplesmente usa a cor padrão.
+    // Opcional: pode logar o erro para depuração futura.
+    // error_log("Não foi possível buscar a cor primária: " . $e->getMessage());
+}
 ?>
 <!DOCTYPE html>
 <html lang="pt-BR" class="h-full bg-gray-100">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Área da Psicóloga</title>
+    <title><?php echo isset($page_title) ? htmlspecialchars($page_title) . ' - ' : ''; ?>Área da Psicóloga</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <script src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
     <style>
-        :root { --cor-primaria: <?php echo $cor_primaria; ?>; }
-        .active-tab { border-bottom-color: var(--cor-primaria) !important; }
+        :root {
+            --cor-primaria: <?php echo $cor_primaria; ?>;
+        }
     </style>
 </head>
 <body class="h-full">
 <div class="min-h-full">
-    <nav x-data="{ open: false, userMenuOpen: false }" class="bg-gray-800">
+    <nav x-data="{ open: false }" class="bg-gray-800">
         <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
             <div class="flex h-16 items-center justify-between">
                 <div class="flex items-center">
@@ -41,11 +50,11 @@ try {
                             <a href="painel.php" class="text-gray-300 hover:bg-gray-700 hover:text-white rounded-md px-3 py-2 text-sm font-medium">Painel</a>
                             <a href="pacientes.php" class="text-gray-300 hover:bg-gray-700 hover:text-white rounded-md px-3 py-2 text-sm font-medium">Pacientes</a>
                             <a href="agenda.php" class="text-gray-300 hover:bg-gray-700 hover:text-white rounded-md px-3 py-2 text-sm font-medium">Agenda</a>
+                            <a href="salas_atendimento.php" class="text-gray-300 hover:bg-gray-700 hover:text-white rounded-md px-3 py-2 text-sm font-medium">Salas</a>
                             <a href="mensagens.php" class="text-gray-300 hover:bg-gray-700 hover:text-white rounded-md px-3 py-2 text-sm font-medium">Mensagens</a>
                             <a href="quizzes.php" class="text-gray-300 hover:bg-gray-700 hover:text-white rounded-md px-3 py-2 text-sm font-medium">Quizzes</a>
-                             <a href="publicacoes.php" class="text-gray-300 hover:bg-gray-700 hover:text-white rounded-md px-3 py-2 text-sm font-medium">Publicações</a>
-                             <a href="documentos_paciente.php" class="text-gray-300 hover:bg-gray-700 hover:text-white rounded-md px-3 py-2 text-sm font-medium">Documentos</a>
-                            <a href="configuracoes_site.php" class="text-gray-300 hover:bg-gray-700 hover:text-white rounded-md px-3 py-2 text-sm font-medium">Config. Site</a>
+                            <a href="recibos.php" class="text-gray-300 hover:bg-gray-700 hover:text-white rounded-md px-3 py-2 text-sm font-medium">Recibos</a>
+                            <a href="configuracoes_site.php" class="text-gray-300 hover:bg-gray-700 hover:text-white rounded-md px-3 py-2 text-sm font-medium">Configurações</a>
                         </div>
                     </div>
                 </div>
@@ -59,8 +68,7 @@ try {
                                 </button>
                             </div>
                             <div x-show="userMenuOpen" @click.away="userMenuOpen = false" x-transition class="absolute right-0 z-10 mt-2 w-48 origin-top-right rounded-md bg-white py-1 shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none" role="menu" aria-orientation="vertical" aria-labelledby="user-menu-button" tabindex="-1">
-                                <a href="alterar_senha.php" class="block px-4 py-2 text-sm text-gray-700" role="menuitem" tabindex="-1" id="user-menu-item-1">Alterar Senha</a>
-                                <a href="../../logout.php" class="block px-4 py-2 text-sm text-gray-700" role="menuitem" tabindex="-1" id="user-menu-item-2">Sair</a>
+                                <a href="../../logout.php" class="block px-4 py-2 text-sm text-gray-700" role="menuitem" tabindex="-1">Sair</a>
                             </div>
                         </div>
                     </div>
@@ -79,19 +87,18 @@ try {
                  <a href="painel.php" class="text-gray-300 hover:bg-gray-700 hover:text-white block rounded-md px-3 py-2 text-base font-medium">Painel</a>
                  <a href="pacientes.php" class="text-gray-300 hover:bg-gray-700 hover:text-white block rounded-md px-3 py-2 text-base font-medium">Pacientes</a>
                  <a href="agenda.php" class="text-gray-300 hover:bg-gray-700 hover:text-white block rounded-md px-3 py-2 text-base font-medium">Agenda</a>
+                 <a href="salas_atendimento.php" class="text-gray-300 hover:bg-gray-700 hover:text-white block rounded-md px-3 py-2 text-base font-medium">Salas</a>
                  <a href="mensagens.php" class="text-gray-300 hover:bg-gray-700 hover:text-white block rounded-md px-3 py-2 text-base font-medium">Mensagens</a>
                  <a href="quizzes.php" class="text-gray-300 hover:bg-gray-700 hover:text-white block rounded-md px-3 py-2 text-base font-medium">Quizzes</a>
-                 <a href="publicacoes.php" class="text-gray-300 hover:bg-gray-700 hover:text-white block rounded-md px-3 py-2 text-base font-medium">Publicações</a>
-                 <a href="documentos_paciente.php" class="text-gray-300 hover:bg-gray-700 hover:text-white block rounded-md px-3 py-2 text-base font-medium">Documentos</a>
-                 <a href="configuracoes_site.php" class="text-gray-300 hover:bg-gray-700 hover:text-white block rounded-md px-3 py-2 text-base font-medium">Config. Site</a>
+                 <a href="recibos.php" class="text-gray-300 hover:bg-gray-700 hover:text-white block rounded-md px-3 py-2 text-base font-medium">Recibos</a>
+                 <a href="configuracoes_site.php" class="text-gray-300 hover:bg-gray-700 hover:text-white block rounded-md px-3 py-2 text-base font-medium">Configurações</a>
             </div>
             <div class="border-t border-gray-700 pt-4 pb-3">
                 <div class="mt-3 space-y-1 px-2">
-                    <a href="alterar_senha.php" class="block rounded-md px-3 py-2 text-base font-medium text-gray-400 hover:bg-gray-700 hover:text-white">Alterar Senha</a>
                     <a href="../../logout.php" class="block rounded-md px-3 py-2 text-base font-medium text-gray-400 hover:bg-gray-700 hover:text-white">Sair</a>
                 </div>
             </div>
         </div>
     </nav>
-    <main>
-        <div class="mx-auto max-w-7xl py-6 sm:px-6 lg:px-8">
+    <main class="py-10">
+        <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
