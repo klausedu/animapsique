@@ -2,11 +2,12 @@
 require_once '../../config.php';
 require_once '../../includes/auth_paciente.php'; // Segurança
 
-$roomUrl = filter_input(INPUT_GET, 'room', FILTER_VALIDATE_URL);
+// Pega a URL da sala diretamente da sessão do utilizador
+$roomUrl = $_SESSION['paciente_whereby_url'] ?? null;
 
 // Validação para garantir que a URL é do Whereby
 if (!$roomUrl || !preg_match('/^https:\/\/.*\.whereby\.com\/.*/', $roomUrl)) {
-    die('URL da sala inválida.');
+    die('URL da sala inválida ou não encontrada. Por favor, contacte o seu psicólogo.');
 }
 
 $page_title = 'Sala de Atendimento';
