@@ -4,6 +4,7 @@ $cor_primaria = '#38b2ac'; // Cor padrão (teal-500)
 try {
     // A função conectar() deve estar disponível a partir do ficheiro que inclui este header.
     if (!function_exists('conectar')) {
+       // O caminho precisa de ser ajustado para subir três níveis a partir de /area_logada/paciente/templates/
        require_once __DIR__ . '/../../../includes/db.php';
     }
     $pdo_header = conectar();
@@ -97,5 +98,5 @@ try {
             </div>
         </div>
     </nav>
-    <main>
-        <div class="mx-auto max-w-7xl py-6 sm:px-6 lg:px-8">
+    <main class="py-10">
+        <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
