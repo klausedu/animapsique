@@ -22,11 +22,8 @@ if (!$roomUrl || !preg_match('/^https:\/\/.*\.whereby\.com\/.*/', $roomUrl)) {
     die('URL da sala inválida ou não encontrada. Por favor, contacte o seu psicólogo.');
 }
 
-// **INÍCIO DA CORREÇÃO**
-// Adiciona o nome do paciente (disponível em $paciente_nome de auth_paciente.php) ao URL
-// O urlencode() garante que nomes com espaços ou acentos funcionem corretamente.
-$finalRoomUrl = $roomUrl . '?embed&screenshare=on&chat=on&displayName=' . urlencode($paciente_nome);
-// **FIM DA CORREÇÃO**
+// **CORREÇÃO: Adiciona os parâmetros de forma segura**
+$finalRoomUrl = htmlspecialchars($roomUrl . '&displayName=' . urlencode($paciente_nome) . '&embed&screenshare=on&chat=on');
 
 $page_title = 'Sala de Atendimento';
 require_once 'templates/header.php';
@@ -38,7 +35,7 @@ require_once 'templates/header.php';
         <p class="text-gray-600 mb-6">Sua sessão está prestes a começar. Permita o acesso à sua câmera e microfone quando solicitado pelo navegador.</p>
 
         <div class="w-full" style="height: 75vh;">
-             <iframe class="w-full h-full border-0 rounded-lg" src="<?php echo htmlspecialchars($finalRoomUrl); ?>" allow="camera; microphone; fullscreen; speaker; display-capture" allowfullscreen></iframe>
+             <iframe class="w-full h-full border-0 rounded-lg" src="<?php echo $finalRoomUrl; ?>" allow="camera; microphone; fullscreen; speaker; display-capture" allowfullscreen></iframe>
         </div>
     </div>
 </div>
