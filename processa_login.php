@@ -1,4 +1,9 @@
 <?php
+// Inicia a sessão de forma segura no início do script, caso ainda não tenha sido iniciada
+if (session_status() == PHP_SESSION_NONE) {
+    session_start();
+}
+
 require_once 'config.php';
 require_once 'includes/db.php';
 
@@ -13,30 +18,33 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $pdo = conectar();
 
         if ($tipo_usuario === 'paciente') {
+            // A query foi atualizada para buscar a sala Whereby.
+            // Se a coluna 'whereby_room_url' não existir na tabela 'pacientes', o login falhará.
             $stmt = $pdo->prepare("SELECT id, nome, senha, whereby_room_url FROM pacientes WHERE email = ? AND ativo = 1");
             $stmt->execute([$email]);
             $user = $stmt->fetch();
 
             if ($user && password_verify($senha, $user['senha'])) {
-                // Regenera o ID da sessão para segurança
+                // Regenera o ID da sessão para maior segurança
                 session_regenerate_id(true);
                 
                 $_SESSION['logged_in'] = true;
                 $_SESSION['user_type'] = 'paciente';
                 $_SESSION['paciente_id'] = $user['id'];
                 $_SESSION['paciente_nome'] = $user['nome'];
-                $_SESSION['paciente_whereby_url'] = $user['whereby_room_url']; // Linha atualizada
+                $_SESSION['paciente_whereby_url'] = $user['whereby_room_url'];
                 
                 header("Location: area_logada/paciente/painel.php");
                 exit();
             }
         } elseif ($tipo_usuario === 'psicologa') {
+            // A query para a psicóloga não foi alterada.
             $stmt = $pdo->prepare("SELECT id, nome, senha FROM psicologa WHERE email = ?");
             $stmt->execute([$email]);
             $user = $stmt->fetch();
 
             if ($user && password_verify($senha, $user['senha'])) {
-                // Regenera o ID da sessão para segurança
+                // Regenera o ID da sessão para maior segurança
                 session_regenerate_id(true);
 
                 $_SESSION['logged_in'] = true;
@@ -49,7 +57,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             }
         }
         
-        // Se a autenticação falhar, redireciona com mensagem de erro
+        // Se a autenticação falhar, redireciona de volta para o login com uma mensagem de erro
         $_SESSION['login_error'] = $response['message'];
         header("Location: login.php");
         exit();
@@ -57,7 +65,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     } catch (PDOException $e) {
         // Em caso de erro de base de dados, redireciona com uma mensagem genérica
         $_SESSION['login_error'] = "Ocorreu um erro no sistema. Tente novamente mais tarde.";
-        error_log("Erro de login: " . $e->getMessage()); // Log do erro para a psicóloga
+        // Log do erro real para depuração (visível apenas para si no log de erros do servidor)
+        error_log("Erro de login (PDOException): " . $e->getMessage());
         header("Location: login.php");
         exit();
     }
