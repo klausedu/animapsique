@@ -16,8 +16,6 @@ try {
     }
 } catch (Exception $e) {
     // Se houver um erro, simplesmente usa a cor padrão.
-    // Opcional: pode logar o erro para depuração futura.
-    // error_log("Não foi possível buscar a cor primária: " . $e->getMessage());
 }
 ?>
 <!DOCTYPE html>
@@ -53,6 +51,7 @@ try {
                             <a href="salas_atendimento.php" class="text-gray-300 hover:bg-gray-700 hover:text-white rounded-md px-3 py-2 text-sm font-medium">Salas</a>
                             <a href="mensagens.php" class="text-gray-300 hover:bg-gray-700 hover:text-white rounded-md px-3 py-2 text-sm font-medium">Mensagens</a>
                             <a href="quizzes.php" class="text-gray-300 hover:bg-gray-700 hover:text-white rounded-md px-3 py-2 text-sm font-medium">Quizzes</a>
+                            <a href="publicacoes.php" class="text-gray-300 hover:bg-gray-700 hover:text-white rounded-md px-3 py-2 text-sm font-medium">Publicações</a>
                             <a href="recibos.php" class="text-gray-300 hover:bg-gray-700 hover:text-white rounded-md px-3 py-2 text-sm font-medium">Recibos</a>
                             <a href="configuracoes_site.php" class="text-gray-300 hover:bg-gray-700 hover:text-white rounded-md px-3 py-2 text-sm font-medium">Configurações</a>
                         </div>
@@ -90,6 +89,7 @@ try {
                  <a href="salas_atendimento.php" class="text-gray-300 hover:bg-gray-700 hover:text-white block rounded-md px-3 py-2 text-base font-medium">Salas</a>
                  <a href="mensagens.php" class="text-gray-300 hover:bg-gray-700 hover:text-white block rounded-md px-3 py-2 text-base font-medium">Mensagens</a>
                  <a href="quizzes.php" class="text-gray-300 hover:bg-gray-700 hover:text-white block rounded-md px-3 py-2 text-base font-medium">Quizzes</a>
+                 <a href="publicacoes.php" class="text-gray-300 hover:bg-gray-700 hover:text-white block rounded-md px-3 py-2 text-base font-medium">Publicações</a>
                  <a href="recibos.php" class="text-gray-300 hover:bg-gray-700 hover:text-white block rounded-md px-3 py-2 text-base font-medium">Recibos</a>
                  <a href="configuracoes_site.php" class="text-gray-300 hover:bg-gray-700 hover:text-white block rounded-md px-3 py-2 text-base font-medium">Configurações</a>
             </div>
