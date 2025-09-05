@@ -19,7 +19,7 @@ try {
 
     // 1. Busca eventos individuais e exceções de recorrência (eventos cancelados)
     $stmt_individuais = $pdo->prepare("
-        SELECT a.id, a.data_hora_inicio, a.data_hora_fim, a.status, a.paciente_id, a.recorrencia_id, p.nome AS paciente_nome, a.sala_reuniao_url 
+        SELECT a.id, a.data_hora_inicio, a.data_hora_fim, a.status, a.paciente_id, a.recorrencia_id, p.nome AS paciente_nome 
         FROM agenda a 
         LEFT JOIN pacientes p ON a.paciente_id = p.id
         WHERE a.data_hora_inicio BETWEEN ? AND ?
@@ -30,14 +30,19 @@ try {
     while ($agendamento = $stmt_individuais->fetch(PDO::FETCH_ASSOC)) {
         $data_agendamento = new DateTime($agendamento['data_hora_inicio'], $timezone);
 
+        // Se for uma exceção, guarda-a para não gerar o evento recorrente
         if ($agendamento['recorrencia_id'] && $agendamento['status'] === 'cancelado') {
             $data_excecao = $data_agendamento->format('Y-m-d');
             $excecoes[$data_excecao][] = $agendamento['recorrencia_id'];
+
+            // LÓGICA ATUALIZADA: Só mostra o evento cancelado se for do passado.
+            // Se for do futuro, a exceção apenas impede a criação do evento recorrente, tornando-o invisível.
             if ($data_agendamento >= $hoje) {
-                continue; 
+                continue; // Pula a adição deste evento futuro cancelado à lista
             }
         }
         
+        // Adiciona o evento individual à lista (pode ser um evento normal ou uma exceção visível do passado)
         $titulo = $agendamento['status'] === 'livre' ? 'Horário Livre' : $agendamento['paciente_nome'];
         $cor = '#3b82f6'; // Cor padrão
         if ($agendamento['status'] === 'livre') $cor = '#0d9488';
@@ -49,11 +54,7 @@ try {
             'start' => $agendamento['data_hora_inicio'],
             'end' => $agendamento['data_hora_fim'],
             'color' => $cor,
-            'extendedProps' => [ 
-                'pacienteId' => $agendamento['paciente_id'], 
-                'status' => $agendamento['status'],
-                'salaUrl' => $agendamento['sala_reuniao_url']
-            ]
+            'extendedProps' => [ 'pacienteId' => $agendamento['paciente_id'], 'status' => $agendamento['status'] ]
         ];
     }
 
@@ -67,6 +68,7 @@ try {
 
         while ($data_atual <= $data_fim) {
             $data_str = $data_atual->format('Y-m-d');
+            // Verifica se o dia da semana corresponde E se não há uma exceção para este dia/regra
             if ($data_atual->format('w') == $regra['dia_semana'] && (!isset($excecoes[$data_str]) || !in_array($regra['id'], $excecoes[$data_str]))) {
                 $eventos[] = [
                     'id' => 'rec_' . $regra['id'] . '_' . $data_str,
