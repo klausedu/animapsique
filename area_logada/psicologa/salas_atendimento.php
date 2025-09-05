@@ -36,10 +36,12 @@ try {
                         <div class="shrink-0 flex items-center gap-x-4">
                             <?php if (!empty($paciente['whereby_room_url'])): ?>
                                 <?php
-                                    // **CORREÇÃO: Adiciona o parâmetro de forma segura**
-                                    $sala_url_psicologa = htmlspecialchars($paciente['whereby_room_url'] . '&displayName=' . urlencode($psicologa_nome));
+                                    // **INÍCIO DA CORREÇÃO**
+                                    // Adiciona o nome da psicóloga (disponível em $psicologa_nome de auth_psicologa.php) ao URL
+                                    $sala_url_psicologa = $paciente['whereby_room_url'] . '&displayName=' . urlencode($psicologa_nome);
+                                    // **FIM DA CORREÇÃO**
                                 ?>
-                                <a href="<?php echo $sala_url_psicologa; ?>" target="_blank" class="entrar-sala-link inline-flex items-center rounded-md bg-teal-600 px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-teal-700">
+                                <a href="<?php echo htmlspecialchars($sala_url_psicologa); ?>" target="_blank" class="entrar-sala-link inline-flex items-center rounded-md bg-teal-600 px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-teal-700">
                                     Entrar na Sala
                                 </a>
                                 <button type="button" class="remover-sala-btn text-sm font-medium text-red-600 hover:text-red-800" data-paciente-id="<?php echo $paciente['id']; ?>">
@@ -59,84 +61,17 @@ try {
 </div>
 
 <script>
-// O JavaScript permanece o mesmo
 document.addEventListener('DOMContentLoaded', function() {
+    
     function handleHabilitarClick(event) {
         if (!event.target.classList.contains('habilitar-sala-btn')) return;
+
         const button = event.target;
         const pacienteId = button.dataset.pacienteId;
+
         button.textContent = 'A criar...';
         button.disabled = true;
+
         const formData = new FormData();
         formData.append('paciente_id', pacienteId);
         formData.append('action', 'create_room');
-        fetch('processa_whereby.php', { method: 'POST', body: formData })
-        .then(response => response.json())
-        .then(data => {
-            if (data.success && data.roomUrl) {
-                const buttonContainer = button.parentElement;
-                const psicologaNome = <?php echo json_encode($psicologa_nome); ?>;
-                const finalUrl = data.roomUrl + '&displayName=' + encodeURIComponent(psicologaNome);
-                buttonContainer.innerHTML = `
-                    <a href="${finalUrl}" target="_blank" class="entrar-sala-link inline-flex items-center rounded-md bg-teal-600 px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-teal-700">
-                        Entrar na Sala
-                    </a>
-                    <button type="button" class="remover-sala-btn text-sm font-medium text-red-600 hover:text-red-800" data-paciente-id="${pacienteId}">
-                        Remover
-                    </button>
-                `;
-            } else {
-                alert('Erro ao criar a sala: ' + data.message);
-                button.textContent = 'Habilitar Sala Whereby';
-                button.disabled = false;
-            }
-        }).catch(error => {
-            console.error('Fetch error:', error);
-            alert('Ocorreu um erro de comunicação com o servidor.');
-            button.textContent = 'Habilitar Sala Whereby';
-            button.disabled = false;
-        });
-    }
-
-    function handleRemoverClick(event) {
-        if (!event.target.classList.contains('remover-sala-btn')) return;
-        if (!confirm('Tem a certeza de que deseja remover esta sala? O link atual deixará de ser válido no sistema e poderá criar um novo.')) return;
-        const button = event.target;
-        const pacienteId = button.dataset.pacienteId;
-        button.textContent = 'A remover...';
-        button.disabled = true;
-        const formData = new FormData();
-        formData.append('paciente_id', pacienteId);
-        formData.append('action', 'remove_room');
-        fetch('processa_whereby.php', { method: 'POST', body: formData })
-        .then(response => response.json())
-        .then(data => {
-            if (data.success) {
-                const buttonContainer = button.parentElement;
-                buttonContainer.innerHTML = `
-                    <button type="button" class="habilitar-sala-btn inline-flex items-center rounded-md bg-blue-600 px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-blue-700" data-paciente-id="${pacienteId}">
-                        Habilitar Sala Whereby
-                    </button>
-                `;
-            } else {
-                alert('Erro ao remover a sala: ' + data.message);
-                button.textContent = 'Remover';
-                button.disabled = false;
-            }
-        }).catch(error => {
-            console.error('Fetch error:', error);
-            alert('Ocorreu um erro de comunicação com o servidor.');
-            button.textContent = 'Remover';
-            button.disabled = false;
-        });
-    }
-    
-    const listContainer = document.querySelector('ul[role="list"]');
-    if (listContainer) {
-        listContainer.addEventListener('click', handleHabilitarClick);
-        listContainer.addEventListener('click', handleRemoverClick);
-    }
-});
-</script>
-
-<?php require_once 'templates/footer.php'; ?>
