@@ -1,48 +1,63 @@
-Write-Host "==========================="
-Write-Host "   Git Helper Script"
-Write-Host "==========================="
-Write-Host "1) Subir alterações locais -> GitHub"
-Write-Host "2) Trazer alterações do GitHub -> Local"
-Write-Host "3) Mostrar status"
-Write-Host "4) Sair"
-$opcao = Read-Host "Escolha uma opção"
+# Script Git Inteligente
+# Salva este arquivo como git_auto.ps1
+
+# Função para verificar se há alterações locais
+function Check-Changes {
+    $status = git status --porcelain
+    return $status
+}
+
+# Função para resolver stash, pull e re-aplicar
+function Safe-Pull {
+    $changes = Check-Changes
+    if ($changes) {
+        Write-Host "Alterações locais detectadas, aplicando stash..."
+        git stash
+        $stashApplied = $true
+    } else {
+        $stashApplied = $false
+    }
+
+    Write-Host "Fazendo pull do repositório remoto..."
+    git pull --rebase origin main
+
+    if ($stashApplied) {
+        Write-Host "Reaplicando alterações locais..."
+        git stash pop
+    }
+}
+
+# Função para commit inteligente
+function Smart-Commit {
+    param([string]$msg)
+    if (-not $msg) {
+        $msg = Read-Host "Mensagem do commit"
+    }
+    git add .
+    git commit -m $msg
+}
+
+# Menu principal
+Write-Host "Escolha uma opção:"
+Write-Host "1 - Commit + Push"
+Write-Host "2 - Pull seguro"
+Write-Host "3 - Status"
+$opcao = Read-Host "Opção"
 
 switch ($opcao) {
-    1 {
+    "1" {
         $msg = Read-Host "Mensagem do commit"
-        if (-not $msg) { $msg = "Atualização automática" }
-
-        git pull --rebase
-        if ($LASTEXITCODE -ne 0) {
-            Write-Host "⚠️ Houve conflito durante o pull!"
-            Write-Host "Arquivos em conflito:"
-            git diff --name-only --diff-filter=U
-            Write-Host "Resolva manualmente os conflitos (<<<<<<< >>>>>>>) e depois rode:"
-            Write-Host "git add . ; git rebase --continue"
-            break
-        }
-
-        git add .
-        git commit -m "$msg"
-        git push
+        Smart-Commit -msg $msg
+        Safe-Pull  # Garante que está atualizado antes do push
+        git push origin main
     }
-    2 {
-        Write-Host "⚠️ Isso pode sobrescrever alterações locais não commitadas!"
-        $confirm = Read-Host "Continuar mesmo assim? (s/n)"
-        if ($confirm -eq "s") {
-            git fetch --all
-            git reset --hard origin/main
-        } else {
-            Write-Host "Operação cancelada."
-        }
+    "2" {
+        Safe-Pull
     }
-    3 {
+    "3" {
         git status
     }
-    4 {
-        Write-Host "Saindo..."
-    }
-    Default {
-        Write-Host "Opção inválida!"
+    default {
+        Write-Host "Opção inválida"
     }
 }
