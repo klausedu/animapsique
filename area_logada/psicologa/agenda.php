@@ -134,17 +134,22 @@ document.addEventListener('DOMContentLoaded', function() {
     const deleteOcorrenciaBtn = document.getElementById('deleteOcorrenciaBtn');
     const cancelDeleteBtn = document.getElementById('cancelDeleteBtn');
 
-    recorrenteCheckbox.addEventListener('change', function() {
-        if (this.checked) {
-            recorrenciaFimContainer.classList.remove('hidden');
-            dataFimRecorrenciaInput.required = true;
-            statusContainer.classList.add('hidden');
-        } else {
-            recorrenciaFimContainer.classList.add('hidden');
-            dataFimRecorrenciaInput.required = false;
-            statusContainer.classList.remove('hidden');
-        }
-    });
+    // **INÍCIO DA CORREÇÃO**
+    // Adicionamos uma verificação para garantir que os elementos existem antes de adicionar os "listeners"
+    if (recorrenteCheckbox) {
+        recorrenteCheckbox.addEventListener('change', function() {
+            if (this.checked) {
+                recorrenciaFimContainer.classList.remove('hidden');
+                dataFimRecorrenciaInput.required = true;
+                statusContainer.classList.add('hidden');
+            } else {
+                recorrenciaFimContainer.classList.add('hidden');
+                dataFimRecorrenciaInput.required = false;
+                statusContainer.classList.remove('hidden');
+            }
+        });
+    }
+    // **FIM DA CORREÇÃO**
 
     const calendar = new FullCalendar.Calendar(calendarEl, {
         initialView: 'timeGridWeek',
@@ -159,4 +164,137 @@ document.addEventListener('DOMContentLoaded', function() {
         dateClick: function(info) {
             form.reset();
             document.getElementById('sala_reuniao_container').classList.add('hidden');
-            re
+            if (recorrenteCheckbox) {
+                recorrenteCheckbox.checked = false;
+                recorrenteCheckbox.dispatchEvent(new Event('change'));
+            }
+            document.getElementById('modal-title').innerText = 'Novo Agendamento';
+            document.getElementById('action').value = 'create';
+            deleteButton.classList.add('hidden');
+            
+            const dataClicada = dayjs(info.dateStr);
+            document.getElementById('data').value = dataClicada.format('YYYY-MM-DD');
+            document.getElementById('hora_inicio').value = dataClicada.format('HH:mm');
+            document.getElementById('hora_fim').value = dataClicada.add(50, 'minute').format('HH:mm');
+            
+            modal.classList.remove('hidden');
+        },
+        
+        eventClick: function(info) {
+            form.reset();
+            if (recorrenteCheckbox) {
+                recorrenteCheckbox.checked = false;
+                recorrenteCheckbox.dispatchEvent(new Event('change'));
+            }
+            document.getElementById('modal-title').innerText = 'Editar Agendamento';
+            document.getElementById('action').value = 'update';
+            document.getElementById('eventId').value = info.event.id;
+            deleteButton.classList.remove('hidden');
+            
+            document.getElementById('paciente_id').value = info.event.extendedProps.pacienteId;
+            document.getElementById('status').value = info.event.extendedProps.status;
+
+            const dataInicio = dayjs(info.event.start);
+            document.getElementById('data').value = dataInicio.format('YYYY-MM-DD');
+            document.getElementById('hora_inicio').value = dataInicio.format('HH:mm');
+            
+            if(info.event.end) {
+                document.getElementById('hora_fim').value = dayjs(info.event.end).format('HH:mm');
+            }
+            
+            const salaUrl = info.event.extendedProps.salaUrl;
+            const salaContainer = document.getElementById('sala_reuniao_container');
+            const salaLink = document.getElementById('sala_reuniao_link');
+
+            if (salaUrl) {
+                salaLink.href = salaUrl;
+                salaLink.textContent = "Acessar sala de atendimento";
+                salaContainer.classList.remove('hidden');
+            } else {
+                salaContainer.classList.add('hidden');
+            }
+            
+            modal.classList.remove('hidden');
+        },
+
+        events: 'api_agenda.php'
+    });
+
+    calendar.render();
+
+    if(closeModalBtn) closeModalBtn.addEventListener('click', () => modal.classList.add('hidden'));
+    if(cancelDeleteBtn) cancelDeleteBtn.addEventListener('click', () => deleteRecorrenciaModal.classList.add('hidden'));
+
+    if(form) {
+        form.addEventListener('submit', function(e) {
+            e.preventDefault();
+            const formData = new FormData(form);
+            
+            fetch('processa_agenda.php', { method: 'POST', body: formData })
+            .then(response => response.json())
+            .then(data => {
+                if(data.success) {
+                    modal.classList.add('hidden');
+                    calendar.refetchEvents();
+                } else {
+                    alert('Erro: ' + (data.message || 'Não foi possível guardar o agendamento.'));
+                }
+            })
+            .catch(error => console.error("Erro ao submeter o formulário:", error));
+        });
+    }
+
+    if (deleteButton) {
+        deleteButton.addEventListener('click', function() {
+            const eventId = document.getElementById('eventId').value;
+            
+            if (eventId.startsWith('rec_')) {
+                deleteRecorrenciaModal.classList.remove('hidden');
+            } else {
+                if (confirm('Tem a certeza de que deseja excluir este agendamento?')) {
+                    performDelete({ action: 'delete_evento', eventId: eventId });
+                }
+            }
+        });
+    }
+
+    if (deleteSerieBtn) {
+        deleteSerieBtn.addEventListener('click', function() {
+            const eventId = document.getElementById('eventId').value;
+            const recorrenciaId = eventId.split('_')[1];
+            performDelete({ action: 'delete_serie', recorrenciaId: recorrenciaId });
+        });
+    }
+
+    if (deleteOcorrenciaBtn) {
+        deleteOcorrenciaBtn.addEventListener('click', function() {
+            const eventId = document.getElementById('eventId').value;
+            const dataOcorrencia = dayjs(document.getElementById('data').value).format('YYYY-MM-DD');
+            const recorrenciaId = eventId.split('_')[1];
+            performDelete({ action: 'delete_ocorrencia', recorrenciaId: recorrenciaId, data: dataOcorrencia });
+        });
+    }
+
+    function performDelete(data) {
+        const formData = new FormData();
+        for (const key in data) {
+            formData.append(key, data[key]);
+        }
+
+        fetch('processa_agenda.php', { method: 'POST', body: formData })
+        .then(response => response.json())
+        .then(result => {
+            if (result.success) {
+                modal.classList.add('hidden');
+                deleteRecorrenciaModal.classList.add('hidden');
+                calendar.refetchEvents();
+            } else {
+                alert('Erro ao excluir: ' + (result.message || 'Erro desconhecido.'));
+            }
+        })
+        .catch(error => console.error("Erro ao excluir:", error));
+    }
+});
+</script>
+
+<?php require_once 'templates/footer.php'; ?>
