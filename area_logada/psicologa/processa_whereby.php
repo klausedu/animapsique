@@ -1,6 +1,5 @@
 <?php
 header('Content-Type: application/json');
-// **CORREÇÃO: O caminho para os arquivos foi ajustado.**
 require_once __DIR__ . '/../../config.php';
 require_once __DIR__ . '/../../includes/auth_psicologa.php';
 require_once __DIR__ . '/../../includes/db.php';
@@ -18,22 +17,24 @@ if (defined('WHEREBY_API_KEY') && WHEREBY_API_KEY != 'SUA_CHAVE_DE_API_AQUI') {
     try {
         $pdo = conectar();
         
-        // Criar a sala na API do Whereby
+        // --- LÓGICA DA API DO WHEREBY ATUALIZADA ---
         $ch = curl_init();
         $endDate = (new DateTime('now', new DateTimeZone('America/Sao_Paulo')))
             ->modify('+5 years') // A sala será válida por 5 anos
             ->setTimezone(new DateTimeZone('UTC'))
             ->format('Y-m-d\TH:i:s.v\Z');
 
+        // Payload simplificado para maior compatibilidade
+        $postData = [
+            "isLocked" => true,
+            "endDate" => $endDate,
+            "fields" => ["hostRoomUrl"] 
+        ];
+
         curl_setopt($ch, CURLOPT_URL, "https://api.whereby.com/v1/meetings");
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
         curl_setopt($ch, CURLOPT_POST, 1);
-        curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode([
-            "isLocked" => true,
-            "endDate" => $endDate,
-            "roomNamePattern" => "personal",
-            "fields" => ["hostRoomUrl"] 
-        ]));
+        curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($postData));
 
         $headers = [
             'Authorization: Bearer ' . WHEREBY_API_KEY,
@@ -47,7 +48,7 @@ if (defined('WHEREBY_API_KEY') && WHEREBY_API_KEY != 'SUA_CHAVE_DE_API_AQUI') {
 
         if ($http_code >= 400) {
             // Log do erro retornado pela API para depuração
-            error_log("Whereby API Error (HTTP $http_code): " . $result);
+            error_log("Whereby API Error (HTTP $http_code) para Paciente ID $paciente_id: " . $result);
             throw new Exception("O serviço de vídeo retornou um erro. Tente novamente mais tarde.");
         }
         
