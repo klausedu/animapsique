@@ -22,11 +22,8 @@ if (!$roomUrl || !preg_match('/^https:\/\/.*\.whereby\.com\/.*/', $roomUrl)) {
     die('URL da sala inválida ou não encontrada. Por favor, contacte o seu psicólogo.');
 }
 
-// **INÍCIO DA CORREÇÃO**
-// Adiciona o nome do paciente (disponível em $paciente_nome de auth_paciente.php) ao URL
-// O urlencode() garante que nomes com espaços ou acentos funcionem corretamente.
-$finalRoomUrl = $roomUrl . '?embed&screenshare=on&chat=on&displayName=' . urlencode($paciente_nome);
-// **FIM DA CORREÇÃO**
+// Adiciona os parâmetros de forma segura
+$finalRoomUrl = htmlspecialchars($roomUrl . '?embed&screenshare=on&chat=on&displayName=' . urlencode($paciente_nome));
 
 $page_title = 'Sala de Atendimento';
 require_once 'templates/header.php';
@@ -34,13 +31,41 @@ require_once 'templates/header.php';
 
 <div class="container mx-auto px-4 sm:px-6 lg:px-8">
     <div class="bg-white p-6 rounded-lg shadow-md">
-        <h1 class="text-2xl font-bold text-gray-800 mb-4">Sessão Online</h1>
+        <div class="flex justify-between items-center mb-4">
+            <h1 class="text-2xl font-bold text-gray-800">Sessão Online</h1>
+            <button id="fullscreen-btn" class="inline-flex items-center rounded-md border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-700 shadow-sm hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-teal-500 focus:ring-offset-2">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M4 8V4m0 0h4M4 4l5 5m11-1V4m0 0h-4m4 0l-5 5M4 16v4m0 0h4m-4 0l5-5m11 5v-4m0 4h-4m4 0l-5-5" />
+                </svg>
+                Ecrã Cheio
+            </button>
+            </div>
         <p class="text-gray-600 mb-6">Sua sessão está prestes a começar. Permita o acesso à sua câmera e microfone quando solicitado pelo navegador.</p>
 
         <div class="w-full" style="height: 75vh;">
-             <iframe class="w-full h-full border-0 rounded-lg" src="<?php echo htmlspecialchars($finalRoomUrl); ?>" allow="camera; microphone; fullscreen; speaker; display-capture" allowfullscreen></iframe>
+             <iframe id="whereby-iframe" class="w-full h-full border-0 rounded-lg" src="<?php echo $finalRoomUrl; ?>" allow="camera; microphone; fullscreen; speaker; display-capture" allowfullscreen></iframe>
         </div>
     </div>
 </div>
 
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const fullscreenButton = document.getElementById('fullscreen-btn');
+    const wherebyIframe = document.getElementById('whereby-iframe');
+
+    if (fullscreenButton && wherebyIframe) {
+        fullscreenButton.addEventListener('click', function() {
+            if (wherebyIframe.requestFullscreen) {
+                wherebyIframe.requestFullscreen();
+            } else if (wherebyIframe.mozRequestFullScreen) { /* Firefox */
+                wherebyIframe.mozRequestFullScreen();
+            } else if (wherebyIframe.webkitRequestFullscreen) { /* Chrome, Safari & Opera */
+                wherebyIframe.webkitRequestFullscreen();
+            } else if (wherebyIframe.msRequestFullscreen) { /* IE/Edge */
+                wherebyIframe.msRequestFullscreen();
+            }
+        });
+    }
+});
+</script>
 <?php require_once 'templates/footer.php'; ?>
