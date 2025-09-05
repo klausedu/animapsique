@@ -1,0 +1,17 @@
+-- 1. Cria a tabela para armazenar as regras de recorrência
+CREATE TABLE `agenda_recorrencias` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `agenda_id_pai` int(11) NOT NULL,
+  `tipo_recorrencia` enum('semanal') NOT NULL,
+  `dia_semana` int(11) NOT NULL COMMENT '0=Domingo, 1=Segunda, ...',
+  `data_fim_recorrencia` date NOT NULL,
+  PRIMARY KEY (`id`),
+  KEY `agenda_id_pai` (`agenda_id_pai`),
+  CONSTRAINT `agenda_recorrencias_ibfk_1` FOREIGN KEY (`agenda_id_pai`) REFERENCES `agenda` (`id`) ON DELETE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+-- 2. Adiciona uma coluna na tabela `agenda` para vincular eventos a uma regra de recorrência
+ALTER TABLE `agenda` ADD `recorrencia_id` INT(11) NULL DEFAULT NULL AFTER `status`;
+
+-- 3. Adiciona o índice para a nova coluna
+ALTER TABLE `agenda` ADD INDEX(`recorrencia_id`);

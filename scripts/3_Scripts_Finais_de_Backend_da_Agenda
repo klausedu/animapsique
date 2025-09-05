@@ -1,0 +1,69 @@
+<?php
+/*
+Arquivo: area_logada/psicologa/processa_agenda.php (VERSÃO FINAL)
+*/
+header('Content-Type: application/json');
+require_once '../../config.php';
+require_once '../../includes/auth_psicologa.php';
+require_once '../../includes/db.php';
+
+// ... (código de processamento para criar, atualizar e deletar eventos) ...
+
+// Na seção de 'create', adicione a lógica de recorrência:
+if ($action === 'create') {
+    $pdo->beginTransaction();
+    // ... (código para inserir o evento principal) ...
+    $evento_pai_id = $pdo->lastInsertId();
+
+    if (isset($_POST['recorrente']) && $_POST['recorrente'] == 'on') {
+        $data_fim_recorrencia = $_POST['data_fim_recorrencia'];
+        $dia_semana = (new DateTime($_POST['data']))->format('w'); // 0=Dom, 1=Seg...
+        
+        $sql_rec = "INSERT INTO agenda_recorrencias (agenda_id_pai, tipo_recorrencia, dia_semana, data_fim_recorrencia) VALUES (?, 'semanal', ?, ?)";
+        $stmt_rec = $pdo->prepare($sql_rec);
+        $stmt_rec->execute([$evento_pai_id, $dia_semana, $data_fim_recorrencia]);
+        $recorrencia_id = $pdo->lastInsertId();
+
+        // Vincula o evento pai à regra de recorrência
+        $stmt_update = $pdo->prepare("UPDATE agenda SET recorrencia_id = ? WHERE id = ?");
+        $stmt_update->execute([$recorrencia_id, $evento_pai_id]);
+    }
+    $pdo->commit();
+    $response = ['success' => true];
+}
+// ... (resto do código) ...
+?>
+
+---
+
+<?php
+/*
+Arquivo: api_agenda_publica.php (NOVO ARQUIVO NA RAIZ)
+*/
+header('Content-Type: application/json');
+require_once 'config.php';
+require_once 'includes/db.php';
+
+try {
+    $pdo = conectar();
+    // Busca apenas os agendamentos com status 'livre' e no futuro
+    $stmt = $pdo->prepare("SELECT data_hora_inicio, data_hora_fim FROM agenda WHERE status = 'livre' AND data_hora_inicio >= NOW()");
+    $stmt->execute();
+    $horarios = $stmt->fetchAll();
+
+    $eventos = [];
+    foreach ($horarios as $horario) {
+        $eventos[] = [
+            'title' => 'Horário Livre',
+            'start' => $horario['data_hora_inicio'],
+            'end' => $horario['data_hora_fim'],
+            'color' => '#14b8a6', // Teal
+            'display' => 'background'
+        ];
+    }
+    echo json_encode($eventos);
+} catch (PDOException $e) {
+    http_response_code(500);
+    echo json_encode(['error' => 'Erro ao buscar horários.']);
+}
+?>

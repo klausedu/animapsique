@@ -1,0 +1,11 @@
+-- Adiciona colunas para a funcionalidade "Esqueci minha senha"
+
+-- Para a tabela de psicólogos
+ALTER TABLE `psicologos`
+ADD `token_reset_senha` VARCHAR(255) NULL DEFAULT NULL AFTER `crp`,
+ADD `token_reset_expiracao` DATETIME NULL DEFAULT NULL AFTER `token_reset_senha`;
+
+-- Para a tabela de pacientes
+ALTER TABLE `pacientes`
+ADD `token_reset_senha` VARCHAR(255) NULL DEFAULT NULL AFTER `token_expiracao`,
+ADD `token_reset_expiracao` DATETIME NULL DEFAULT NULL AFTER `token_reset_senha`;

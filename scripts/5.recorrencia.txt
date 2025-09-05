@@ -1,0 +1,17 @@
+-- 1. Cria a tabela para armazenar as regras de recorrência
+CREATE TABLE `agenda_recorrencias` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `paciente_id` int(11) NOT NULL,
+  `titulo` varchar(255) NOT NULL,
+  `hora_inicio` time NOT NULL,
+  `hora_fim` time NOT NULL,
+  `dia_semana` int(11) NOT NULL COMMENT '0=Domingo, 1=Segunda, ...',
+  `data_inicio_recorrencia` date NOT NULL,
+  `data_fim_recorrencia` date NOT NULL,
+  PRIMARY KEY (`id`),
+  KEY `paciente_id` (`paciente_id`),
+  CONSTRAINT `agenda_recorrencias_ibfk_1` FOREIGN KEY (`paciente_id`) REFERENCES `pacientes` (`id`) ON DELETE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+-- 2. (Opcional, mas recomendado) Adiciona uma coluna na tabela `agenda` para identificar eventos individuais que foram cancelados ou alterados de uma recorrência
+ALTER TABLE `agenda` ADD `recorrencia_id` INT(11) NULL DEFAULT NULL AFTER `status`;

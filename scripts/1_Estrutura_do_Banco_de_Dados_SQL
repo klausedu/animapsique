@@ -1,0 +1,195 @@
+-- Estrutura do Banco de Dados para a Plataforma de Psicologia
+-- Versão 1.0
+
+SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
+START TRANSACTION;
+SET time_zone = "+00:00";
+
+-- Tabela para armazenar os dados do(a) psicólogo(a) (administrador)
+CREATE TABLE `psicologos` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `nome` varchar(255) NOT NULL,
+  `email` varchar(255) NOT NULL,
+  `senha` varchar(255) NOT NULL,
+  `crp` varchar(30) DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `email` (`email`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+-- Tabela para armazenar os dados dos pacientes
+CREATE TABLE `pacientes` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `nome` varchar(255) NOT NULL,
+  `email` varchar(255) NOT NULL,
+  `senha` varchar(255) DEFAULT NULL,
+  `telefone` varchar(25) DEFAULT NULL,
+  `endereco` text DEFAULT NULL,
+  `estado_civil` varchar(50) DEFAULT NULL,
+  `data_nascimento` date DEFAULT NULL,
+  `token_registro` varchar(255) DEFAULT NULL,
+  `token_expiracao` datetime DEFAULT NULL,
+  `ativo` tinyint(1) NOT NULL DEFAULT 0,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `email` (`email`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+-- Tabela para gerenciar o conteúdo editável do site público
+CREATE TABLE `conteudo_site` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `chave` varchar(100) NOT NULL,
+  `titulo` varchar(255) DEFAULT NULL,
+  `conteudo` text DEFAULT NULL,
+  `imagem_url` varchar(255) DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `chave` (`chave`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+-- Tabela para a agenda de sessões
+CREATE TABLE `agenda` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `paciente_id` int(11) NOT NULL,
+  `data_hora_inicio` datetime NOT NULL,
+  `data_hora_fim` datetime NOT NULL,
+  `status` enum('planejado','concluido','cancelado','falta') NOT NULL DEFAULT 'planejado',
+  `recorrencia_id` int(11) DEFAULT NULL,
+  `observacoes` text DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  KEY `paciente_id` (`paciente_id`),
+  CONSTRAINT `agenda_ibfk_1` FOREIGN KEY (`paciente_id`) REFERENCES `pacientes` (`id`) ON DELETE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+-- Tabela para prontuários (acesso exclusivo da psicóloga)
+CREATE TABLE `prontuarios` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `paciente_id` int(11) NOT NULL,
+  `data_sessao` datetime NOT NULL DEFAULT current_timestamp(),
+  `anotacoes` text NOT NULL,
+  PRIMARY KEY (`id`),
+  KEY `paciente_id` (`paciente_id`),
+  CONSTRAINT `prontuarios_ibfk_1` FOREIGN KEY (`paciente_id`) REFERENCES `pacientes` (`id`) ON DELETE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+-- Tabela para documentos enviados pelos pacientes
+CREATE TABLE `documentos` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `paciente_id` int(11) NOT NULL,
+  `nome_arquivo` varchar(255) NOT NULL,
+  `caminho_arquivo` varchar(255) NOT NULL,
+  `data_upload` datetime NOT NULL DEFAULT current_timestamp(),
+  PRIMARY KEY (`id`),
+  KEY `paciente_id` (`paciente_id`),
+  CONSTRAINT `documentos_ibfk_1` FOREIGN KEY (`paciente_id`) REFERENCES `pacientes` (`id`) ON DELETE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+-- Tabela para o diário do paciente
+CREATE TABLE `diario` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `paciente_id` int(11) NOT NULL,
+  `titulo` varchar(255) NOT NULL,
+  `texto` text NOT NULL,
+  `data_criacao` datetime NOT NULL DEFAULT current_timestamp(),
+  PRIMARY KEY (`id`),
+  KEY `paciente_id` (`paciente_id`),
+  CONSTRAINT `diario_ibfk_1` FOREIGN KEY (`paciente_id`) REFERENCES `pacientes` (`id`) ON DELETE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+-- Tabela para mensagens (individuais e broadcast)
+CREATE TABLE `mensagens` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `remetente` enum('psicologa','paciente') NOT NULL,
+  `remetente_id` int(11) NOT NULL,
+  `destinatario_id` int(11) DEFAULT NULL,
+  `tipo` enum('individual','broadcast') NOT NULL,
+  `assunto` varchar(255) NOT NULL,
+  `conteudo` text NOT NULL,
+  `data_envio` datetime NOT NULL DEFAULT current_timestamp(),
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+-- Tabela para associar mensagens lidas pelos usuários
+CREATE TABLE `mensagens_status` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `mensagem_id` int(11) NOT NULL,
+  `usuario_id` int(11) NOT NULL,
+  `tipo_usuario` enum('psicologa','paciente') NOT NULL,
+  `lida` tinyint(1) NOT NULL DEFAULT 0,
+  `data_leitura` datetime DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `mensagem_usuario` (`mensagem_id`,`usuario_id`,`tipo_usuario`),
+  CONSTRAINT `mensagens_status_ibfk_1` FOREIGN KEY (`mensagem_id`) REFERENCES `mensagens` (`id`) ON DELETE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+-- Tabela para recibos e controle de pagamentos
+CREATE TABLE `recibos` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `paciente_id` int(11) NOT NULL,
+  `caminho_pdf` varchar(255) NOT NULL,
+  `data_emissao` date NOT NULL,
+  `valor_recebido` decimal(10,2) DEFAULT NULL,
+  `data_recebimento` date DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  KEY `paciente_id` (`paciente_id`),
+  CONSTRAINT `recibos_ibfk_1` FOREIGN KEY (`paciente_id`) REFERENCES `pacientes` (`id`) ON DELETE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+-- Tabela para criar os quizzes
+CREATE TABLE `quizzes` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `titulo` varchar(255) NOT NULL,
+  `descricao` text DEFAULT NULL,
+  `data_criacao` datetime NOT NULL DEFAULT current_timestamp(),
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+-- Tabela para as perguntas de cada quiz
+CREATE TABLE `quiz_perguntas` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `quiz_id` int(11) NOT NULL,
+  `texto_pergunta` text NOT NULL,
+  `tipo` enum('texto','multipla_escolha','unica_escolha') NOT NULL,
+  `ordem` int(11) NOT NULL DEFAULT 0,
+  PRIMARY KEY (`id`),
+  KEY `quiz_id` (`quiz_id`),
+  CONSTRAINT `quiz_perguntas_ibfk_1` FOREIGN KEY (`quiz_id`) REFERENCES `quizzes` (`id`) ON DELETE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+-- Tabela para as opções das perguntas de múltipla/única escolha
+CREATE TABLE `quiz_opcoes` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `pergunta_id` int(11) NOT NULL,
+  `texto_opcao` varchar(255) NOT NULL,
+  PRIMARY KEY (`id`),
+  KEY `pergunta_id` (`pergunta_id`),
+  CONSTRAINT `quiz_opcoes_ibfk_1` FOREIGN KEY (`pergunta_id`) REFERENCES `quiz_perguntas` (`id`) ON DELETE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+-- Tabela para atribuir um quiz a um paciente
+CREATE TABLE `quiz_atribuicoes` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `quiz_id` int(11) NOT NULL,
+  `paciente_id` int(11) NOT NULL,
+  `data_atribuicao` datetime NOT NULL DEFAULT current_timestamp(),
+  `status` enum('pendente','respondido') NOT NULL DEFAULT 'pendente',
+  `data_resposta` datetime DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  KEY `quiz_id` (`quiz_id`),
+  KEY `paciente_id` (`paciente_id`),
+  CONSTRAINT `quiz_atribuicoes_ibfk_1` FOREIGN KEY (`quiz_id`) REFERENCES `quizzes` (`id`) ON DELETE CASCADE,
+  CONSTRAINT `quiz_atribuicoes_ibfk_2` FOREIGN KEY (`paciente_id`) REFERENCES `pacientes` (`id`) ON DELETE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+-- Tabela para armazenar as respostas dos pacientes
+CREATE TABLE `quiz_respostas` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `atribuicao_id` int(11) NOT NULL,
+  `pergunta_id` int(11) NOT NULL,
+  `resposta_texto` text DEFAULT NULL,
+  `resposta_opcao_id` int(11) DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  KEY `atribuicao_id` (`atribuicao_id`),
+  KEY `pergunta_id` (`pergunta_id`),
+  CONSTRAINT `quiz_respostas_ibfk_1` FOREIGN KEY (`atribuicao_id`) REFERENCES `quiz_atribuicoes` (`id`) ON DELETE CASCADE,
+  CONSTRAINT `quiz_respostas_ibfk_2` FOREIGN KEY (`pergunta_id`) REFERENCES `quiz_perguntas` (`id`) ON DELETE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+COMMIT;
