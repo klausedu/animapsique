@@ -92,23 +92,6 @@ try {
                 </div>
             </div>
         </div>
-      // ... dentro da <nav> ...
-<div class="ml-10 flex items-baseline space-x-4">
-    <a href="painel.php" class="text-gray-300 hover:bg-gray-700 hover:text-white rounded-md px-3 py-2 text-sm font-medium">Painel</a>
-    <a href="pacientes.php" class="text-gray-300 hover:bg-gray-700 hover:text-white rounded-md px-3 py-2 text-sm font-medium">Pacientes</a>
-    <a href="agenda.php" class="text-gray-300 hover:bg-gray-700 hover:text-white rounded-md px-3 py-2 text-sm font-medium">Agenda</a>
-    <a href="salas_atendimento.php" class="text-gray-300 hover:bg-gray-700 hover:text-white rounded-md px-3 py-2 text-sm font-medium">Salas</a> <a href="mensagens.php" class="text-gray-300 hover:bg-gray-700 hover:text-white rounded-md px-3 py-2 text-sm font-medium">Mensagens</a>
-    <a href="quizzes.php" class="text-gray-300 hover:bg-gray-700 hover:text-white rounded-md px-3 py-2 text-sm font-medium">Quizzes</a>
-    </div>
-// ...
-// Faça o mesmo para o menu mobile
-<div x-show="open" class="md:hidden" id="mobile-menu">
-    <div class="space-y-1 px-2 pt-2 pb-3 sm:px-3">
-        <a href="painel.php" class="text-gray-300 hover:bg-gray-700 hover:text-white block rounded-md px-3 py-2 text-base font-medium">Painel</a>
-        <a href="pacientes.php" class="text-gray-300 hover:bg-gray-700 hover:text-white block rounded-md px-3 py-2 text-base font-medium">Pacientes</a>
-        <a href="agenda.php" class="text-gray-300 hover:bg-gray-700 hover:text-white block rounded-md px-3 py-2 text-base font-medium">Agenda</a>
-        <a href="salas_atendimento.php" class="text-gray-300 hover:bg-gray-700 hover:text-white block rounded-md px-3 py-2 text-base font-medium">Salas</a> <a href="mensagens.php" class="text-gray-300 hover:bg-gray-700 hover:text-white block rounded-md px-3 py-2 text-base font-medium">Mensagens</a>
-    ```
     </nav>
     <main>
         <div class="mx-auto max-w-7xl py-6 sm:px-6 lg:px-8">
