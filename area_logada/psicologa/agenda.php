@@ -14,6 +14,7 @@ try {
 } catch (PDOException $e) { $pacientes = []; }
 ?>
 
+<!-- Bibliotecas JS -->
 <script src='https://cdn.jsdelivr.net/npm/fullcalendar@6.1.11/index.global.min.js'></script>
 <script src="https://cdn.jsdelivr.net/npm/dayjs@1/dayjs.min.js"></script>
 
@@ -23,6 +24,7 @@ try {
     </div>
 </div>
 
+<!-- Modal Principal para Adicionar/Editar Agendamento -->
 <div id="agendaModal" class="fixed z-10 inset-0 overflow-y-auto hidden" aria-labelledby="modal-title" role="dialog" aria-modal="true">
     <div class="flex items-end justify-center min-h-screen pt-4 px-4 pb-20 text-center sm:block sm:p-0">
         <div class="fixed inset-0 bg-gray-500 bg-opacity-75 transition-opacity" aria-hidden="true"></div>
@@ -59,13 +61,6 @@ try {
                             </div>
                         </div>
 
-                        <div id="sala_reuniao_container" class="hidden">
-                            <label class="block text-sm font-medium text-gray-700">Link da Sala</label>
-                            <div class="mt-1">
-                                <a id="sala_reuniao_link" href="#" target="_blank" class="text-teal-600 hover:text-teal-800 break-all"></a>
-                            </div>
-                        </div>
-
                         <div class="border-t pt-4 space-y-4">
                             <div class="relative flex items-start">
                                 <div class="flex h-6 items-center"><input id="recorrente" name="recorrente" type="checkbox" class="h-4 w-4 rounded border-gray-300 text-teal-600 focus:ring-teal-600"></div>
@@ -98,6 +93,7 @@ try {
     </div>
 </div>
 
+<!-- Modal de Confirmação de Exclusão de Recorrência -->
 <div id="deleteRecorrenciaModal" class="fixed z-20 inset-0 overflow-y-auto hidden">
     <div class="flex items-end justify-center min-h-screen pt-4 px-4 pb-20 text-center sm:block sm:p-0">
         <div class="fixed inset-0 bg-gray-500 bg-opacity-75 transition-opacity"></div>
@@ -134,22 +130,17 @@ document.addEventListener('DOMContentLoaded', function() {
     const deleteOcorrenciaBtn = document.getElementById('deleteOcorrenciaBtn');
     const cancelDeleteBtn = document.getElementById('cancelDeleteBtn');
 
-    // **INÍCIO DA CORREÇÃO**
-    // Adicionamos uma verificação para garantir que os elementos existem antes de adicionar os "listeners"
-    if (recorrenteCheckbox && recorrenciaFimContainer && dataFimRecorrenciaInput && statusContainer) {
-        recorrenteCheckbox.addEventListener('change', function() {
-            if (this.checked) {
-                recorrenciaFimContainer.classList.remove('hidden');
-                dataFimRecorrenciaInput.required = true;
-                statusContainer.classList.add('hidden');
-            } else {
-                recorrenciaFimContainer.classList.add('hidden');
-                dataFimRecorrenciaInput.required = false;
-                statusContainer.classList.remove('hidden');
-            }
-        });
-    }
-    // **FIM DA CORREÇÃO**
+    recorrenteCheckbox.addEventListener('change', function() {
+        if (this.checked) {
+            recorrenciaFimContainer.classList.remove('hidden');
+            dataFimRecorrenciaInput.required = true;
+            statusContainer.classList.add('hidden');
+        } else {
+            recorrenciaFimContainer.classList.add('hidden');
+            dataFimRecorrenciaInput.required = false;
+            statusContainer.classList.remove('hidden');
+        }
+    });
 
     const calendar = new FullCalendar.Calendar(calendarEl, {
         initialView: 'timeGridWeek',
@@ -163,14 +154,11 @@ document.addEventListener('DOMContentLoaded', function() {
         
         dateClick: function(info) {
             form.reset();
-            document.getElementById('sala_reuniao_container').classList.add('hidden');
-            if (recorrenteCheckbox) {
-                recorrenteCheckbox.checked = false;
-                recorrenteCheckbox.dispatchEvent(new Event('change'));
-            }
+            recorrenteCheckbox.checked = false;
+            recorrenteCheckbox.dispatchEvent(new Event('change'));
             document.getElementById('modal-title').innerText = 'Novo Agendamento';
             document.getElementById('action').value = 'create';
-            deleteButton.classList.add('hidden');
+            deleteButton.classList.add('hidden'); // Esconde o botão ao criar
             
             const dataClicada = dayjs(info.dateStr);
             document.getElementById('data').value = dataClicada.format('YYYY-MM-DD');
@@ -182,14 +170,12 @@ document.addEventListener('DOMContentLoaded', function() {
         
         eventClick: function(info) {
             form.reset();
-            if (recorrenteCheckbox) {
-                recorrenteCheckbox.checked = false;
-                recorrenteCheckbox.dispatchEvent(new Event('change'));
-            }
+            recorrenteCheckbox.checked = false;
+            recorrenteCheckbox.dispatchEvent(new Event('change'));
             document.getElementById('modal-title').innerText = 'Editar Agendamento';
             document.getElementById('action').value = 'update';
             document.getElementById('eventId').value = info.event.id;
-            deleteButton.classList.remove('hidden');
+            deleteButton.classList.remove('hidden'); // CORREÇÃO: Mostra o botão ao editar
             
             document.getElementById('paciente_id').value = info.event.extendedProps.pacienteId;
             document.getElementById('status').value = info.event.extendedProps.status;
@@ -202,18 +188,6 @@ document.addEventListener('DOMContentLoaded', function() {
                 document.getElementById('hora_fim').value = dayjs(info.event.end).format('HH:mm');
             }
             
-            const salaUrl = info.event.extendedProps.salaUrl;
-            const salaContainer = document.getElementById('sala_reuniao_container');
-            const salaLink = document.getElementById('sala_reuniao_link');
-
-            if (salaUrl) {
-                salaLink.href = salaUrl;
-                salaLink.textContent = "Acessar sala de atendimento";
-                salaContainer.classList.remove('hidden');
-            } else {
-                salaContainer.classList.add('hidden');
-            }
-            
             modal.classList.remove('hidden');
         },
 
@@ -222,58 +196,50 @@ document.addEventListener('DOMContentLoaded', function() {
 
     calendar.render();
 
-    if(closeModalBtn && modal) closeModalBtn.addEventListener('click', () => modal.classList.add('hidden'));
-    if(cancelDeleteBtn && deleteRecorrenciaModal) cancelDeleteBtn.addEventListener('click', () => deleteRecorrenciaModal.classList.add('hidden'));
+    closeModalBtn.addEventListener('click', () => modal.classList.add('hidden'));
+    cancelDeleteBtn.addEventListener('click', () => deleteRecorrenciaModal.classList.add('hidden'));
 
-    if(form) {
-        form.addEventListener('submit', function(e) {
-            e.preventDefault();
-            const formData = new FormData(form);
-            
-            fetch('processa_agenda.php', { method: 'POST', body: formData })
-            .then(response => response.json())
-            .then(data => {
-                if(data.success) {
-                    modal.classList.add('hidden');
-                    calendar.refetchEvents();
-                } else {
-                    alert('Erro: ' + (data.message || 'Não foi possível guardar o agendamento.'));
-                }
-            })
-            .catch(error => console.error("Erro ao submeter o formulário:", error));
-        });
-    }
-
-    if (deleteButton) {
-        deleteButton.addEventListener('click', function() {
-            const eventId = document.getElementById('eventId').value;
-            
-            if (eventId.startsWith('rec_')) {
-                deleteRecorrenciaModal.classList.remove('hidden');
+    form.addEventListener('submit', function(e) {
+        e.preventDefault();
+        const formData = new FormData(form);
+        
+        fetch('processa_agenda.php', { method: 'POST', body: formData })
+        .then(response => response.json())
+        .then(data => {
+            if(data.success) {
+                modal.classList.add('hidden');
+                calendar.refetchEvents();
             } else {
-                if (confirm('Tem a certeza de que deseja excluir este agendamento?')) {
-                    performDelete({ action: 'delete_evento', eventId: eventId });
-                }
+                alert('Erro: ' + (data.message || 'Não foi possível guardar o agendamento.'));
             }
-        });
-    }
+        })
+        .catch(error => console.error("Erro ao submeter o formulário:", error));
+    });
 
-    if (deleteSerieBtn) {
-        deleteSerieBtn.addEventListener('click', function() {
-            const eventId = document.getElementById('eventId').value;
-            const recorrenciaId = eventId.split('_')[1];
-            performDelete({ action: 'delete_serie', recorrenciaId: recorrenciaId });
-        });
-    }
+    deleteButton.addEventListener('click', function() {
+        const eventId = document.getElementById('eventId').value;
+        
+        if (eventId.startsWith('rec_')) {
+            deleteRecorrenciaModal.classList.remove('hidden');
+        } else {
+            if (confirm('Tem a certeza de que deseja excluir este agendamento?')) {
+                performDelete({ action: 'delete_evento', eventId: eventId });
+            }
+        }
+    });
 
-    if (deleteOcorrenciaBtn) {
-        deleteOcorrenciaBtn.addEventListener('click', function() {
-            const eventId = document.getElementById('eventId').value;
-            const dataOcorrencia = dayjs(document.getElementById('data').value).format('YYYY-MM-DD');
-            const recorrenciaId = eventId.split('_')[1];
-            performDelete({ action: 'delete_ocorrencia', recorrenciaId: recorrenciaId, data: dataOcorrencia });
-        });
-    }
+    deleteSerieBtn.addEventListener('click', function() {
+        const eventId = document.getElementById('eventId').value;
+        const recorrenciaId = eventId.split('_')[1];
+        performDelete({ action: 'delete_serie', recorrenciaId: recorrenciaId });
+    });
+
+    deleteOcorrenciaBtn.addEventListener('click', function() {
+        const eventId = document.getElementById('eventId').value;
+        const dataOcorrencia = dayjs(document.getElementById('data').value).format('YYYY-MM-DD');
+        const recorrenciaId = eventId.split('_')[1];
+        performDelete({ action: 'delete_ocorrencia', recorrenciaId: recorrenciaId, data: dataOcorrencia });
+    });
 
     function performDelete(data) {
         const formData = new FormData();
