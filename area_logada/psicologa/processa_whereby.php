@@ -1,8 +1,9 @@
 <?php
 header('Content-Type: application/json');
-require_once '../../config.php';
-require_once '../../includes/auth_psicologa.php';
-require_once '../../includes/db.php';
+// **CORREÇÃO: O caminho para os arquivos foi ajustado.**
+require_once __DIR__ . '/../../config.php';
+require_once __DIR__ . '/../../includes/auth_psicologa.php';
+require_once __DIR__ . '/../../includes/db.php';
 
 $response = ['success' => false, 'message' => 'Ação inválida.'];
 $paciente_id = $_POST['paciente_id'] ?? null;
@@ -30,7 +31,7 @@ if (defined('WHEREBY_API_KEY') && WHEREBY_API_KEY != 'SUA_CHAVE_DE_API_AQUI') {
         curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode([
             "isLocked" => true,
             "endDate" => $endDate,
-            "roomNamePattern": "personal",
+            "roomNamePattern" => "personal",
             "fields" => ["hostRoomUrl"] 
         ]));
 
@@ -45,7 +46,9 @@ if (defined('WHEREBY_API_KEY') && WHEREBY_API_KEY != 'SUA_CHAVE_DE_API_AQUI') {
         curl_close($ch);
 
         if ($http_code >= 400) {
-            throw new Exception("Erro da API do Whereby: " . $result);
+            // Log do erro retornado pela API para depuração
+            error_log("Whereby API Error (HTTP $http_code): " . $result);
+            throw new Exception("O serviço de vídeo retornou um erro. Tente novamente mais tarde.");
         }
         
         $whereby_data = json_decode($result, true);
@@ -61,15 +64,16 @@ if (defined('WHEREBY_API_KEY') && WHEREBY_API_KEY != 'SUA_CHAVE_DE_API_AQUI') {
                 'roomUrl' => $roomUrl
             ];
         } else {
-            throw new Exception("Resposta da API do Whereby não continha uma URL da sala.");
+            throw new Exception("A resposta da API do Whereby não continha uma URL da sala.");
         }
 
     } catch (Exception $e) {
+        // Log do erro para que você possa ver os detalhes no servidor
         error_log("Erro ao criar sala Whereby para o paciente ID $paciente_id: " . $e->getMessage());
         $response['message'] = $e->getMessage();
     }
 } else {
-    $response['message'] = 'Chave da API do Whereby não configurada.';
+    $response['message'] = 'A chave da API do Whereby não está configurada no servidor.';
 }
 
 echo json_encode($response);
