@@ -1,5 +1,6 @@
 <?php
-// Inicia a sessão de forma segura no início do script, caso ainda não tenha sido iniciada
+// **CORREÇÃO: Inicia a sessão de forma segura no início absoluto do script.**
+// Isto garante que a sessão está sempre disponível antes de qualquer outra operação.
 if (session_status() == PHP_SESSION_NONE) {
     session_start();
 }
@@ -18,14 +19,13 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $pdo = conectar();
 
         if ($tipo_usuario === 'paciente') {
-            // A query foi atualizada para buscar a sala Whereby.
-            // Se a coluna 'whereby_room_url' não existir na tabela 'pacientes', o login falhará.
+            // A query para o paciente está correta, assumindo que a coluna 'whereby_room_url' existe.
             $stmt = $pdo->prepare("SELECT id, nome, senha, whereby_room_url FROM pacientes WHERE email = ? AND ativo = 1");
             $stmt->execute([$email]);
             $user = $stmt->fetch();
 
             if ($user && password_verify($senha, $user['senha'])) {
-                // Regenera o ID da sessão para maior segurança
+                // Regenera o ID da sessão para segurança após o login bem-sucedido
                 session_regenerate_id(true);
                 
                 $_SESSION['logged_in'] = true;
@@ -38,13 +38,13 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 exit();
             }
         } elseif ($tipo_usuario === 'psicologa') {
-            // A query para a psicóloga não foi alterada.
+            // A query para a psicóloga está correta.
             $stmt = $pdo->prepare("SELECT id, nome, senha FROM psicologa WHERE email = ?");
             $stmt->execute([$email]);
             $user = $stmt->fetch();
 
             if ($user && password_verify($senha, $user['senha'])) {
-                // Regenera o ID da sessão para maior segurança
+                // Regenera o ID da sessão para segurança
                 session_regenerate_id(true);
 
                 $_SESSION['logged_in'] = true;
@@ -57,21 +57,20 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             }
         }
         
-        // Se a autenticação falhar, redireciona de volta para o login com uma mensagem de erro
+        // Se a autenticação falhar, armazena a mensagem de erro na sessão e redireciona.
         $_SESSION['login_error'] = $response['message'];
         header("Location: login.php");
         exit();
 
     } catch (PDOException $e) {
-        // Em caso de erro de base de dados, redireciona com uma mensagem genérica
+        // Em caso de erro de base de dados, redireciona com uma mensagem genérica.
         $_SESSION['login_error'] = "Ocorreu um erro no sistema. Tente novamente mais tarde.";
-        // Log do erro real para depuração (visível apenas para si no log de erros do servidor)
-        error_log("Erro de login (PDOException): " . $e->getMessage());
+        error_log("Erro de login (PDOException): " . $e->getMessage()); // Log do erro real para depuração.
         header("Location: login.php");
         exit();
     }
 } else {
-    // Redireciona se o acesso não for via POST
+    // Redireciona se o acesso não for via POST, para segurança.
     header("Location: login.php");
     exit();
 }
