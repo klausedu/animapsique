@@ -29,48 +29,12 @@ try {
     die("Erro ao buscar conteúdo da página: " . $e->getMessage());
 }
 
-// Função auxiliar para obter valores de forma segura
+// Função auxiliar para obter valores (SEM htmlspecialchars no TEXTO)
 function get_content($key, $field, $default = '') {
     global $conteudos;
-    return isset($conteudos[$key][$field]) ? htmlspecialchars($conteudos[$key][$field]) : $default;
-}
-
-// Função para formatar o texto com marcadores de ícone
-function formatar_marcadores($texto) {
-    if (empty(trim($texto))) return '';
-
-    $linhas = preg_split("/\r\n|\n|\r/", $texto);
-    $html = '';
-    $em_lista = false;
-
-    $icone_svg = '<svg class="w-5 h-5 mr-3 mt-1 flex-shrink-0 text-[var(--cor-primaria)]" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75L11.25 15 15 9.75M21 12a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>';
-
-    foreach ($linhas as $linha) {
-        $linha_trim = trim($linha);
-
-        if (strpos($linha_trim, '*') === 0) {
-            if (!$em_lista) {
-                $html .= '<div class="space-y-3">'; // Inicia um grupo de itens de lista
-                $em_lista = true;
-            }
-            $texto_item = trim(substr($linha_trim, 1));
-            $html .= '<div class="flex items-start"><span class="flex-shrink-0">' . $icone_svg . '</span><span>' . htmlspecialchars($texto_item) . '</span></div>';
-        } else {
-            if ($em_lista) {
-                $html .= '</div>'; // Fecha o grupo de itens de lista
-                $em_lista = false;
-            }
-            if (!empty($linha_trim)) {
-                $html .= '<p class="mb-4">' . htmlspecialchars($linha_trim) . '</p>';
-            }
-        }
-    }
-
-    if ($em_lista) {
-        $html .= '</div>'; // Garante que o último grupo de lista é fechado
-    }
-
-    return $html;
+    $value = isset($conteudos[$key][$field]) ? $conteudos[$key][$field] : $default;
+    // Escapa apenas o título, mas não o texto
+    return ($field === 'titulo') ? htmlspecialchars($value) : $value;
 }
 
 require_once 'templates/header_publico.php';
@@ -83,20 +47,20 @@ require_once 'templates/header_publico.php';
                 <?php echo get_content("atuacao_p{$id}_titulo", 'titulo', "Título do Serviço {$id}"); ?>
             </h1>
 
-            <div class="text-lg text-gray-700 leading-relaxed space-y-4">
-                <?php echo formatar_marcadores(get_content("atuacao_p{$id}_titulo", 'texto', 'Parágrafo 1 sobre o serviço.')); ?>
+            <div class="text-gray-700 leading-relaxed">
+                <?php echo get_content("atuacao_p{$id}_titulo", 'texto', 'Parágrafo 1 sobre o serviço.'); ?>
             </div>
 
             <hr class="my-8">
 
-            <div class="text-lg text-gray-700 leading-relaxed space-y-4">
-                <?php echo formatar_marcadores(get_content("atuacao_p{$id}_p2", 'texto', 'Parágrafo 2 sobre o serviço.')); ?>
+            <div class="text-gray-700 leading-relaxed">
+                <?php echo get_content("atuacao_p{$id}_p2", 'texto', 'Parágrafo 2 sobre o serviço.'); ?>
             </div>
 
             <hr class="my-8">
 
-            <div class="text-lg text-gray-700 leading-relaxed space-y-4 bg-gray-50 p-6 rounded-lg">
-                <?php echo formatar_marcadores(get_content("atuacao_p{$id}_desfecho", 'texto', 'Desfecho sobre o serviço.')); ?>
+            <div class="text-gray-700 leading-relaxed bg-gray-50 p-6 rounded-lg">
+                <?php echo get_content("atuacao_p{$id}_desfecho", 'texto', 'Desfecho sobre o serviço.'); ?>
             </div>
 
              <div class="mt-12 text-center">
@@ -107,5 +71,14 @@ require_once 'templates/header_publico.php';
         </article>
     </div>
 </main>
+
+<style>
+    /* Estilos para o conteúdo do artigo gerado pelo editor */
+    .prose p { margin-bottom: 1.25em; }
+    .prose h1, .prose h2, .prose h3 { margin-bottom: 0.8em; margin-top: 1.5em; font-weight: bold; }
+    .prose a { color: var(--cor-primaria); text-decoration: underline; }
+    .prose ul, .prose ol { margin-left: 1.5em; margin-bottom: 1.25em; }
+    .prose li { margin-bottom: 0.5em; }
+</style>
 
 <?php require_once 'templates/footer_publico.php'; ?>
