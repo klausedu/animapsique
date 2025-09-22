@@ -53,9 +53,9 @@ require_once 'templates/header_publico.php';
 ?>
 <section class="relative bg-cover bg-center text-white py-20" style="background-image: url('<?php echo get_image_url('banner_inicio', 'https://images.unsplash.com/photo-1557804506-669a67965ba0?q=80&w=2874&auto=format&fit=crop'); ?>');">
     <div class="absolute inset-0 bg-black opacity-50"></div>
-    <div class="container mx-auto px-6 text-center relative prose prose-xl text-white">
-        <h1><?php echo get_content('banner_inicio', 'titulo', 'Bem-vindo à AnimaPsique'); ?></h1>
-        <div><?php echo get_content('banner_inicio', 'texto', '<p>Um espaço de acolhimento e transformação.</p>'); ?></div>
+    <div class="container mx-auto px-6 text-center relative">
+        <h1 class="prose prose-xl text-white"><?php echo get_content('banner_inicio', 'titulo', 'Bem-vindo à AnimaPsique'); ?></h1>
+        <div class="prose prose-xl text-white"><?php echo get_content('banner_inicio', 'texto', '<p>Um espaço de acolhimento e transformação.</p>'); ?></div>
         <a href="contato.php" style="background-color: var(--cor-botao-bg);" class="no-underline inline-block mt-4 py-2 px-4 text-white rounded-full hover:opacity-90 transition-opacity">Agende a sua Consulta</a>
     </div>
 </section>
