@@ -102,7 +102,7 @@ require_once 'templates/header.php';
             <h2 class="text-2xl font-semibold text-gray-700 mb-4">Banner Principal</h2>
             <div class="mb-4">
                 <label for="banner_inicio_titulo" class="block text-gray-700 font-medium mb-2">Título do Banner</label>
-                <input type="text" id="banner_inicio_titulo" name="conteudo[banner_inicio][titulo]" value="<?php echo get_content('banner_inicio', 'titulo'); ?>" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-teal-500">
+                <textarea id="banner_inicio_titulo" name="conteudo[banner_inicio][titulo]" rows="2" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-teal-500 richtext"><?php echo get_content('banner_inicio', 'titulo'); ?></textarea>
             </div>
             <div class="mb-4">
                 <label for="banner_inicio_texto" class="block text-gray-700 font-medium mb-2">Texto do Banner</label>
