@@ -41,7 +41,6 @@ function get_content($key, $field, $default = '') {
     return $value;
 }
 
-
 // Função para construir o caminho da imagem de forma segura e evitar cache
 function get_image_url($secao, $fallback_url) {
     $imagem_nome = get_content($secao, 'imagem');
@@ -61,7 +60,11 @@ $slides_data = [
 
 require_once 'templates/header_publico.php';
 ?>
-<section class="relative bg-cover bg-center text-white py-20" style="background-image: url('<?php echo get_image_url('banner_inicio', 'https://images.unsplash.com/photo-1557804506-669a67965ba0?q=80&w=2874&auto=format&fit=crop'); ?>');">
+<section class="relative text-white py-20" 
+         style="background-image: url('<?php echo get_image_url('banner_inicio', 'https://images.unsplash.com/photo-1557804506-669a67965ba0?q=80&w=2874&auto=format&fit=crop'); ?>');
+                background-size: cover;
+                /* Altere 'center' para 'top', 'bottom', 'left', 'right' ou uma combinação como 'center top' para ajustar o foco da imagem. */
+                background-position: center;">
     <div class="absolute inset-0 bg-black opacity-50"></div>
     <div class="container mx-auto px-6 text-center relative prose prose-xl text-white">
         <h1><?php echo get_content('banner_inicio', 'titulo', 'Bem-vindo à AnimaPsique'); ?></h1>
