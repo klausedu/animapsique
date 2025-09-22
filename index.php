@@ -24,13 +24,23 @@ try {
     die("Erro ao buscar conteúdos do site: " . $e->getMessage());
 }
 
-// Função auxiliar para obter valores (SEM htmlspecialchars no TEXTO)
+// Função auxiliar para obter valores
 function get_content($key, $field, $default = '') {
     global $conteudos;
     $value = isset($conteudos[$key][$field]) ? $conteudos[$key][$field] : $default;
-    // Escapa apenas o título e imagem, mas não o texto
-    return in_array($field, ['titulo', 'imagem']) ? htmlspecialchars($value) : $value;
+
+    // Escapa o título e a imagem, exceto para o título do banner que pode ter HTML
+    if (in_array($field, ['titulo', 'imagem'])) {
+        // Exceção para o título do banner, que é um campo de rich text
+        if ($key === 'banner_inicio' && $field === 'titulo') {
+            return $value;
+        }
+        return htmlspecialchars($value);
+    }
+    // Retorna outros campos (como 'texto') sem escapar
+    return $value;
 }
+
 
 // Função para construir o caminho da imagem de forma segura e evitar cache
 function get_image_url($secao, $fallback_url) {
@@ -53,9 +63,9 @@ require_once 'templates/header_publico.php';
 ?>
 <section class="relative bg-cover bg-center text-white py-20" style="background-image: url('<?php echo get_image_url('banner_inicio', 'https://images.unsplash.com/photo-1557804506-669a67965ba0?q=80&w=2874&auto=format&fit=crop'); ?>');">
     <div class="absolute inset-0 bg-black opacity-50"></div>
-    <div class="container mx-auto px-6 text-center relative">
-        <h1 class="prose prose-xl text-white"><?php echo get_content('banner_inicio', 'titulo', 'Bem-vindo à AnimaPsique'); ?></h1>
-        <div class="prose prose-xl text-white"><?php echo get_content('banner_inicio', 'texto', '<p>Um espaço de acolhimento e transformação.</p>'); ?></div>
+    <div class="container mx-auto px-6 text-center relative prose prose-xl text-white">
+        <h1><?php echo get_content('banner_inicio', 'titulo', 'Bem-vindo à AnimaPsique'); ?></h1>
+        <div><?php echo get_content('banner_inicio', 'texto', '<p>Um espaço de acolhimento e transformação.</p>'); ?></div>
         <a href="contato.php" style="background-color: var(--cor-botao-bg);" class="no-underline inline-block mt-4 py-2 px-4 text-white rounded-full hover:opacity-90 transition-opacity">Agende a sua Consulta</a>
     </div>
 </section>
