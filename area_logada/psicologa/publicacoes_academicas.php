@@ -42,50 +42,50 @@ require_once 'templates/header.php';
     <?php endif; ?>
 
     <div class="bg-white p-6 rounded-lg shadow-md mb-8">
-        <h2 class="text-2xl font-semibold text-gray-700 mb-4">Adicionar Nova Publicação Acadêmica</h2>
+        <h2 class="text-2xl font-semibold text-gray-700 mb-4">Adicionar Nova Publicação</h2>
         <form action="processa_publicacao_academica.php" method="POST">
             <input type="hidden" name="acao" value="adicionar">
             <div class="mb-4">
                 <label for="titulo" class="block text-gray-700 font-medium mb-2">Título</label>
-                <input type="text" id="titulo" name="titulo" required class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-[var(--cor-primaria)]">
+                <input type="text" id="titulo" name="titulo" required class="w-full px-3 py-2 border border-gray-300 rounded-md">
             </div>
             <div class="mb-4">
                 <label for="texto_publicacao_add" class="block text-gray-700 font-medium mb-2">Texto da Publicação</label>
                 <textarea id="texto_publicacao_add" name="texto" class="hugerte-editor"></textarea>
             </div>
-            <button type="submit" class="w-full text-white font-bold py-3 px-4 rounded-md transition-colors duration-300" style="background-color: var(--cor-primaria);">Adicionar Publicação</button>
+            <div class="mb-4">
+                <label for="link" class="block text-gray-700 font-medium mb-2">Link (Saiba Mais)</label>
+                <input type="url" id="link" name="link" placeholder="https://exemplo.com/artigo" class="w-full px-3 py-2 border border-gray-300 rounded-md">
+            </div>
+            <button type="submit" class="w-full text-white font-bold py-3 px-4 rounded-md transition-colors" style="background-color: var(--cor-primaria);">Adicionar Publicação</button>
         </form>
     </div>
 
     <div class="bg-white p-6 rounded-lg shadow-md">
         <h2 class="text-2xl font-semibold text-gray-700 mb-4">Publicações Existentes</h2>
-        <div class="overflow-x-auto">
-            <table class="min-w-full divide-y divide-gray-200">
-                <thead class="bg-gray-50">
+        <table class="min-w-full divide-y divide-gray-200">
+            <thead class="bg-gray-50">
+                <tr>
+                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Título</th>
+                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Ação</th>
+                </tr>
+            </thead>
+            <tbody class="bg-white divide-y divide-gray-200">
+                <?php foreach ($publicacoes as $pub): ?>
                     <tr>
-                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Título</th>
-                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Ação</th>
+                        <td class="px-6 py-4 text-sm font-medium text-gray-900"><?php echo htmlspecialchars($pub['titulo']); ?></td>
+                        <td class="px-6 py-4 whitespace-nowrap text-sm font-medium flex items-center space-x-4">
+                            <a href="editar_publicacao_academica.php?id=<?php echo $pub['id']; ?>" class="text-[var(--cor-primaria)] hover:opacity-80">Editar</a>
+                            <form action="processa_publicacao_academica.php" method="POST" onsubmit="return confirm('Tem certeza?');" class="inline">
+                                <input type="hidden" name="acao" value="apagar">
+                                <input type="hidden" name="id" value="<?php echo $pub['id']; ?>">
+                                <button type="submit" class="text-red-600 hover:text-red-900">Apagar</button>
+                            </form>
+                        </td>
                     </tr>
-                </thead>
-                <tbody class="bg-white divide-y divide-gray-200">
-                    <?php foreach ($publicacoes as $pub): ?>
-                        <tr>
-                            <td class="px-6 py-4">
-                                <div class="text-sm font-medium text-gray-900"><?php echo htmlspecialchars($pub['titulo']); ?></div>
-                            </td>
-                            <td class="px-6 py-4 whitespace-nowrap text-sm font-medium flex items-center space-x-4">
-                                <a href="editar_publicacao_academica.php?id=<?php echo $pub['id']; ?>" class="text-[var(--cor-primaria)] hover:opacity-80">Editar</a>
-                                <form action="processa_publicacao_academica.php" method="POST" onsubmit="return confirm('Tem certeza que deseja apagar esta publicação?');" class="inline">
-                                    <input type="hidden" name="acao" value="apagar">
-                                    <input type="hidden" name="id" value="<?php echo $pub['id']; ?>">
-                                    <button type="submit" class="text-red-600 hover:text-red-900">Apagar</button>
-                                </form>
-                            </td>
-                        </tr>
-                    <?php endforeach; ?>
-                </tbody>
-            </table>
-        </div>
+                <?php endforeach; ?>
+            </tbody>
+        </table>
     </div>
 </div>
 
