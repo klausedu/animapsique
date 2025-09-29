@@ -54,6 +54,7 @@ try {
                     <a href="publicacoes_academicas.php" class="py-2 px-3 text-gray-700 hover:text-[var(--cor-primaria)]">Publicações Acadêmicas</a>
                     <a href="livros.php" class="py-2 px-3 text-gray-700 hover:text-[var(--cor-primaria)]">Livros</a>
                     <a href="reportagens.php" class="py-2 px-3 text-gray-700 hover:text-[var(--cor-primaria)]">Reportagens</a>
+                    <a href="livros.php" class="py-2 px-3 text-gray-700 hover:text-[var(--cor-primaria)]">Livros</a>
                     <a href="contato.php" class="py-2 px-3 text-gray-700 hover:text-[var(--cor-primaria)]">Contato</a>
                     <a href="login.php" style="background-color: var(--cor-botao-bg);" class="py-2 px-4 text-white rounded-full hover:opacity-90 transition-opacity">Área do Paciente</a>
                 </div>
@@ -72,6 +73,7 @@ try {
                 <a href="publicacoes_academicas.php" class="block py-2 px-4 text-sm text-gray-700 hover:bg-gray-200">Publicações Acadêmicas</a>
                 <a href="livros.php" class="block py-2 px-4 text-sm text-gray-700 hover:bg-gray-200">Livros</a>
                 <a href="reportagens.php" class="block py-2 px-4 text-sm text-gray-700 hover:bg-gray-200">Reportagens</a>
+                <a href="livros.php" class="py-2 px-3 text-gray-700 hover:text-[var(--cor-primaria)]">Livros</a>
                 <a href="contato.php" class="block py-2 px-4 text-sm text-gray-700 hover:bg-gray-200">Contato</a>
                 <a href="login.php" style="background-color: var(--cor-botao-bg);" class="block mt-2 py-2 px-4 text-sm text-white rounded-md text-center">Área do Paciente</a>
             </div>
