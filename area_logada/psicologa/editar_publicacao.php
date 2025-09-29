@@ -27,11 +27,10 @@ if (!$publicacao) {
 
 require_once 'templates/header.php';
 ?>
-<!-- Adicionar o script do editor de Rich Text com a sua chave de API -->
-<script src="https://cdn.tiny.cloud/1/j9iwoh1j7j4qho7h8elm4scjtv3733q34tylzc7ggbf9ux3e/tinymce/6/tinymce.min.js" referrerpolicy="origin"></script>
+<script src="https://cdn.jsdelivr.net/npm/hugerte@1.0.9/hugerte.min.js"></script>
 <script>
-  tinymce.init({
-    selector: 'textarea.tinymce-editor',
+  hugerte.init({
+    selector: 'textarea.hugerte-editor',
     plugins: 'anchor autolink charmap codesample emoticons image link lists media searchreplace table visualblocks wordcount',
     toolbar: 'undo redo | blocks fontfamily fontsize | bold italic underline strikethrough | link image media table | align lineheight | numlist bullist indent outdent | emoticons charmap | removeformat',
     height: 400,
@@ -55,7 +54,7 @@ require_once 'templates/header.php';
             </div>
             <div class="mb-4">
                 <label for="texto_artigo" class="block text-gray-700 font-medium mb-2">Texto do Artigo</label>
-                <textarea id="texto_artigo" name="resumo" class="tinymce-editor"><?php echo htmlspecialchars($publicacao['resumo']); ?></textarea>
+                <textarea id="texto_artigo" name="resumo" class="hugerte-editor"><?php echo htmlspecialchars($publicacao['resumo']); ?></textarea>
             </div>
             <div class="mb-4">
                 <label for="link_compra" class="block text-gray-700 font-medium mb-2">Link externo de compra (opcional)</label>
@@ -79,4 +78,3 @@ require_once 'templates/header.php';
 </div>
 
 <?php require_once 'templates/footer.php'; ?>
-
