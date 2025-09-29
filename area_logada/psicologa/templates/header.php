@@ -2,9 +2,7 @@
 // Tenta buscar a cor primária da base de dados.
 $cor_primaria = '#38b2ac'; // Cor padrão (teal-500)
 try {
-    // A função conectar() deve estar disponível a partir do ficheiro que inclui este header.
     if (!function_exists('conectar')) {
-       // O caminho precisa de ser ajustado para subir três níveis a partir de /area_logada/psicologa/templates/
        require_once __DIR__ . '/../../../includes/db.php';
     }
     $pdo_header = conectar();
@@ -14,9 +12,7 @@ try {
     if ($resultado && !empty($resultado['texto'])) {
         $cor_primaria = htmlspecialchars($resultado['texto']);
     }
-} catch (Exception $e) {
-    // Se houver um erro, simplesmente usa a cor padrão.
-}
+} catch (Exception $e) {}
 ?>
 <!DOCTYPE html>
 <html lang="pt-BR" class="h-full bg-gray-100">
@@ -51,8 +47,7 @@ try {
                             <a href="salas_atendimento.php" class="text-gray-300 hover:bg-gray-700 hover:text-white rounded-md px-3 py-2 text-sm font-medium">Salas</a>
                             <a href="mensagens.php" class="text-gray-300 hover:bg-gray-700 hover:text-white rounded-md px-3 py-2 text-sm font-medium">Mensagens</a>
                             <a href="quizzes.php" class="text-gray-300 hover:bg-gray-700 hover:text-white rounded-md px-3 py-2 text-sm font-medium">Quizzes</a>
-                            <a href="publicacoes.php" class="text-gray-300 hover:bg-gray-700 hover:text-white rounded-md px-3 py-2 text-sm font-medium">Publicações</a>
-                            <a href="recibos.php" class="text-gray-300 hover:bg-gray-700 hover:text-white rounded-md px-3 py-2 text-sm font-medium">Recibos</a>
+                            <a href="reportagens.php" class="text-gray-300 hover:bg-gray-700 hover:text-white rounded-md px-3 py-2 text-sm font-medium">Reportagens</a>
                             <a href="configuracoes_site.php" class="text-gray-300 hover:bg-gray-700 hover:text-white rounded-md px-3 py-2 text-sm font-medium">Configurações</a>
                         </div>
                     </div>
@@ -89,8 +84,7 @@ try {
                  <a href="salas_atendimento.php" class="text-gray-300 hover:bg-gray-700 hover:text-white block rounded-md px-3 py-2 text-base font-medium">Salas</a>
                  <a href="mensagens.php" class="text-gray-300 hover:bg-gray-700 hover:text-white block rounded-md px-3 py-2 text-base font-medium">Mensagens</a>
                  <a href="quizzes.php" class="text-gray-300 hover:bg-gray-700 hover:text-white block rounded-md px-3 py-2 text-base font-medium">Quizzes</a>
-                 <a href="publicacoes.php" class="text-gray-300 hover:bg-gray-700 hover:text-white block rounded-md px-3 py-2 text-base font-medium">Publicações</a>
-                 <a href="recibos.php" class="text-gray-300 hover:bg-gray-700 hover:text-white block rounded-md px-3 py-2 text-base font-medium">Recibos</a>
+                 <a href="reportagens.php" class="text-gray-300 hover:bg-gray-700 hover:text-white block rounded-md px-3 py-2 text-base font-medium">Reportagens</a>
                  <a href="configuracoes_site.php" class="text-gray-300 hover:bg-gray-700 hover:text-white block rounded-md px-3 py-2 text-base font-medium">Configurações</a>
             </div>
             <div class="border-t border-gray-700 pt-4 pb-3">
