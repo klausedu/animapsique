@@ -23,9 +23,9 @@ function get_content($key, $field, $default = '') {
 
 require_once 'templates/header.php';
 ?>
-<script src="https://cdn.tiny.cloud/1/j9iwoh1j7j4qho7h8elm4scjtv3733q34tylzc7ggbf9ux3e/tinymce/6/tinymce.min.js" referrerpolicy="origin"></script>
+<script src="https://cdn.jsdelivr.net/npm/hugerte@1.0.9/hugerte.min.js"></script>
 <script>
-  tinymce.init({
+  hugerte.init({
     selector: 'textarea.richtext',
     plugins: 'anchor autolink charmap codesample emoticons image link lists media searchreplace table visualblocks wordcount',
     toolbar: 'undo redo | blocks fontfamily fontsize | bold italic underline strikethrough | link image media table | align lineheight | numlist bullist indent outdent | emoticons charmap | removeformat',
