@@ -25,7 +25,7 @@ require_once 'templates/header.php';
 </script>
 
 <div class="container mx-auto p-4 sm:p-6 lg:p-8">
-    <h1 class="text-3xl font-bold text-gray-800 mb-6">Gerir Publicações</h1>
+    <h1 class="text-3xl font-bold text-gray-800 mb-6">Gerenciar Reportagens</h1>
 
     <?php if (isset($_SESSION['mensagem_sucesso'])): ?>
         <div class="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded relative mb-4" role="alert">
