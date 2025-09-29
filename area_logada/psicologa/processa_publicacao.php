@@ -95,7 +95,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $_SESSION['mensagem_erro'] = "Ocorreu um erro: " . $e->getMessage();
     }
 
-    header('Location: publicacoes.php');
+    header('Location: reportagens.php');
     exit;
 }
 
