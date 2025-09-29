@@ -48,6 +48,7 @@ try {
                             <a href="mensagens.php" class="text-gray-300 hover:bg-gray-700 hover:text-white rounded-md px-3 py-2 text-sm font-medium">Mensagens</a>
                             <a href="quizzes.php" class="text-gray-300 hover:bg-gray-700 hover:text-white rounded-md px-3 py-2 text-sm font-medium">Quizzes</a>
                             <a href="reportagens.php" class="text-gray-300 hover:bg-gray-700 hover:text-white rounded-md px-3 py-2 text-sm font-medium">Reportagens</a>
+                            <a href="publicacoes_academicas.php" class="text-gray-300 hover:bg-gray-700 hover:text-white rounded-md px-3 py-2 text-sm font-medium">Publicações Acadêmicas</a>
                             <a href="configuracoes_site.php" class="text-gray-300 hover:bg-gray-700 hover:text-white rounded-md px-3 py-2 text-sm font-medium">Configurações</a>
                         </div>
                     </div>
@@ -85,6 +86,7 @@ try {
                  <a href="mensagens.php" class="text-gray-300 hover:bg-gray-700 hover:text-white block rounded-md px-3 py-2 text-base font-medium">Mensagens</a>
                  <a href="quizzes.php" class="text-gray-300 hover:bg-gray-700 hover:text-white block rounded-md px-3 py-2 text-base font-medium">Quizzes</a>
                  <a href="reportagens.php" class="text-gray-300 hover:bg-gray-700 hover:text-white block rounded-md px-3 py-2 text-base font-medium">Reportagens</a>
+                 <a href="publicacoes_academicas.php" class="text-gray-300 hover:bg-gray-700 hover:text-white block rounded-md px-3 py-2 text-base font-medium">Publicações Acadêmicas</a>
                  <a href="configuracoes_site.php" class="text-gray-300 hover:bg-gray-700 hover:text-white block rounded-md px-3 py-2 text-base font-medium">Configurações</a>
             </div>
             <div class="border-t border-gray-700 pt-4 pb-3">
