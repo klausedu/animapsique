@@ -14,11 +14,10 @@ try {
 
 require_once 'templates/header.php';
 ?>
-<!-- Adicionar o script do editor de Rich Text com a sua chave de API -->
-<script src="https://cdn.tiny.cloud/1/j9iwoh1j7j4qho7h8elm4scjtv3733q34tylzc7ggbf9ux3e/tinymce/6/tinymce.min.js" referrerpolicy="origin"></script>
+<script src="https://cdn.jsdelivr.net/npm/hugerte@1.0.9/hugerte.min.js"></script>
 <script>
-  tinymce.init({
-    selector: 'textarea.tinymce-editor',
+  hugerte.init({
+    selector: 'textarea.hugerte-editor',
     plugins: 'anchor autolink charmap codesample emoticons image link lists media searchreplace table visualblocks wordcount',
     toolbar: 'undo redo | blocks fontfamily fontsize | bold italic underline strikethrough | link image media table | align lineheight | numlist bullist indent outdent | emoticons charmap | removeformat',
     height: 300,
@@ -41,7 +40,6 @@ require_once 'templates/header.php';
         <?php unset($_SESSION['mensagem_erro']); ?>
     <?php endif; ?>
 
-    <!-- Formulário para Adicionar Nova Publicação -->
     <div class="bg-white p-6 rounded-lg shadow-md mb-8">
         <h2 class="text-2xl font-semibold text-gray-700 mb-4">Adicionar Nova Publicação</h2>
         <form action="processa_publicacao.php" method="POST" enctype="multipart/form-data">
@@ -52,7 +50,7 @@ require_once 'templates/header.php';
             </div>
             <div class="mb-4">
                 <label for="texto_artigo_add" class="block text-gray-700 font-medium mb-2">Texto do Artigo</label>
-                <textarea id="texto_artigo_add" name="resumo" class="tinymce-editor"></textarea>
+                <textarea id="texto_artigo_add" name="resumo" class="hugerte-editor"></textarea>
             </div>
             <div class="mb-4">
                 <label for="link_compra_add" class="block text-gray-700 font-medium mb-2">Link externo de compra (opcional)</label>
@@ -67,7 +65,6 @@ require_once 'templates/header.php';
         </form>
     </div>
 
-    <!-- Lista de Publicações Existentes -->
     <div class="bg-white p-6 rounded-lg shadow-md">
         <h2 class="text-2xl font-semibold text-gray-700 mb-4">Publicações Existentes</h2>
         <div class="overflow-x-auto">
@@ -109,4 +106,3 @@ require_once 'templates/header.php';
 </div>
 
 <?php require_once 'templates/footer.php'; ?>
-
