@@ -5,7 +5,7 @@ require_once '../../includes/db.php';
 
 $id = filter_input(INPUT_GET, 'id', FILTER_VALIDATE_INT);
 if (!$id) {
-    header('Location: publicacoes.php');
+    header('Location: reportagens.php');
     exit;
 }
 
@@ -21,7 +21,7 @@ try {
 
 if (!$publicacao) {
     $_SESSION['mensagem_erro'] = "Publicação não encontrada.";
-    header('Location: publicacoes.php');
+    header('Location: reportagens.php');
     exit;
 }
 
@@ -40,7 +40,7 @@ require_once 'templates/header.php';
 <div class="container mx-auto p-4 sm:p-6 lg:p-8">
     <div class="flex justify-between items-center mb-6">
         <h1 class="text-3xl font-bold text-gray-800">Editar Publicação</h1>
-        <a href="publicacoes.php" class="text-sm font-medium text-[var(--cor-primaria)] hover:opacity-80 transition-opacity">&larr; Voltar para Publicações</a>
+        <a href="reportagens.php" class="text-sm font-medium text-[var(--cor-primaria)] hover:opacity-80 transition-opacity">&larr; Voltar para Publicações</a>
     </div>
 
     <div class="bg-white p-6 rounded-lg shadow-md">
