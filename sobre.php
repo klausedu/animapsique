@@ -60,7 +60,7 @@ require_once 'templates/header_publico.php';
             <div class="md:w-1/3 w-full space-y-8">
                 <img src="<?php echo get_image_url('sobre_psicologa_foto', 'https://placehold.co/400x400/EFEFEF/333333?text=Foto'); ?>" alt="Foto da Psicóloga" class="rounded-lg shadow-lg w-full">
                 <div class="prose italic text-gray-700 text-lg leading-relaxed">
-                   <?php echo get_content('sobre_mim_texto', 'titulo', '... Priorizo a constante especialização...'); ?>
+                   <?php echo get_content('sobre_mim_texto', 'texto', '<i>... Priorizo a constante especialização...</i>'); ?>
                 </div>
             </div>
 
