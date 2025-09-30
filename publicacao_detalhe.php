@@ -4,7 +4,7 @@ require_once 'includes/db.php';
 
 $id = filter_input(INPUT_GET, 'id', FILTER_VALIDATE_INT);
 if (!$id) {
-    header('Location: publicacoes.php');
+    header('Location: reportagens.php');
     exit;
 }
 
@@ -19,7 +19,7 @@ try {
 }
 
 if (!$publicacao) {
-    header('Location: publicacoes.php');
+    header('Location: reportagens.php');
     exit;
 }
 
@@ -30,7 +30,7 @@ require_once 'templates/header_publico.php';
     <div class="container mx-auto px-6 max-w-4xl">
         <article>
             <header class="mb-8">
-                <a href="publicacoes.php" class="text-sm font-semibold text-[var(--cor-primaria)] hover:opacity-80 transition-opacity mb-4 inline-block">&larr; Voltar para todas as publicações</a>
+                <a href="reportagens.php" class="text-sm font-semibold text-[var(--cor-primaria)] hover:opacity-80 transition-opacity mb-4 inline-block">&larr; Voltar para todas as publicações</a>
                 <h1 class="text-4xl md:text-5xl font-bold text-gray-800 leading-tight">
                     <?php echo htmlspecialchars($publicacao['titulo']); ?>
                 </h1>
