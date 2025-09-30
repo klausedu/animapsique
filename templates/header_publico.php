@@ -52,7 +52,6 @@ try {
                     <a href="sobre.php" class="py-2 px-3 text-gray-700 hover:text-[var(--cor-primaria)]">Quem Sou</a>
                     <a href="atuacao.php" class="py-2 px-3 text-gray-700 hover:text-[var(--cor-primaria)]">Áreas de Atuação</a>
                     <a href="publicacoes_academicas.php" class="py-2 px-3 text-gray-700 hover:text-[var(--cor-primaria)]">Publicações Acadêmicas</a>
-                    <a href="livros.php" class="py-2 px-3 text-gray-700 hover:text-[var(--cor-primaria)]">Livros</a>
                     <a href="reportagens.php" class="py-2 px-3 text-gray-700 hover:text-[var(--cor-primaria)]">Reportagens</a>
                     <a href="livros.php" class="py-2 px-3 text-gray-700 hover:text-[var(--cor-primaria)]">Livros</a>
                     <a href="contato.php" class="py-2 px-3 text-gray-700 hover:text-[var(--cor-primaria)]">Contato</a>
@@ -71,7 +70,6 @@ try {
                 <a href="sobre.php" class="block py-2 px-4 text-sm text-gray-700 hover:bg-gray-200">Quem Sou</a>
                 <a href="atuacao.php" class="block py-2 px-4 text-sm text-gray-700 hover:bg-gray-200">Áreas de Atuação</a>
                 <a href="publicacoes_academicas.php" class="block py-2 px-4 text-sm text-gray-700 hover:bg-gray-200">Publicações Acadêmicas</a>
-                <a href="livros.php" class="block py-2 px-4 text-sm text-gray-700 hover:bg-gray-200">Livros</a>
                 <a href="reportagens.php" class="block py-2 px-4 text-sm text-gray-700 hover:bg-gray-200">Reportagens</a>
                 <a href="livros.php" class="py-2 px-3 text-gray-700 hover:text-[var(--cor-primaria)]">Livros</a>
                 <a href="contato.php" class="block py-2 px-4 text-sm text-gray-700 hover:bg-gray-200">Contato</a>
