@@ -29,15 +29,12 @@ function get_content($key, $field, $default = '') {
     global $conteudos;
     $value = isset($conteudos[$key][$field]) ? $conteudos[$key][$field] : $default;
 
-    // Escapa o título e a imagem, exceto para o título do banner que pode ter HTML
     if (in_array($field, ['titulo', 'imagem'])) {
-        // Exceção para o título do banner, que é um campo de rich text
         if ($key === 'banner_inicio' && $field === 'titulo') {
             return $value;
         }
         return htmlspecialchars($value);
     }
-    // Retorna outros campos (como 'texto') sem escapar
     return $value;
 }
 
@@ -60,10 +57,12 @@ $slides_data = [
 
 require_once 'templates/header_publico.php';
 ?>
-<section class="relative text-white py-20" 
+<section class="relative text-white py-48" 
          style="background-image: url('<?php echo get_image_url('banner_inicio', 'https://images.unsplash.com/photo-1557804506-669a67965ba0?q=80&w=2874&auto=format&fit=crop'); ?>');
-                background-size: cover;
-                background-position: bottom;">
+                background-attachment: fixed;
+                background-position: center;
+                background-repeat: no-repeat;
+                background-size: cover;">
 <div class="absolute inset-0 bg-black opacity-50"></div>
     <div class="container mx-auto px-6 text-center relative prose prose-xl text-white">
         <h1><?php echo get_content('banner_inicio', 'titulo', 'Bem-vindo à AnimaPsique'); ?></h1>
