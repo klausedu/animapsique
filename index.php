@@ -60,7 +60,7 @@ $slides_data = [
 
 require_once 'templates/header_publico.php';
 ?>
-<section class="relative text-white py-45 flex items-center justify-center" 
+<section class="relative text-white py-65 flex items-center justify-center" 
          style="background-image: url('<?php echo get_image_url('banner_inicio', 'https://images.unsplash.com/photo-1557804506-669a67965ba0?q=80&w=2874&auto=format&fit=crop'); ?>');
                 background-size: cover;
                 background-position: top;">
