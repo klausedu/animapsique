@@ -28,9 +28,11 @@ require_once 'templates/header_publico.php';
         <?php else: ?>
             <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
                 <?php foreach ($livros as $livro): ?>
-                    <div class="bg-white p-6 rounded-lg shadow-lg text-center flex flex-col">
+                    <div class="bg-white p-6 rounded-lg shadow-lg text-center flex flex-col group overflow-hidden">
                         <?php if (!empty($livro['imagem'])): ?>
-                            <img src="uploads/site/<?php echo htmlspecialchars($livro['imagem']); ?>" alt="<?php echo htmlspecialchars($livro['titulo']); ?>" class="rounded-lg shadow-md w-full h-64 object-cover mb-4">
+                            <div class="overflow-hidden rounded-lg shadow-md mb-4">
+                                <img src="uploads/site/<?php echo htmlspecialchars($livro['imagem']); ?>" alt="<?php echo htmlspecialchars($livro['titulo']); ?>" class="w-full h-64 object-cover transition-transform duration-300 ease-in-out group-hover:scale-110">
+                            </div>
                         <?php else: ?>
                             <div class="w-full h-64 bg-gray-200 flex items-center justify-center rounded-lg mb-4">
                                 <span class="text-gray-500">Sem Imagem</span>
