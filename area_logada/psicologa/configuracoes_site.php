@@ -266,7 +266,7 @@ require_once 'templates/header.php';
             </div>
             <?php endfor; ?>
         </div>
-        <div id="sobre-content" class="tab-content hidden">
+       <div id="sobre-content" class="tab-content hidden">
             <h2 class="text-2xl font-semibold text-gray-700 mb-4">Página "Sobre"</h2>
             <div class="border p-4 rounded-md mb-4 bg-gray-50">
                 <label for="sobre_objetivo_titulo" class="block text-gray-700 font-medium mb-2">Título da Secção "Objetivo"</label>
@@ -287,9 +287,10 @@ require_once 'templates/header.php';
                 <?php if ($imagem_atual): ?><img src="../../uploads/site/<?php echo $imagem_atual; ?>" class="w-48 h-auto rounded-md border mb-2"><?php endif; ?>
                 <input type="hidden" name="conteudo[sobre_psicologa_foto][imagem_atual]" value="<?php echo $imagem_atual; ?>">
                 <input type="file" id="sobre_psicologa_foto" name="conteudo_imagem[sobre_psicologa_foto]" class="w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0" accept="image/jpeg, image/png, image/gif">
-                <label for="sobre_mim_texto" class="block text-gray-700 font-medium mb-2 mt-4">Texto "Sobre Mim"</label>
-                <textarea id="sobre_mim_texto" name="conteudo[sobre_mim_texto][titulo]" rows="7" class="w-full px-3 py-2 border border-gray-300 rounded-md richtext"><?php echo get_content('sobre_mim_texto', 'titulo'); ?></textarea>
-            </div>
+                
+                <label for="sobre_mim_texto" class="block text-gray-700 font-medium mb-2 mt-4">Texto em itálico ao lado da foto</label>
+                <textarea id="sobre_mim_texto" name="conteudo[sobre_mim_texto][texto]" rows="7" class="w-full px-3 py-2 border border-gray-300 rounded-md richtext"><?php echo get_content('sobre_mim_texto', 'texto'); ?></textarea>
+                </div>
             <div class="border p-4 rounded-md mb-4 bg-gray-50">
                 <label for="sobre_quem_sou_titulo" class="block text-gray-700 font-medium mb-2">Título "Quem sou eu..."</label>
                 <input type="text" id="sobre_quem_sou_titulo" name="conteudo[sobre_quem_sou_titulo][titulo]" value="<?php echo get_content('sobre_quem_sou_titulo', 'titulo'); ?>" class="w-full px-3 py-2 border border-gray-300 rounded-md mb-2">
