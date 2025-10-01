@@ -8,16 +8,16 @@ $cores = [
 ];
 
 try {
+    // Garante que o ficheiro db.php é incluído de forma segura
     require_once __DIR__ . '/../includes/db.php';
     $pdo_cores = conectar();
-    // Adiciona a busca pela nova cor do botão
+    
     $stmt_cores = $pdo_cores->query("SELECT secao, texto FROM conteudo_site WHERE secao IN ('site_cor_primaria', 'site_cor_header_bg', 'site_cor_footer_bg', 'site_cor_botao_bg')");
     $resultados = $stmt_cores->fetchAll(PDO::FETCH_KEY_PAIR);
     
     if (isset($resultados['site_cor_primaria'])) $cores['primaria'] = htmlspecialchars($resultados['site_cor_primaria']);
     if (isset($resultados['site_cor_header_bg'])) $cores['header_bg'] = htmlspecialchars($resultados['site_cor_header_bg']);
     if (isset($resultados['site_cor_footer_bg'])) $cores['footer_bg'] = htmlspecialchars($resultados['site_cor_footer_bg']);
-    // Guarda a nova cor do botão
     if (isset($resultados['site_cor_botao_bg'])) $cores['botao_bg'] = htmlspecialchars($resultados['site_cor_botao_bg']);
 
 } catch (Exception $e) { /* Usa cores padrão em caso de erro */ }
@@ -29,6 +29,7 @@ try {
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>AnimaPsique - Psicologia Clínica</title>
     <script src="https://cdn.tailwindcss.com"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
     <style>
         :root {
             --cor-primaria: <?php echo $cores['primaria']; ?>;
@@ -65,13 +66,14 @@ try {
                     </button>
                 </div>
             </div>
+            
             <div x-show="open" @click.away="open = false" class="md:hidden mt-3">
                 <a href="index.php" @click="open = false" class="block py-2 px-4 text-sm text-gray-700 hover:bg-gray-200">Início</a>
                 <a href="sobre.php" @click="open = false" class="block py-2 px-4 text-sm text-gray-700 hover:bg-gray-200">Quem Sou</a>
                 <a href="atuacao.php" @click="open = false" class="block py-2 px-4 text-sm text-gray-700 hover:bg-gray-200">Áreas de Atuação</a>
                 <a href="publicacoes_academicas.php" @click="open = false" class="block py-2 px-4 text-sm text-gray-700 hover:bg-gray-200">Publicações Acadêmicas</a>
                 <a href="reportagens.php" @click="open = false" class="block py-2 px-4 text-sm text-gray-700 hover:bg-gray-200">Reportagens</a>
-                <a href="livros.php" @click="open = false" class="py-2 px-3 text-gray-700 hover:text-[var(--cor-primaria)] block">Livros</a>
+                <a href="livros.php" @click="open = false" class="block py-2 px-4 text-sm text-gray-700 hover:bg-gray-200">Livros</a>
                 <a href="contato.php" @click="open = false" class="block py-2 px-4 text-sm text-gray-700 hover:bg-gray-200">Contato</a>
                 <a href="login.php" @click="open = false" style="background-color: var(--cor-botao-bg);" class="block mt-2 py-2 px-4 text-sm text-white rounded-md text-center">Área do Paciente</a>
             </div>
