@@ -66,14 +66,14 @@ try {
                 </div>
             </div>
             <div x-show="open" @click.away="open = false" class="md:hidden mt-3">
-                <a href="index.php" class="block py-2 px-4 text-sm text-gray-700 hover:bg-gray-200">Início</a>
-                <a href="sobre.php" class="block py-2 px-4 text-sm text-gray-700 hover:bg-gray-200">Quem Sou</a>
-                <a href="atuacao.php" class="block py-2 px-4 text-sm text-gray-700 hover:bg-gray-200">Áreas de Atuação</a>
-                <a href="publicacoes_academicas.php" class="block py-2 px-4 text-sm text-gray-700 hover:bg-gray-200">Publicações Acadêmicas</a>
-                <a href="reportagens.php" class="block py-2 px-4 text-sm text-gray-700 hover:bg-gray-200">Reportagens</a>
-                <a href="livros.php" class="py-2 px-3 text-gray-700 hover:text-[var(--cor-primaria)]">Livros</a>
-                <a href="contato.php" class="block py-2 px-4 text-sm text-gray-700 hover:bg-gray-200">Contato</a>
-                <a href="login.php" style="background-color: var(--cor-botao-bg);" class="block mt-2 py-2 px-4 text-sm text-white rounded-md text-center">Área do Paciente</a>
+                <a href="index.php" @click="open = false" class="block py-2 px-4 text-sm text-gray-700 hover:bg-gray-200">Início</a>
+                <a href="sobre.php" @click="open = false" class="block py-2 px-4 text-sm text-gray-700 hover:bg-gray-200">Quem Sou</a>
+                <a href="atuacao.php" @click="open = false" class="block py-2 px-4 text-sm text-gray-700 hover:bg-gray-200">Áreas de Atuação</a>
+                <a href="publicacoes_academicas.php" @click="open = false" class="block py-2 px-4 text-sm text-gray-700 hover:bg-gray-200">Publicações Acadêmicas</a>
+                <a href="reportagens.php" @click="open = false" class="block py-2 px-4 text-sm text-gray-700 hover:bg-gray-200">Reportagens</a>
+                <a href="livros.php" @click="open = false" class="py-2 px-3 text-gray-700 hover:text-[var(--cor-primaria)] block">Livros</a>
+                <a href="contato.php" @click="open = false" class="block py-2 px-4 text-sm text-gray-700 hover:bg-gray-200">Contato</a>
+                <a href="login.php" @click="open = false" style="background-color: var(--cor-botao-bg);" class="block mt-2 py-2 px-4 text-sm text-white rounded-md text-center">Área do Paciente</a>
             </div>
         </nav>
     </header>
