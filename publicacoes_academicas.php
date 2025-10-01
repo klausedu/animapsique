@@ -36,7 +36,7 @@ require_once 'templates/header_publico.php';
                                 </svg>
                                 <?php echo htmlspecialchars($pub['titulo']); ?>
                             </span>
-                            <svg :class="{'transform rotate-180': open}" class="w-5 h-5 text-gray-500 transition-transform duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
+                            <svg :class="{'transform rotate-180': open}" class="w-7 h-7 text-gray-500 transition-transform duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
                         </button>
                         <div x-show="open" x-transition class="p-4 pt-0 text-gray-600 prose max-w-none">
                             <?php echo $pub['texto']; ?>
