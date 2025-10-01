@@ -57,7 +57,7 @@ $slides_data = [
 
 require_once 'templates/header_publico.php';
 ?>
-<section class="relative text-white py-48" 
+<section class="relative text-white py-64" 
          style="background-image: url('<?php echo get_image_url('banner_inicio', 'https://images.unsplash.com/photo-1557804506-669a67965ba0?q=80&w=2874&auto=format&fit=crop'); ?>');
                 background-attachment: fixed;
                 background-position: center;
