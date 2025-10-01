@@ -24,17 +24,24 @@ try {
     die("Erro ao buscar conteúdos do site: " . $e->getMessage());
 }
 
-// Função auxiliar para obter valores
+// Função auxiliar para obter valores (VERSÃO CORRIGIDA)
 function get_content($key, $field, $default = '') {
     global $conteudos;
     $value = isset($conteudos[$key][$field]) ? $conteudos[$key][$field] : $default;
 
-    if (in_array($field, ['titulo', 'imagem'])) {
-        if ($key === 'banner_inicio' && $field === 'titulo') {
+    if ($field === 'imagem') {
+        return $value; // Retorna o nome da imagem sem qualquer modificação
+    }
+
+    if ($field === 'titulo') {
+        // Permite HTML no título do banner, mas limpa outros títulos
+        if ($key === 'banner_inicio') {
             return $value;
         }
         return htmlspecialchars($value);
     }
+
+    // Para o campo 'texto' e outros, retorna o valor como está
     return $value;
 }
 
