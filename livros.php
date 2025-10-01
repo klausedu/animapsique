@@ -31,7 +31,7 @@ require_once 'templates/header_publico.php';
                     <div class="bg-white p-6 rounded-lg shadow-lg text-center flex flex-col group overflow-hidden">
                         <?php if (!empty($livro['imagem'])): ?>
                             <div class="overflow-hidden rounded-lg shadow-md mb-4">
-                                <img src="uploads/site/<?php echo htmlspecialchars($livro['imagem']); ?>" alt="<?php echo htmlspecialchars($livro['titulo']); ?>" class="w-full h-64 object-cover transition-transform duration-300 ease-in-out group-hover:scale-110">
+                                <img src="uploads/site/<?php echo htmlspecialchars($livro['imagem']); ?>" alt="<?php echo htmlspecialchars($livro['titulo']); ?>" class="w-full h-auto transition-transform duration-300 ease-in-out group-hover:scale-110">
                             </div>
                         <?php else: ?>
                             <div class="w-full h-64 bg-gray-200 flex items-center justify-center rounded-lg mb-4">
