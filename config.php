@@ -32,15 +32,15 @@ define('DB_HOST', 'localhost');
 
 // Nome do seu banco de dados
 
-define('DB_NAME', 'u200613309_animapsique02');
+define('DB_NAME', 'u811529511_animapsique');
 
 // Usuário do banco de dados
 
-define('DB_USER', 'u200613309_adminuser');
+define('DB_USER', 'u811529511_adminuser');
 
 // Senha do banco de dados
 
-define('DB_PASS', 'Gostodoce00!123');
+define('DB_PASS', 'Gostodoce00!');
 
 // Charset da conexão
 
@@ -90,7 +90,7 @@ define('EMAIL_FROM_NAME', 'Plataforma AnimaPsique');
 
 // URL completa do seu site (com https://)
 
-define('BASE_URL', 'https://new.animapsique.com.br');
+define('BASE_URL', 'https://animapsique.com.br');
 
 // Fuso horário para datas e horas
 
@@ -109,6 +109,7 @@ define('SECRET_KEY', '$2y$10$0ve.bxEgeCpjx226L6RYIeDEmAvRLlHaog4Qtqf2td0wSS9RxZH
 define('WHEREBY_API_KEY', 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJodHRwczovL2FjY291bnRzLmFwcGVhci5pbiIsImF1ZCI6Imh0dHBzOi8vYXBpLmFwcGVhci5pbi92MSIsImV4cCI6OTAwNzE5OTI1NDc0MDk5MSwiaWF0IjoxNzU3MDkxMjk4LCJvcmdhbml6YXRpb25JZCI6MzI0MjAzLCJqdGkiOiI1Nzk2MmQ0ZC05YWY1LTQ1NDctODE0MS04NmZlMDljYjE0NDIifQ.w5J6YPkpiShWZFZtEaD6N3_PGZsuz9FdvKMCPcebpHc');
 
 ?>
+
 
 
 
