@@ -5,6 +5,7 @@
  * Arquivo de Configuração Principal
 
  *
+ 
 
  * Defina aqui todas as constantes e configurações globais do sistema.
 
@@ -109,6 +110,7 @@ define('SECRET_KEY', '$2y$10$0ve.bxEgeCpjx226L6RYIeDEmAvRLlHaog4Qtqf2td0wSS9RxZH
 define('WHEREBY_API_KEY', 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJodHRwczovL2FjY291bnRzLmFwcGVhci5pbiIsImF1ZCI6Imh0dHBzOi8vYXBpLmFwcGVhci5pbi92MSIsImV4cCI6OTAwNzE5OTI1NDc0MDk5MSwiaWF0IjoxNzU3MDkxMjk4LCJvcmdhbml6YXRpb25JZCI6MzI0MjAzLCJqdGkiOiI1Nzk2MmQ0ZC05YWY1LTQ1NDctODE0MS04NmZlMDljYjE0NDIifQ.w5J6YPkpiShWZFZtEaD6N3_PGZsuz9FdvKMCPcebpHc');
 
 ?>
+
 
 
 
