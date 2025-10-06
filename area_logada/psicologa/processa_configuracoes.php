@@ -3,76 +3,53 @@ require_once '../../config.php';
 require_once '../../includes/auth_psicologa.php';
 require_once '../../includes/db.php';
 
+// Verifica se os dados foram enviados via POST
 if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
     header('Location: configuracoes_site.php');
     exit;
 }
 
+// Diretório para onde as imagens serão enviadas
 define('UPLOAD_DIR', __DIR__ . '/../../uploads/site/');
 
+// Função para processar o upload de uma imagem
 function processar_upload($file_info, $imagem_atual) {
-    if (!isset($file_info['error']) || $file_info['error'] !== UPLOAD_ERR_OK) {
-        if (isset($file_info['error']) && $file_info['error'] !== UPLOAD_ERR_NO_FILE) {
+    // Verifica se há erro no upload
+    if ($file_info['error'] !== UPLOAD_ERR_OK) {
+        // Se não for UPLOAD_ERR_NO_FILE, é um erro real.
+        if ($file_info['error'] !== UPLOAD_ERR_NO_FILE) {
              $_SESSION['mensagem_erro'] = "Erro no upload da imagem: " . $file_info['error'];
         }
-        return $imagem_atual;
+        return $imagem_atual; // Retorna a imagem antiga se não houver novo upload ou se houver erro
     }
+
+    // Validação do tipo de ficheiro
     $mime_type = mime_content_type($file_info['tmp_name']);
     $allowed_types = ['image/jpeg', 'image/png', 'image/gif'];
     if (!in_array($mime_type, $allowed_types)) {
         $_SESSION['mensagem_erro'] = "Tipo de ficheiro inválido. Apenas JPG, PNG e GIF são permitidos.";
         return $imagem_atual;
     }
+
+    // Gera um nome de ficheiro único para evitar conflitos
     $extension = pathinfo($file_info['name'], PATHINFO_EXTENSION);
     $novo_nome = uniqid('site_', true) . '.' . $extension;
     $caminho_destino = UPLOAD_DIR . $novo_nome;
+
+    // Move o ficheiro para o diretório de uploads
     if (move_uploaded_file($file_info['tmp_name'], $caminho_destino)) {
+        // Se o upload for bem-sucedido, apaga a imagem antiga se ela existir
         if ($imagem_atual && file_exists(UPLOAD_DIR . $imagem_atual)) {
             unlink(UPLOAD_DIR . $imagem_atual);
         }
-        return $novo_nome;
+        return $novo_nome; // Retorna o nome do novo ficheiro
     } else {
         $_SESSION['mensagem_erro'] = "Falha ao mover o ficheiro enviado.";
-        return $imagem_atual;
+        return $imagem_atual; // Retorna a imagem antiga em caso de falha
     }
 }
 
-// ======================================================================
-// NOVA LÓGICA PARA RECONSTRUIR OS DADOS DO FORMULÁRIO
-// ======================================================================
-$dados_organizados = [];
-
-// 1. Processa os campos de texto (titulo, texto, etc.)
-foreach ($_POST as $key => $value) {
-    if (strpos($key, 'conteudo_') === 0) {
-        // Ex: 'conteudo_banner_inicio_titulo' -> ['conteudo', 'banner_inicio', 'titulo']
-        $parts = explode('_', $key, 3);
-        if (count($parts) === 3) {
-            $secao = $parts[1];
-            $campo = $parts[2];
-            $dados_organizados[$secao][$campo] = trim($value);
-        }
-    }
-}
-
-// 2. Processa as imagens (novas e atuais)
-foreach ($_FILES as $key => $file_info) {
-    if (strpos($key, 'imagem_') === 0) {
-        // Ex: 'imagem_banner_inicio' -> ['imagem', 'banner_inicio']
-        $parts = explode('_', $key, 2);
-        if (count($parts) === 2) {
-            $secao = $parts[1];
-            $imagem_atual_key = 'imagem_atual_' . $secao;
-            $imagem_atual = $_POST[$imagem_atual_key] ?? null;
-            
-            $imagem_final = processar_upload($file_info, $imagem_atual);
-            $dados_organizados[$secao]['imagem'] = $imagem_final;
-        }
-    }
-}
-
-// ======================================================================
-
+// Inicia a transação com a base de dados
 try {
     $pdo = conectar();
     $pdo->beginTransaction();
@@ -83,33 +60,46 @@ try {
                 titulo = VALUES(titulo), 
                 texto = VALUES(texto), 
                 imagem = VALUES(imagem)";
-    
     $stmt = $pdo->prepare($sql);
 
-    // Itera sobre os dados já organizados
-    foreach ($dados_organizados as $secao => $campos) {
-        // Garante que a imagem antiga é mantida se não houver um novo upload
-        $imagem_final = $campos['imagem'] ?? ($_POST['imagem_atual_' . $secao] ?? null);
+    // Itera sobre cada secção de conteúdo de texto
+    if (isset($_POST['conteudo'])) {
+        foreach ($_POST['conteudo'] as $secao => $campos) {
+            $titulo = isset($campos['titulo']) ? trim($campos['titulo']) : null;
+            $texto = isset($campos['texto']) ? trim($campos['texto']) : null;
+            
+            // Lida com a imagem (nova ou a atual)
+            $imagem_atual = isset($campos['imagem_atual']) ? trim($campos['imagem_atual']) : null;
+            $imagem_nova_info = isset($_FILES['conteudo_imagem']['name'][$secao]) ? [
+                'name' => $_FILES['conteudo_imagem']['name'][$secao],
+                'type' => $_FILES['conteudo_imagem']['type'][$secao],
+                'tmp_name' => $_FILES['conteudo_imagem']['tmp_name'][$secao],
+                'error' => $_FILES['conteudo_imagem']['error'][$secao],
+                'size' => $_FILES['conteudo_imagem']['size'][$secao],
+            ] : null;
 
-        $stmt->execute([
-            ':secao' => $secao,
-            ':titulo' => $campos['titulo'] ?? null,
-            ':texto' => $campos['texto'] ?? null,
-            ':imagem' => $imagem_final
-        ]);
+            $imagem_final = $imagem_atual;
+            if ($imagem_nova_info) {
+                 $imagem_final = processar_upload($imagem_nova_info, $imagem_atual);
+            }
+            
+            $stmt->execute([
+                ':secao' => $secao,
+                ':titulo' => $titulo,
+                ':texto' => $texto,
+                ':imagem' => $imagem_final
+            ]);
+        }
     }
 
     $pdo->commit();
     $_SESSION['mensagem_sucesso'] = "As configurações foram guardadas com sucesso!";
 
 } catch (Exception $e) {
-    if ($pdo && $pdo->inTransaction()) {
-        $pdo->rollBack();
-    }
+    $pdo->rollBack();
     $_SESSION['mensagem_erro'] = "Erro ao guardar as configurações: " . $e->getMessage();
 }
 
 $active_tab = isset($_POST['active_tab']) ? $_POST['active_tab'] : 'geral';
 header('Location: configuracoes_site.php?tab=' . urlencode($active_tab));
 exit;
-?>
