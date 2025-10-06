@@ -18,6 +18,10 @@ try {
 // Função auxiliar para obter valores de forma segura
 function get_content($key, $field, $default = '') {
     global $conteudos;
+    // Para SEO, usamos o campo 'texto' para guardar os valores
+    if (strpos($key, 'seo_') === 0) {
+        return isset($conteudos[$key]) ? htmlspecialchars($conteudos[$key]['texto']) : $default;
+    }
     return isset($conteudos[$key]) ? htmlspecialchars($conteudos[$key][$field]) : $default;
 }
 
@@ -52,6 +56,7 @@ require_once 'templates/header.php';
     <div id="tabs" class="mb-4 border-b border-gray-200">
         <nav class="flex flex-wrap -mb-px" aria-label="Tabs">
             <button onclick="changeTab('geral')" class="tab-button" data-tab-content="geral-content">Geral</button>
+            <button onclick="changeTab('seo')" class="tab-button" data-tab-content="seo-content">SEO / Indexação</button>
             <button onclick="changeTab('missao')" class="tab-button" data-tab-content="missao-content">Missão</button>
             <button onclick="changeTab('filosofia')" class="tab-button" data-tab-content="filosofia-content">Filosofia</button>
             <button onclick="changeTab('slides')" class="tab-button" data-tab-content="slides-content">Banner Rotativo</button>
@@ -121,8 +126,28 @@ require_once 'templates/header.php';
             </div>
         </div>
 
+        <div id="seo-content" class="tab-content hidden">
+            <h2 class="text-2xl font-semibold text-gray-700 mb-4">Otimização para Buscadores (SEO)</h2>
+            <p class="text-gray-600 mb-6">Estas informações ajudarão o Google e outros buscadores a entender e classificar melhor o seu site.</p>
+            <div class="mb-4">
+                <label for="seo_title" class="block text-gray-700 font-medium mb-2">Meta Título (Title Tag)</label>
+                <input type="text" id="seo_title" name="conteudo_seo_title_texto" value="<?php echo get_content('seo_title', 'texto'); ?>" class="w-full px-3 py-2 border border-gray-300 rounded-md" maxlength="60">
+                <p class="text-xs text-gray-500 mt-1">O título principal do site nos resultados de busca. Idealmente até 60 caracteres.</p>
+            </div>
+            <div class="mb-4">
+                <label for="seo_description" class="block text-gray-700 font-medium mb-2">Meta Descrição (Meta Description)</label>
+                <textarea id="seo_description" name="conteudo_seo_description_texto" rows="3" class="w-full px-3 py-2 border border-gray-300 rounded-md" maxlength="160"><?php echo get_content('seo_description', 'texto'); ?></textarea>
+                <p class="text-xs text-gray-500 mt-1">O pequeno texto que aparece sob o título nos resultados de busca. Idealmente até 160 caracteres.</p>
+            </div>
+            <div class="mb-6">
+                <label for="seo_keywords" class="block text-gray-700 font-medium mb-2">Palavras-chave (Keywords)</label>
+                <input type="text" id="seo_keywords" name="conteudo_seo_keywords_texto" value="<?php echo get_content('seo_keywords', 'texto'); ?>" class="w-full px-3 py-2 border border-gray-300 rounded-md">
+                <p class="text-xs text-gray-500 mt-1">Termos relevantes separados por vírgula (ex: psicologia, terapia online, saúde mental, ...). Embora o Google dê menos importância hoje, ainda é útil.</p>
+            </div>
+        </div>
+
         <div id="missao-content" class="tab-content hidden">
-            <h2 class="text-2xl font-semibold text-gray-700 mb-4">Nossa Missão</h2>
+             <h2 class="text-2xl font-semibold text-gray-700 mb-4">Nossa Missão</h2>
             <div class="mb-4">
                 <label for="missao_titulo" class="block text-gray-700 font-medium mb-2">Título da Secção</label>
                 <input type="text" id="missao_titulo" name="conteudo_missao_titulo" value="<?php echo get_content('missao', 'titulo'); ?>" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-teal-500">
@@ -148,7 +173,7 @@ require_once 'templates/header.php';
                 <textarea id="filosofia_texto" name="conteudo_filosofia_texto" rows="4" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-teal-500 richtext"><?php echo get_content('filosofia', 'texto'); ?></textarea>
             </div>
             <hr class="my-6">
-            <h3 class="text-xl font-semibold text-gray-700 mb-3">Textos Expansíveis</h3>
+             <h3 class="text-xl font-semibold text-gray-700 mb-3">Textos Expansíveis</h3>
             <div class="mb-4">
                 <label for="filosofia_tec_titulo" class="block text-gray-700 font-medium mb-2">Título 1: Tecnologias Digitais</label>
                 <input type="text" id="filosofia_tec_titulo" name="conteudo_filosofia_tec_titulo" value="<?php echo get_content('filosofia_tec', 'titulo'); ?>" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-teal-500">
@@ -158,7 +183,7 @@ require_once 'templates/header.php';
             <div class="mb-4">
                 <label for="filosofia_pra_titulo" class="block text-gray-700 font-medium mb-2">Título 2: Práticas Internacionais</label>
                 <input type="text" id="filosofia_pra_titulo" name="conteudo_filosofia_pra_titulo" value="<?php echo get_content('filosofia_pra', 'titulo'); ?>" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-teal-500">
-                <label for="filosofia_pra_texto" class="block text-gray-700 font-medium mb-2 mt-2">Texto Expansível 2</label>
+                 <label for="filosofia_pra_texto" class="block text-gray-700 font-medium mb-2 mt-2">Texto Expansível 2</label>
                 <textarea id="filosofia_pra_texto" name="conteudo_filosofia_pra_texto" rows="3" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-teal-500 richtext"><?php echo get_content('filosofia_pra', 'texto'); ?></textarea>
             </div>
             <div class="mb-6">
@@ -168,7 +193,7 @@ require_once 'templates/header.php';
                 <textarea id="filosofia_ime_texto" name="conteudo_filosofia_ime_texto" rows="3" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-teal-500 richtext"><?php echo get_content('filosofia_ime', 'texto'); ?></textarea>
             </div>
         </div>
-        
+
         <div id="slides-content" class="tab-content hidden">
             <h2 class="text-2xl font-semibold text-gray-700 mb-4">Banner Rotativo</h2>
             <?php for ($i = 1; $i <= 3; $i++): ?>
@@ -264,7 +289,7 @@ require_once 'templates/header.php';
             </div>
             <?php endfor; ?>
         </div>
-        
+       
         <div id="sobre-content" class="tab-content hidden">
             <h2 class="text-2xl font-semibold text-gray-700 mb-4">Página "Sobre"</h2>
             <div class="border p-4 rounded-md mb-4 bg-gray-50">
@@ -341,7 +366,7 @@ require_once 'templates/header.php';
                 <input type="text" id="contato_whatsapp" name="conteudo_contato_whatsapp_texto" value="<?php echo get_content('contato_whatsapp', 'texto'); ?>" class="w-full px-3 py-2 border border-gray-300 rounded-md" placeholder="Ex: https://wa.me/5511999999999">
             </div>
         </div>
-        
+
         <div class="mt-8">
             <button type="submit" class="w-full bg-teal-600 text-white font-bold py-3 px-4 rounded-md hover:bg-teal-700">
                 Guardar Alterações
@@ -390,7 +415,6 @@ document.addEventListener('DOMContentLoaded', function() {
     } else {
         document.querySelector('.tab-button').click();
     }
-    // Script para os seletores de cores
     const colorInputs = [
         { picker: 'site_cor_primaria', display: 'cor-hex-primaria' },
         { picker: 'site_cor_botao_bg', display: 'cor-hex-botao' },
@@ -415,11 +439,11 @@ document.addEventListener('DOMContentLoaded', function() {
     cursor: pointer;
     border-bottom: 2px solid transparent;
     font-weight: 500;
-    color: #4a5568; /* gray-700 */
+    color: #4a5568;
     transition: all 0.2s;
 }
 .tab-button:hover {
-    color: #2d3748; /* gray-800 */
+    color: #2d3748;
 }
 .active-tab {
     border-bottom-color: var(--cor-primaria, #38b2ac);
