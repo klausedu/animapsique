@@ -45,7 +45,7 @@ try {
             <div class="flex justify-between items-center">
                 <div class="text-xl font-semibold text-gray-700">
                     <a href="index.php">
-                        <img src="https://animapsique.com.br/wp-content/uploads/2022/03/animapsique_logo70perc.png" alt="AnimaPsique Logotipo" class="h-12">
+                        <img src="https://animapsique.com.br/uploads/site/animapsique_logo70perc.png" alt="AnimaPsique Logotipo" class="h-12">
                     </a>
                 </div>
                 <div class="hidden md:flex items-center space-x-3">
