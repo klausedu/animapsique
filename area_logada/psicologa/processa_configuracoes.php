@@ -1,4 +1,59 @@
 <?php
+// ======================================================================
+// SECÇÃO DE DIAGNÓSTICO
+// ======================================================================
+// O código abaixo serve para testar o acesso ao ficheiro e as permissões.
+// Ele irá parar a execução antes de tentar processar os dados.
+// ======================================================================
+
+// Inicia a sessão para podermos ver as mensagens
+if (session_status() == PHP_SESSION_NONE) {
+    session_start();
+}
+
+// Desativa a visualização de erros para o utilizador final, mas regista-os
+error_reporting(E_ALL);
+ini_set('display_errors', 1); // Temporariamente ligado para ver erros no ecrã
+ini_set('log_errors', 1);
+
+echo "<h1>Diagnóstico de Submissão</h1>";
+echo "<p>Se está a ver esta página, o acesso ao ficheiro PHP funcionou. O problema está nos dados enviados ou no processamento original.</p>";
+
+echo "<h2>Dados Recebidos (\$_POST):</h2>";
+echo "<pre>";
+print_r($_POST);
+echo "</pre>";
+
+echo "<h2>Ficheiros Recebidos (\$_FILES):</h2>";
+echo "<pre>";
+print_r($_FILES);
+echo "</pre>";
+
+// Tenta uma operação simples de ficheiro para verificar permissões
+$teste_dir = __DIR__ . '/../../uploads/site/';
+echo "<h2>Teste de Escrita no Diretório:</h2>";
+$caminho_real_dir = realpath($teste_dir);
+
+if ($caminho_real_dir) {
+    echo "<p>A tentar escrever em: " . $caminho_real_dir . "</p>";
+    if (is_writable($caminho_real_dir)) {
+        echo "<p style='color:green; font-weight:bold;'>Sucesso! O diretório tem permissão de escrita.</p>";
+    } else {
+        echo "<p style='color:red; font-weight:bold;'>Falha! O diretório não tem permissão de escrita. Verifique as permissões (devem ser 755 ou 775).</p>";
+    }
+} else {
+    echo "<p style='color:red; font-weight:bold;'>Falha! O diretório especificado ('" . htmlspecialchars($teste_dir) . "') não foi encontrado.</p>";
+}
+
+
+// A execução para aqui intencionalmente para análise.
+// Depois de diagnosticar, apague ou comente esta secção.
+exit;
+
+
+// ======================================================================
+// CÓDIGO ORIGINAL (NÃO SERÁ EXECUTADO DURANTE O DIAGNÓSTICO)
+// ======================================================================
 require_once '../../config.php';
 require_once '../../includes/auth_psicologa.php';
 require_once '../../includes/db.php';
@@ -9,7 +64,7 @@ if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
     exit;
 }
 
-// Diretório para onde as imagens serão enviadas
+// Diretório para onde as imagens serão enviadas - JÁ CORRIGIDO
 define('UPLOAD_DIR', __DIR__ . '/../../uploads/site/');
 
 // Função para processar o upload de uma imagem
@@ -60,6 +115,7 @@ try {
                 titulo = VALUES(titulo), 
                 texto = VALUES(texto), 
                 imagem = VALUES(imagem)";
+    
     $stmt = $pdo->prepare($sql);
 
     // Itera sobre cada secção de conteúdo de texto
@@ -96,10 +152,14 @@ try {
     $_SESSION['mensagem_sucesso'] = "As configurações foram guardadas com sucesso!";
 
 } catch (Exception $e) {
-    $pdo->rollBack();
+    if ($pdo && $pdo->inTransaction()) {
+        $pdo->rollBack();
+    }
     $_SESSION['mensagem_erro'] = "Erro ao guardar as configurações: " . $e->getMessage();
 }
 
 $active_tab = isset($_POST['active_tab']) ? $_POST['active_tab'] : 'geral';
 header('Location: configuracoes_site.php?tab=' . urlencode($active_tab));
 exit;
+
+?>
