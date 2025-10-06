@@ -2,18 +2,18 @@
 <html lang="pt-br">
 <head>
     <meta charset="UTF-8">
-    <title>Formulário de Debug Final</title>
+    <title>Formulário de Debug com HTML</title>
     <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
 </head>
 <body class="bg-gray-100 p-8">
     <div class="max-w-xl mx-auto bg-white p-8 rounded-lg shadow-lg">
-        <h1 class="text-2xl font-bold text-gray-800 mb-4">Teste Final: Nomes de Campos Reais</h1>
-        <p class="text-gray-600 mb-6">Este formulário enviará um grande número de campos com os nomes exatos utilizados em `configuracoes_site.php`. Se este pedido falhar (resultar em "Forbidden"), confirma que o problema está nos nomes dos campos. Se funcionar, o problema é ainda mais complexo.</p>
+        <h1 class="text-2xl font-bold text-gray-800 mb-4">Teste de Gatilho do Firewall</h1>
+        <p class="text-gray-600 mb-6">Este formulário envia o mesmo número e nomes de campos que o teste anterior bem-sucedido. No entanto, o valor de um dos campos agora contém código HTML (`<p><strong>...</strong></p>`). Se este pedido falhar, teremos a prova final de que o firewall está a bloquear o conteúdo.</p>
         
         <form action="debug_receiver.php" method="POST">
             
             <?php
-            // Lista de nomes de campos extraídos do seu formulário original
+            // Lista de nomes de campos
             $field_names = [
                 'active_tab', 'conteudo_site_cor_primaria_texto', 'conteudo_site_cor_botao_bg_texto',
                 'conteudo_site_cor_header_bg_texto', 'conteudo_site_cor_footer_bg_texto', 'conteudo_banner_inicio_titulo',
@@ -47,13 +47,21 @@
                 'conteudo_contato_endereco_sp_texto', 'conteudo_contato_endereco_cwb_texto', 'conteudo_contato_whatsapp_texto'
             ];
 
-            foreach ($field_names as $name) {
-                echo "<input type='hidden' name='" . htmlspecialchars($name) . "' value='test_value'>\n";
+            // Injeta HTML num dos campos para testar o firewall
+            $problematic_value = '<p>Este é um <strong>conteúdo HTML</strong> que pode acionar o firewall.</p>';
+            
+            // O primeiro campo da lista terá o valor com HTML
+            echo "<input type='hidden' name='" . htmlspecialchars($field_names[5]) . "' value='" . htmlspecialchars($problematic_value) . "'>\n";
+
+            // Os outros campos terão um valor normal
+            for ($i = 0; $i < count($field_names); $i++) {
+                if ($i === 5) continue; // Pula o campo que já adicionámos
+                echo "<input type='hidden' name='" . htmlspecialchars($field_names[$i]) . "' value='valor_normal'>\n";
             }
             ?>
 
             <button type="submit" class="w-full bg-red-600 text-white font-bold py-3 px-4 rounded-md hover:bg-red-700">
-                Executar Teste Final
+                Executar Teste com HTML
             </button>
         </form>
     </div>
