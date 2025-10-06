@@ -2,54 +2,60 @@
 <html lang="pt-br">
 <head>
     <meta charset="UTF-8">
-    <title>Formulário de Debug</title>
+    <title>Formulário de Debug Final</title>
     <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
 </head>
 <body class="bg-gray-100 p-8">
     <div class="max-w-xl mx-auto bg-white p-8 rounded-lg shadow-lg">
-        <h1 class="text-2xl font-bold text-gray-800 mb-4">Teste de Carga de Formulário</h1>
-        <p class="text-gray-600 mb-6">Este formulário testa quantos campos POST o servidor aceita antes de retornar um erro 'Forbidden'. Comece com um número baixo (como 5, similar ao form de livros) e aumente até o erro ocorrer.</p>
+        <h1 class="text-2xl font-bold text-gray-800 mb-4">Teste Final: Nomes de Campos Reais</h1>
+        <p class="text-gray-600 mb-6">Este formulário enviará um grande número de campos com os nomes exatos utilizados em `configuracoes_site.php`. Se este pedido falhar (resultar em "Forbidden"), confirma que o problema está nos nomes dos campos. Se funcionar, o problema é ainda mais complexo.</p>
         
-        <form action="debug_receiver.php" method="POST" enctype="multipart/form-data">
-            <div class="mb-4">
-                <label for="num_campos" class="block text-gray-700 font-medium mb-2">Quantos campos de texto de teste deseja enviar?</label>
-                <input type="number" id="num_campos" name="num_campos" value="5" class="w-full px-3 py-2 border border-gray-300 rounded-md">
-            </div>
+        <form action="debug_receiver.php" method="POST">
+            
+            <?php
+            // Lista de nomes de campos extraídos do seu formulário original
+            $field_names = [
+                'active_tab', 'conteudo_site_cor_primaria_texto', 'conteudo_site_cor_botao_bg_texto',
+                'conteudo_site_cor_header_bg_texto', 'conteudo_site_cor_footer_bg_texto', 'conteudo_banner_inicio_titulo',
+                'conteudo_banner_inicio_texto', 'imagem_atual_banner_inicio', 'conteudo_missao_titulo',
+                'conteudo_missao_texto', 'conteudo_missao_p2_texto', 'conteudo_filosofia_titulo', 'conteudo_filosofia_texto',
+                'conteudo_filosofia_tec_titulo', 'conteudo_filosofia_tec_texto', 'conteudo_filosofia_pra_titulo',
+                'conteudo_filosofia_pra_texto', 'conteudo_filosofia_ime_titulo', 'conteudo_filosofia_ime_texto',
+                'conteudo_slide1_titulo', 'conteudo_slide1_texto', 'imagem_atual_slide1', 'conteudo_slide2_titulo',
+                'conteudo_slide2_texto', 'imagem_atual_slide2', 'conteudo_slide3_titulo', 'conteudo_slide3_texto',
+                'imagem_atual_slide3', 'conteudo_atuacao_titulo_titulo', 'conteudo_atuacao_titulo_texto',
+                'conteudo_atuacao_card1_exibir_titulo', 'conteudo_atuacao_card1_titulo_titulo', 'imagem_atual_atuacao_card1_titulo',
+                'conteudo_atuacao_card1_titulo_texto', 'conteudo_atuacao_p1_titulo_titulo', 'conteudo_atuacao_p1_titulo_texto',
+                'conteudo_atuacao_p1_p2_texto', 'conteudo_atuacao_p1_desfecho_texto', 'conteudo_atuacao_card2_exibir_titulo',
+                'conteudo_atuacao_card2_titulo_titulo', 'imagem_atual_atuacao_card2_titulo', 'conteudo_atuacao_card2_titulo_texto',
+                'conteudo_atuacao_p2_titulo_titulo', 'conteudo_atuacao_p2_titulo_texto', 'conteudo_atuacao_p2_p2_texto',
+                'conteudo_atuacao_p2_desfecho_texto', 'conteudo_atuacao_card3_exibir_titulo', 'conteudo_atuacao_card3_titulo_titulo',
+                'imagem_atual_atuacao_card3_titulo', 'conteudo_atuacao_card3_titulo_texto', 'conteudo_atuacao_p3_titulo_titulo',
+                'conteudo_atuacao_p3_titulo_texto', 'conteudo_atuacao_p3_p2_texto', 'conteudo_atuacao_p3_desfecho_texto',
+                'conteudo_atuacao_card4_exibir_titulo', 'conteudo_atuacao_card4_titulo_titulo', 'imagem_atual_atuacao_card4_titulo',
+                'conteudo_atuacao_card4_titulo_texto', 'conteudo_atuacao_p4_titulo_titulo', 'conteudo_atuacao_p4_titulo_texto',
+                'conteudo_atuacao_p4_p2_texto', 'conteudo_atuacao_p4_desfecho_texto', 'conteudo_atuacao_card5_exibir_titulo',
+                'conteudo_atuacao_card5_titulo_titulo', 'imagem_atual_atuacao_card5_titulo', 'conteudo_atuacao_card5_titulo_texto',
+                'conteudo_atuacao_p5_titulo_titulo', 'conteudo_atuacao_p5_titulo_texto', 'conteudo_atuacao_p5_p2_texto',
+                'conteudo_atuacao_p5_desfecho_texto', 'conteudo_sobre_objetivo_titulo_titulo', 'conteudo_sobre_objetivo_titulo_texto',
+                'imagem_atual_sobre_reflexao_imagem', 'imagem_atual_sobre_psicologa_foto', 'conteudo_sobre_mim_texto_texto',
+                'conteudo_sobre_quem_sou_titulo_titulo', 'conteudo_sobre_quem_sou_titulo_texto', 'conteudo_sobre_especializacoes_titulo_titulo',
+                'conteudo_sobre_especializacoes_titulo_texto', 'imagem_atual_sobre_mod1_imagem', 'conteudo_sobre_mod1_imagem_titulo',
+                'conteudo_sobre_mod1_imagem_texto', 'imagem_atual_sobre_mod2_imagem', 'conteudo_sobre_mod2_imagem_titulo',
+                'conteudo_sobre_mod2_imagem_texto', 'imagem_atual_sobre_mod3_imagem', 'conteudo_sobre_mod3_imagem_titulo',
+                'conteudo_sobre_mod3_imagem_texto', 'conteudo_contato_titulo_titulo', 'conteudo_contato_titulo_texto',
+                'conteudo_contato_endereco_sp_texto', 'conteudo_contato_endereco_cwb_texto', 'conteudo_contato_whatsapp_texto'
+            ];
 
-            <div class="mb-6">
-                <label class="block text-gray-700 font-medium mb-2">Enviar também um ficheiro de teste?</label>
-                <input type="file" name="ficheiro_teste" class="w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-teal-50 file:text-teal-700 hover:file:bg-teal-100">
-            </div>
+            foreach ($field_names as $name) {
+                echo "<input type='hidden' name='" . htmlspecialchars($name) . "' value='test_value'>\n";
+            }
+            ?>
 
-            <div id="campos-container" class="mb-6">
-                </div>
-
-            <button type="submit" class="w-full bg-teal-600 text-white font-bold py-3 px-4 rounded-md hover:bg-teal-700">
-                Enviar Teste
+            <button type="submit" class="w-full bg-red-600 text-white font-bold py-3 px-4 rounded-md hover:bg-red-700">
+                Executar Teste Final
             </button>
         </form>
     </div>
-
-    <script>
-        const numCamposInput = document.getElementById('num_campos');
-        const container = document.getElementById('campos-container');
-
-        function gerarCampos() {
-            const num = parseInt(numCamposInput.value, 10);
-            container.innerHTML = ''; // Limpa os campos existentes
-            for (let i = 1; i <= num; i++) {
-                const input = document.createElement('input');
-                input.type = 'hidden'; // Oculto para não poluir a interface
-                input.name = 'campo_teste_' + i;
-                input.value = 'valor de teste ' + i;
-                container.appendChild(input);
-            }
-        }
-
-        numCamposInput.addEventListener('input', gerarCampos);
-        
-        // Gera os campos iniciais
-        gerarCampos();
-    </script>
 </body>
 </html>
