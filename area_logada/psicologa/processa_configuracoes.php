@@ -1,35 +1,115 @@
 <?php
-// Inicia a sessão para podermos ver as mensagens
-session_start();
+require_once '../../config.php';
+require_once '../../includes/auth_psicologa.php';
+require_once '../../includes/db.php';
 
-// Desativa a visualização de erros para o utilizador final, mas regista-os
-error_reporting(E_ALL);
-ini_set('display_errors', 0);
-ini_set('log_errors', 1);
-
-echo "<h1>Diagnóstico de Submissão</h1>";
-echo "<p>Se está a ver esta página, o acesso ao ficheiro PHP funcionou. O problema está nos dados enviados ou no processamento.</p>";
-
-echo "<h2>Dados Recebidos (\$_POST):</h2>";
-echo "<pre>";
-print_r($_POST);
-echo "</pre>";
-
-echo "<h2>Ficheiros Recebidos (\$_FILES):</h2>";
-echo "<pre>";
-print_r($_FILES);
-echo "</pre>";
-
-// Tenta uma operação simples de ficheiro para verificar permissões
-$teste_dir = __DIR__ . '/../../uploads/site/';
-echo "<h2>Teste de Escrita no Diretório:</h2>";
-echo "<p>A tentar escrever em: " . realpath($teste_dir) . "</p>";
-
-if (is_writable($teste_dir)) {
-    echo "<p style='color:green;'>Sucesso! O diretório tem permissão de escrita.</p>";
-} else {
-    echo "<p style='color:red;'>Falha! O diretório não tem permissão de escrita. Verifique as permissões (devem ser 755 ou 775).</p>";
+if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
+    header('Location: configuracoes_site.php');
+    exit;
 }
 
+define('UPLOAD_DIR', __DIR__ . '/../../uploads/site/');
+
+function processar_upload($file_info, $imagem_atual) {
+    if (!isset($file_info['error']) || $file_info['error'] !== UPLOAD_ERR_OK) {
+        if (isset($file_info['error']) && $file_info['error'] !== UPLOAD_ERR_NO_FILE) {
+             $_SESSION['mensagem_erro'] = "Erro no upload da imagem: " . $file_info['error'];
+        }
+        return $imagem_atual;
+    }
+    $mime_type = mime_content_type($file_info['tmp_name']);
+    $allowed_types = ['image/jpeg', 'image/png', 'image/gif'];
+    if (!in_array($mime_type, $allowed_types)) {
+        $_SESSION['mensagem_erro'] = "Tipo de ficheiro inválido. Apenas JPG, PNG e GIF são permitidos.";
+        return $imagem_atual;
+    }
+    $extension = pathinfo($file_info['name'], PATHINFO_EXTENSION);
+    $novo_nome = uniqid('site_', true) . '.' . $extension;
+    $caminho_destino = UPLOAD_DIR . $novo_nome;
+    if (move_uploaded_file($file_info['tmp_name'], $caminho_destino)) {
+        if ($imagem_atual && file_exists(UPLOAD_DIR . $imagem_atual)) {
+            unlink(UPLOAD_DIR . $imagem_atual);
+        }
+        return $novo_nome;
+    } else {
+        $_SESSION['mensagem_erro'] = "Falha ao mover o ficheiro enviado.";
+        return $imagem_atual;
+    }
+}
+
+// ======================================================================
+// NOVA LÓGICA PARA RECONSTRUIR OS DADOS DO FORMULÁRIO
+// ======================================================================
+$dados_organizados = [];
+
+// 1. Processa os campos de texto (titulo, texto, etc.)
+foreach ($_POST as $key => $value) {
+    if (strpos($key, 'conteudo_') === 0) {
+        // Ex: 'conteudo_banner_inicio_titulo' -> ['conteudo', 'banner_inicio', 'titulo']
+        $parts = explode('_', $key, 3);
+        if (count($parts) === 3) {
+            $secao = $parts[1];
+            $campo = $parts[2];
+            $dados_organizados[$secao][$campo] = trim($value);
+        }
+    }
+}
+
+// 2. Processa as imagens (novas e atuais)
+foreach ($_FILES as $key => $file_info) {
+    if (strpos($key, 'imagem_') === 0) {
+        // Ex: 'imagem_banner_inicio' -> ['imagem', 'banner_inicio']
+        $parts = explode('_', $key, 2);
+        if (count($parts) === 2) {
+            $secao = $parts[1];
+            $imagem_atual_key = 'imagem_atual_' . $secao;
+            $imagem_atual = $_POST[$imagem_atual_key] ?? null;
+            
+            $imagem_final = processar_upload($file_info, $imagem_atual);
+            $dados_organizados[$secao]['imagem'] = $imagem_final;
+        }
+    }
+}
+
+// ======================================================================
+
+try {
+    $pdo = conectar();
+    $pdo->beginTransaction();
+
+    $sql = "INSERT INTO conteudo_site (secao, titulo, texto, imagem) 
+            VALUES (:secao, :titulo, :texto, :imagem)
+            ON DUPLICATE KEY UPDATE 
+                titulo = VALUES(titulo), 
+                texto = VALUES(texto), 
+                imagem = VALUES(imagem)";
+    
+    $stmt = $pdo->prepare($sql);
+
+    // Itera sobre os dados já organizados
+    foreach ($dados_organizados as $secao => $campos) {
+        // Garante que a imagem antiga é mantida se não houver um novo upload
+        $imagem_final = $campos['imagem'] ?? ($_POST['imagem_atual_' . $secao] ?? null);
+
+        $stmt->execute([
+            ':secao' => $secao,
+            ':titulo' => $campos['titulo'] ?? null,
+            ':texto' => $campos['texto'] ?? null,
+            ':imagem' => $imagem_final
+        ]);
+    }
+
+    $pdo->commit();
+    $_SESSION['mensagem_sucesso'] = "As configurações foram guardadas com sucesso!";
+
+} catch (Exception $e) {
+    if ($pdo && $pdo->inTransaction()) {
+        $pdo->rollBack();
+    }
+    $_SESSION['mensagem_erro'] = "Erro ao guardar as configurações: " . $e->getMessage();
+}
+
+$active_tab = isset($_POST['active_tab']) ? $_POST['active_tab'] : 'geral';
+header('Location: configuracoes_site.php?tab=' . urlencode($active_tab));
 exit;
 ?>
