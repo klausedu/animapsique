@@ -71,28 +71,28 @@ require_once 'templates/header.php';
                 <div>
                     <label for="site_cor_primaria" class="block text-gray-700 font-medium mb-2">Cor Principal (Links)</label>
                     <div class="flex items-center">
-                        <input type="color" id="site_cor_primaria" name="conteudo_site_cor_primaria_texto" value="<?php echo get_content('site_cor_primaria', 'texto', '#38b2ac'); ?>" class="p-1 h-10 w-14 block bg-white border border-gray-300 cursor-pointer rounded-lg">
+                        <input type="color" id="site_cor_primaria" name="conteudo[site_cor_primaria][texto]" value="<?php echo get_content('site_cor_primaria', 'texto', '#38b2ac'); ?>" class="p-1 h-10 w-14 block bg-white border border-gray-300 cursor-pointer rounded-lg">
                         <span id="cor-hex-primaria" class="ml-3 text-gray-600 font-mono"><?php echo get_content('site_cor_primaria', 'texto', '#38b2ac'); ?></span>
                     </div>
                 </div>
                 <div>
                     <label for="site_cor_botao_bg" class="block text-gray-700 font-medium mb-2">Cor do Botão</label>
                     <div class="flex items-center">
-                        <input type="color" id="site_cor_botao_bg" name="conteudo_site_cor_botao_bg_texto" value="<?php echo get_content('site_cor_botao_bg', 'texto', '#38b2ac'); ?>" class="p-1 h-10 w-14 block bg-white border border-gray-300 cursor-pointer rounded-lg">
+                        <input type="color" id="site_cor_botao_bg" name="conteudo[site_cor_botao_bg][texto]" value="<?php echo get_content('site_cor_botao_bg', 'texto', '#38b2ac'); ?>" class="p-1 h-10 w-14 block bg-white border border-gray-300 cursor-pointer rounded-lg">
                         <span id="cor-hex-botao" class="ml-3 text-gray-600 font-mono"><?php echo get_content('site_cor_botao_bg', 'texto', '#38b2ac'); ?></span>
                     </div>
                 </div>
                 <div>
                     <label for="site_cor_header_bg" class="block text-gray-700 font-medium mb-2">Fundo do Cabeçalho</label>
                     <div class="flex items-center">
-                        <input type="color" id="site_cor_header_bg" name="conteudo_site_cor_header_bg_texto" value="<?php echo get_content('site_cor_header_bg', 'texto', '#ffffff'); ?>" class="p-1 h-10 w-14 block bg-white border border-gray-300 cursor-pointer rounded-lg">
+                        <input type="color" id="site_cor_header_bg" name="conteudo[site_cor_header_bg][texto]" value="<?php echo get_content('site_cor_header_bg', 'texto', '#ffffff'); ?>" class="p-1 h-10 w-14 block bg-white border border-gray-300 cursor-pointer rounded-lg">
                         <span id="cor-hex-header" class="ml-3 text-gray-600 font-mono"><?php echo get_content('site_cor_header_bg', 'texto', '#ffffff'); ?></span>
                     </div>
                 </div>
                 <div>
                     <label for="site_cor_footer_bg" class="block text-gray-700 font-medium mb-2">Fundo do Rodapé</label>
                     <div class="flex items-center">
-                        <input type="color" id="site_cor_footer_bg" name="conteudo_site_cor_footer_bg_texto" value="<?php echo get_content('site_cor_footer_bg', 'texto', '#1f2937'); ?>" class="p-1 h-10 w-14 block bg-white border border-gray-300 cursor-pointer rounded-lg">
+                        <input type="color" id="site_cor_footer_bg" name="conteudo[site_cor_footer_bg][texto]" value="<?php echo get_content('site_cor_footer_bg', 'texto', '#1f2937'); ?>" class="p-1 h-10 w-14 block bg-white border border-gray-300 cursor-pointer rounded-lg">
                         <span id="cor-hex-footer" class="ml-3 text-gray-600 font-mono"><?php echo get_content('site_cor_footer_bg', 'texto', '#1f2937'); ?></span>
                     </div>
                 </div>
@@ -102,14 +102,14 @@ require_once 'templates/header.php';
             <h2 class="text-2xl font-semibold text-gray-700 mb-4">Banner Principal</h2>
             <div class="mb-4">
                 <label for="banner_inicio_titulo" class="block text-gray-700 font-medium mb-2">Título do Banner</label>
-                <textarea id="banner_inicio_titulo" name="conteudo_banner_inicio_titulo" rows="2" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-teal-500 richtext"><?php echo get_content('banner_inicio', 'titulo'); ?></textarea>
+                <textarea id="banner_inicio_titulo" name="conteudo[banner_inicio][titulo]" rows="2" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-teal-500 richtext"><?php echo get_content('banner_inicio', 'titulo'); ?></textarea>
             </div>
             <div class="mb-4">
                 <label for="banner_inicio_texto" class="block text-gray-700 font-medium mb-2">Texto do Banner</label>
-                <textarea id="banner_inicio_texto" name="conteudo_banner_inicio_texto" rows="4" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-teal-500 richtext"><?php echo get_content('banner_inicio', 'texto'); ?></textarea>
+                <textarea id="banner_inicio_texto" name="conteudo[banner_inicio][texto]" rows="4" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-teal-500 richtext"><?php echo get_content('banner_inicio', 'texto'); ?></textarea>
             </div>
             <div class="mb-6">
-                <label for="imagem_banner_inicio" class="block text-gray-700 font-medium mb-2">Nova Imagem do Banner</label>
+                <label for="banner_inicio_imagem" class="block text-gray-700 font-medium mb-2">Nova Imagem do Banner</label>
                 <?php $imagem_atual = get_content('banner_inicio', 'imagem'); ?>
                 <?php if ($imagem_atual): ?>
                     <div class="mb-2">
@@ -117,8 +117,8 @@ require_once 'templates/header.php';
                         <img src="../../uploads/site/<?php echo $imagem_atual; ?>" alt="Banner Atual" class="w-48 h-auto rounded-md border">
                     </div>
                 <?php endif; ?>
-                <input type="hidden" name="imagem_atual_banner_inicio" value="<?php echo $imagem_atual; ?>">
-                <input type="file" id="imagem_banner_inicio" name="imagem_banner_inicio" class="w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-teal-50 file:text-teal-700 hover:file:bg-teal-100" accept="image/jpeg, image/png, image/gif">
+                <input type="hidden" name="conteudo[banner_inicio][imagem_atual]" value="<?php echo $imagem_atual; ?>">
+                <input type="file" id="banner_inicio_imagem" name="conteudo_imagem[banner_inicio]" class="w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-teal-50 file:text-teal-700 hover:file:bg-teal-100" accept="image/jpeg, image/png, image/gif">
                 <p class="text-xs text-gray-500 mt-1">Deixe em branco para manter a imagem atual.</p>
             </div>
         </div>
@@ -127,15 +127,15 @@ require_once 'templates/header.php';
              <h2 class="text-2xl font-semibold text-gray-700 mb-4">Nossa Missão</h2>
             <div class="mb-4">
                 <label for="missao_titulo" class="block text-gray-700 font-medium mb-2">Título da Secção</label>
-                <input type="text" id="missao_titulo" name="conteudo_missao_titulo" value="<?php echo get_content('missao', 'titulo'); ?>" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-teal-500">
+                <input type="text" id="missao_titulo" name="conteudo[missao][titulo]" value="<?php echo get_content('missao', 'titulo'); ?>" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-teal-500">
             </div>
             <div class="mb-4">
                 <label for="missao_texto" class="block text-gray-700 font-medium mb-2">Parágrafo 1</label>
-                <textarea id="missao_texto" name="conteudo_missao_texto" rows="4" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-teal-500 richtext"><?php echo get_content('missao', 'texto'); ?></textarea>
+                <textarea id="missao_texto" name="conteudo[missao][texto]" rows="4" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-teal-500 richtext"><?php echo get_content('missao', 'texto'); ?></textarea>
             </div>
             <div class="mb-6">
                 <label for="missao_p2_texto" class="block text-gray-700 font-medium mb-2">Parágrafo 2</label>
-                <textarea id="missao_p2_texto" name="conteudo_missao_p2_texto" rows="4" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-teal-500 richtext"><?php echo get_content('missao_p2', 'texto'); ?></textarea>
+                <textarea id="missao_p2_texto" name="conteudo[missao_p2][texto]" rows="4" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-teal-500 richtext"><?php echo get_content('missao_p2', 'texto'); ?></textarea>
             </div>
         </div>
 
@@ -143,31 +143,31 @@ require_once 'templates/header.php';
             <h2 class="text-2xl font-semibold text-gray-700 mb-4">Nossa Filosofia</h2>
             <div class="mb-4">
                 <label for="filosofia_titulo" class="block text-gray-700 font-medium mb-2">Título da Secção</label>
-                <input type="text" id="filosofia_titulo" name="conteudo_filosofia_titulo" value="<?php echo get_content('filosofia', 'titulo'); ?>" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-teal-500">
+                <input type="text" id="filosofia_titulo" name="conteudo[filosofia][titulo]" value="<?php echo get_content('filosofia', 'titulo'); ?>" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-teal-500">
             </div>
             <div class="mb-4">
                 <label for="filosofia_texto" class="block text-gray-700 font-medium mb-2">Texto Principal</label>
-                <textarea id="filosofia_texto" name="conteudo_filosofia_texto" rows="4" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-teal-500 richtext"><?php echo get_content('filosofia', 'texto'); ?></textarea>
+                <textarea id="filosofia_texto" name="conteudo[filosofia][texto]" rows="4" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-teal-500 richtext"><?php echo get_content('filosofia', 'texto'); ?></textarea>
             </div>
             <hr class="my-6">
              <h3 class="text-xl font-semibold text-gray-700 mb-3">Textos Expansíveis</h3>
             <div class="mb-4">
                 <label for="filosofia_tec_titulo" class="block text-gray-700 font-medium mb-2">Título 1: Tecnologias Digitais</label>
-                <input type="text" id="filosofia_tec_titulo" name="conteudo_filosofia_tec_titulo" value="<?php echo get_content('filosofia_tec', 'titulo'); ?>" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-teal-500">
+                <input type="text" id="filosofia_tec_titulo" name="conteudo[filosofia_tec][titulo]" value="<?php echo get_content('filosofia_tec', 'titulo'); ?>" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-teal-500">
                 <label for="filosofia_tec_texto" class="block text-gray-700 font-medium mb-2 mt-2">Texto Expansível 1</label>
-                <textarea id="filosofia_tec_texto" name="conteudo_filosofia_tec_texto" rows="3" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-teal-500 richtext"><?php echo get_content('filosofia_tec', 'texto'); ?></textarea>
+                <textarea id="filosofia_tec_texto" name="conteudo[filosofia_tec][texto]" rows="3" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-teal-500 richtext"><?php echo get_content('filosofia_tec', 'texto'); ?></textarea>
             </div>
             <div class="mb-4">
                 <label for="filosofia_pra_titulo" class="block text-gray-700 font-medium mb-2">Título 2: Práticas Internacionais</label>
-                <input type="text" id="filosofia_pra_titulo" name="conteudo_filosofia_pra_titulo" value="<?php echo get_content('filosofia_pra', 'titulo'); ?>" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-teal-500">
+                <input type="text" id="filosofia_pra_titulo" name="conteudo[filosofia_pra][titulo]" value="<?php echo get_content('filosofia_pra', 'titulo'); ?>" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-teal-500">
                  <label for="filosofia_pra_texto" class="block text-gray-700 font-medium mb-2 mt-2">Texto Expansível 2</label>
-                <textarea id="filosofia_pra_texto" name="conteudo_filosofia_pra_texto" rows="3" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-teal-500 richtext"><?php echo get_content('filosofia_pra', 'texto'); ?></textarea>
+                <textarea id="filosofia_pra_texto" name="conteudo[filosofia_pra][texto]" rows="3" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-teal-500 richtext"><?php echo get_content('filosofia_pra', 'texto'); ?></textarea>
             </div>
             <div class="mb-6">
                 <label for="filosofia_ime_titulo" class="block text-gray-700 font-medium mb-2">Título 3: Imersão e Subjetividade</label>
-                <input type="text" id="filosofia_ime_titulo" name="conteudo_filosofia_ime_titulo" value="<?php echo get_content('filosofia_ime', 'titulo'); ?>" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-teal-500">
+                <input type="text" id="filosofia_ime_titulo" name="conteudo[filosofia_ime][titulo]" value="<?php echo get_content('filosofia_ime', 'titulo'); ?>" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-teal-500">
                 <label for="filosofia_ime_texto" class="block text-gray-700 font-medium mb-2 mt-2">Texto Expansível 3</label>
-                <textarea id="filosofia_ime_texto" name="conteudo_filosofia_ime_texto" rows="3" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-teal-500 richtext"><?php echo get_content('filosofia_ime', 'texto'); ?></textarea>
+                <textarea id="filosofia_ime_texto" name="conteudo[filosofia_ime][texto]" rows="3" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-teal-500 richtext"><?php echo get_content('filosofia_ime', 'texto'); ?></textarea>
             </div>
         </div>
 
@@ -178,14 +178,14 @@ require_once 'templates/header.php';
                 <h3 class="text-xl font-semibold text-gray-700 mb-3">Slide <?php echo $i; ?></h3>
                 <div class="mb-4">
                     <label for="slide<?php echo $i; ?>_titulo" class="block text-gray-700 font-medium mb-2">Autor da Citação</label>
-                    <input type="text" id="slide<?php echo $i; ?>_titulo" name="conteudo_slide<?php echo $i; ?>_titulo" value="<?php echo get_content("slide{$i}", 'titulo'); ?>" class="w-full px-3 py-2 border border-gray-300 rounded-md">
+                    <input type="text" id="slide<?php echo $i; ?>_titulo" name="conteudo[slide<?php echo $i; ?>][titulo]" value="<?php echo get_content("slide{$i}", 'titulo'); ?>" class="w-full px-3 py-2 border border-gray-300 rounded-md">
                 </div>
                 <div class="mb-4">
                     <label for="slide<?php echo $i; ?>_texto" class="block text-gray-700 font-medium mb-2">Texto da Citação</label>
-                    <textarea id="slide<?php echo $i; ?>_texto" name="conteudo_slide<?php echo $i; ?>_texto" rows="3" class="w-full px-3 py-2 border border-gray-300 rounded-md richtext"><?php echo get_content("slide{$i}", 'texto'); ?></textarea>
+                    <textarea id="slide<?php echo $i; ?>_texto" name="conteudo[slide<?php echo $i; ?>][texto]" rows="3" class="w-full px-3 py-2 border border-gray-300 rounded-md richtext"><?php echo get_content("slide{$i}", 'texto'); ?></textarea>
                 </div>
                 <div class="mb-4">
-                    <label for="imagem_slide<?php echo $i; ?>" class="block text-gray-700 font-medium mb-2">Nova Imagem de Fundo</label>
+                    <label for="slide<?php echo $i; ?>_imagem" class="block text-gray-700 font-medium mb-2">Nova Imagem de Fundo</label>
                     <?php $imagem_atual = get_content("slide{$i}", 'imagem'); ?>
                     <?php if ($imagem_atual): ?>
                     <div class="mb-2">
@@ -193,8 +193,8 @@ require_once 'templates/header.php';
                         <img src="../../uploads/site/<?php echo $imagem_atual; ?>" alt="Slide <?php echo $i; ?> Atual" class="w-48 h-auto rounded-md border">
                     </div>
                     <?php endif; ?>
-                    <input type="hidden" name="imagem_atual_slide<?php echo $i; ?>" value="<?php echo $imagem_atual; ?>">
-                    <input type="file" id="imagem_slide<?php echo $i; ?>" name="imagem_slide<?php echo $i; ?>" class="w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-teal-50 file:text-teal-700 hover:file:bg-teal-100" accept="image/jpeg, image/png, image/gif">
+                    <input type="hidden" name="conteudo[slide<?php echo $i; ?>][imagem_atual]" value="<?php echo $imagem_atual; ?>">
+                    <input type="file" id="slide<?php echo $i; ?>_imagem" name="conteudo_imagem[slide<?php echo $i; ?>]" class="w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-teal-50 file:text-teal-700 hover:file:bg-teal-100" accept="image/jpeg, image/png, image/gif">
                 </div>
             </div>
             <?php endfor; ?>
@@ -204,11 +204,11 @@ require_once 'templates/header.php';
             <h2 class="text-2xl font-semibold text-gray-700 mb-4">Página "Áreas de Atuação"</h2>
             <div class="mb-4">
                 <label for="atuacao_titulo" class="block text-gray-700 font-medium mb-2">Título Principal da Página</label>
-                <input type="text" id="atuacao_titulo" name="conteudo_atuacao_titulo_titulo" value="<?php echo get_content('atuacao_titulo', 'titulo'); ?>" class="w-full px-3 py-2 border border-gray-300 rounded-md">
+                <input type="text" id="atuacao_titulo" name="conteudo[atuacao_titulo][titulo]" value="<?php echo get_content('atuacao_titulo', 'titulo'); ?>" class="w-full px-3 py-2 border border-gray-300 rounded-md">
             </div>
             <div class="mb-6">
                 <label for="atuacao_texto" class="block text-gray-700 font-medium mb-2">Texto Introdutório</label>
-                <textarea id="atuacao_texto" name="conteudo_atuacao_titulo_texto" rows="4" class="w-full px-3 py-2 border border-gray-300 rounded-md richtext"><?php echo get_content('atuacao_titulo', 'texto'); ?></textarea>
+                <textarea id="atuacao_texto" name="conteudo[atuacao_titulo][texto]" rows="4" class="w-full px-3 py-2 border border-gray-300 rounded-md richtext"><?php echo get_content('atuacao_titulo', 'texto'); ?></textarea>
             </div>
             <hr class="my-6">
             <h3 class="text-xl font-semibold text-gray-700 mb-3">Caixas Interativas e Páginas de Conteúdo</h3>
@@ -217,8 +217,8 @@ require_once 'templates/header.php';
                 <h4 class="text-lg font-semibold text-gray-700 mb-3">Serviço <?php echo $i; ?></h4>
                 <div class="mb-4">
                     <label class="flex items-center cursor-pointer">
-                        <input type="hidden" name="conteudo_atuacao_card<?php echo $i; ?>_exibir_titulo" value="nao">
-                        <input type="checkbox" name="conteudo_atuacao_card<?php echo $i; ?>_exibir_titulo" value="sim" <?php echo get_content("atuacao_card{$i}_exibir", 'titulo') === 'sim' ? 'checked' : ''; ?> class="form-checkbox h-5 w-5 text-teal-600">
+                        <input type="hidden" name="conteudo[atuacao_card<?php echo $i; ?>_exibir][titulo]" value="nao">
+                        <input type="checkbox" name="conteudo[atuacao_card<?php echo $i; ?>_exibir][titulo]" value="sim" <?php echo get_content("atuacao_card{$i}_exibir", 'titulo') === 'sim' ? 'checked' : ''; ?> class="form-checkbox h-5 w-5 text-teal-600">
                         <span class="ml-2 text-gray-700">Exibir este serviço na página de Atuação?</span>
                     </label>
                 </div>
@@ -227,39 +227,39 @@ require_once 'templates/header.php';
                         <h5 class="font-semibold text-gray-600 mb-2">Aparência da Caixa</h5>
                         <div class="mb-4">
                             <label for="card<?php echo $i; ?>_titulo" class="block text-gray-700 font-medium mb-2">Título da Frente</label>
-                            <input type="text" id="card<?php echo $i; ?>_titulo" name="conteudo_atuacao_card<?php echo $i; ?>_titulo_titulo" value="<?php echo get_content("atuacao_card{$i}_titulo", 'titulo'); ?>" class="w-full px-3 py-2 border border-gray-300 rounded-md">
+                            <input type="text" id="card<?php echo $i; ?>_titulo" name="conteudo[atuacao_card<?php echo $i; ?>_titulo][titulo]" value="<?php echo get_content("atuacao_card{$i}_titulo", 'titulo'); ?>" class="w-full px-3 py-2 border border-gray-300 rounded-md">
                         </div>
                         <div class="mb-4">
-                            <label for="imagem_atuacao_card<?php echo $i; ?>_titulo" class="block text-gray-700 font-medium mb-2">Nova Imagem da Frente</label>
+                            <label for="card<?php echo $i; ?>_imagem" class="block text-gray-700 font-medium mb-2">Nova Imagem da Frente</label>
                             <?php $imagem_atual = get_content("atuacao_card{$i}_titulo", 'imagem'); ?>
                             <?php if ($imagem_atual): ?>
                                 <img src="../../uploads/site/<?php echo $imagem_atual; ?>" alt="Caixa <?php echo $i; ?> Imagem" class="w-32 h-auto rounded-md border mb-2">
                             <?php endif; ?>
-                            <input type="hidden" name="imagem_atual_atuacao_card<?php echo $i; ?>_titulo" value="<?php echo $imagem_atual; ?>">
-                            <input type="file" id="imagem_atuacao_card<?php echo $i; ?>_titulo" name="imagem_atuacao_card<?php echo $i; ?>_titulo" class="w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0" accept="image/jpeg, image/png, image/gif">
+                            <input type="hidden" name="conteudo[atuacao_card<?php echo $i; ?>_titulo][imagem_atual]" value="<?php echo $imagem_atual; ?>">
+                            <input type="file" id="card<?php echo $i; ?>_imagem" name="conteudo_imagem[atuacao_card<?php echo $i; ?>_titulo]" class="w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0" accept="image/jpeg, image/png, image/gif">
                         </div>
                         <div class="mb-4">
                             <label for="card<?php echo $i; ?>_texto" class="block text-gray-700 font-medium mb-2">Texto do Verso</label>
-                            <textarea id="card<?php echo $i; ?>_texto" name="conteudo_atuacao_card<?php echo $i; ?>_titulo_texto" rows="3" class="w-full px-3 py-2 border border-gray-300 rounded-md richtext"><?php echo get_content("atuacao_card{$i}_titulo", 'texto'); ?></textarea>
+                            <textarea id="card<?php echo $i; ?>_texto" name="conteudo[atuacao_card<?php echo $i; ?>_titulo][texto]" rows="3" class="w-full px-3 py-2 border border-gray-300 rounded-md richtext"><?php echo get_content("atuacao_card{$i}_titulo", 'texto'); ?></textarea>
                         </div>
                     </div>
                     <div>
                          <h5 class="font-semibold text-gray-600 mb-2">Conteúdo da Página de Detalhe</h5>
                          <div class="mb-4">
                             <label for="atuacao_p<?php echo $i; ?>_titulo" class="block text-gray-700 font-medium mb-2">Título da Página</label>
-                            <input type="text" id="atuacao_p<?php echo $i; ?>_titulo" name="conteudo_atuacao_p<?php echo $i; ?>_titulo_titulo" value="<?php echo get_content("atuacao_p{$i}_titulo", 'titulo'); ?>" class="w-full px-3 py-2 border border-gray-300 rounded-md">
+                            <input type="text" id="atuacao_p<?php echo $i; ?>_titulo" name="conteudo[atuacao_p<?php echo $i; ?>_titulo][titulo]" value="<?php echo get_content("atuacao_p{$i}_titulo", 'titulo'); ?>" class="w-full px-3 py-2 border border-gray-300 rounded-md">
                         </div>
                          <div class="mb-4">
                             <label for="atuacao_p<?php echo $i; ?>_p1" class="block text-gray-700 font-medium mb-2">Parágrafo 1</label>
-                            <textarea id="atuacao_p<?php echo $i; ?>_p1" name="conteudo_atuacao_p<?php echo $i; ?>_titulo_texto" rows="5" class="w-full px-3 py-2 border border-gray-300 rounded-md richtext"><?php echo get_content("atuacao_p{$i}_titulo", 'texto'); ?></textarea>
+                            <textarea id="atuacao_p<?php echo $i; ?>_p1" name="conteudo[atuacao_p<?php echo $i; ?>_titulo][texto]" rows="5" class="w-full px-3 py-2 border border-gray-300 rounded-md richtext"><?php echo get_content("atuacao_p{$i}_titulo", 'texto'); ?></textarea>
                         </div>
                          <div class="mb-4">
                             <label for="atuacao_p<?php echo $i; ?>_p2" class="block text-gray-700 font-medium mb-2">Parágrafo 2</label>
-                            <textarea id="atuacao_p<?php echo $i; ?>_p2" name="conteudo_atuacao_p<?php echo $i; ?>_p2_texto" rows="5" class="w-full px-3 py-2 border border-gray-300 rounded-md richtext"><?php echo get_content("atuacao_p{$i}_p2", 'texto'); ?></textarea>
+                            <textarea id="atuacao_p<?php echo $i; ?>_p2" name="conteudo[atuacao_p<?php echo $i; ?>_p2][texto]" rows="5" class="w-full px-3 py-2 border border-gray-300 rounded-md richtext"><?php echo get_content("atuacao_p{$i}_p2", 'texto'); ?></textarea>
                         </div>
                          <div class="mb-4">
                             <label for="atuacao_p<?php echo $i; ?>_desfecho" class="block text-gray-700 font-medium mb-2">Desfecho</label>
-                            <textarea id="atuacao_p<?php echo $i; ?>_desfecho" name="conteudo_atuacao_p<?php echo $i; ?>_desfecho_texto" rows="3" class="w-full px-3 py-2 border border-gray-300 rounded-md richtext"><?php echo get_content("atuacao_p{$i}_desfecho", 'texto'); ?></textarea>
+                            <textarea id="atuacao_p<?php echo $i; ?>_desfecho" name="conteudo[atuacao_p<?php echo $i; ?>_desfecho][texto]" rows="3" class="w-full px-3 py-2 border border-gray-300 rounded-md richtext"><?php echo get_content("atuacao_p{$i}_desfecho", 'texto'); ?></textarea>
                         </div>
                     </div>
                 </div>
@@ -270,53 +270,53 @@ require_once 'templates/header.php';
             <h2 class="text-2xl font-semibold text-gray-700 mb-4">Página "Sobre"</h2>
             <div class="border p-4 rounded-md mb-4 bg-gray-50">
                 <label for="sobre_objetivo_titulo" class="block text-gray-700 font-medium mb-2">Título da Secção "Objetivo"</label>
-                <input type="text" id="sobre_objetivo_titulo" name="conteudo_sobre_objetivo_titulo_titulo" value="<?php echo get_content('sobre_objetivo_titulo', 'titulo'); ?>" class="w-full px-3 py-2 border border-gray-300 rounded-md mb-2">
+                <input type="text" id="sobre_objetivo_titulo" name="conteudo[sobre_objetivo_titulo][titulo]" value="<?php echo get_content('sobre_objetivo_titulo', 'titulo'); ?>" class="w-full px-3 py-2 border border-gray-300 rounded-md mb-2">
                 <label for="sobre_objetivo_texto" class="block text-gray-700 font-medium mb-2">Texto "Objetivo"</label>
-                <textarea id="sobre_objetivo_texto" name="conteudo_sobre_objetivo_titulo_texto" rows="5" class="w-full px-3 py-2 border border-gray-300 rounded-md richtext"><?php echo get_content('sobre_objetivo_titulo', 'texto'); ?></textarea>
+                <textarea id="sobre_objetivo_texto" name="conteudo[sobre_objetivo_titulo][texto]" rows="5" class="w-full px-3 py-2 border border-gray-300 rounded-md richtext"><?php echo get_content('sobre_objetivo_titulo', 'texto'); ?></textarea>
             </div>
             <div class="border p-4 rounded-md mb-4 bg-gray-50">
-                <label for="imagem_sobre_reflexao_imagem" class="block text-gray-700 font-medium mb-2">Nova Imagem para Reflexão</label>
+                <label for="sobre_reflexao_imagem" class="block text-gray-700 font-medium mb-2">Nova Imagem para Reflexão</label>
                 <?php $imagem_atual = get_content('sobre_reflexao_imagem', 'imagem'); ?>
                 <?php if ($imagem_atual): ?><img src="../../uploads/site/<?php echo $imagem_atual; ?>" class="w-48 h-auto rounded-md border mb-2"><?php endif; ?>
-                <input type="hidden" name="imagem_atual_sobre_reflexao_imagem" value="<?php echo $imagem_atual; ?>">
-                <input type="file" id="imagem_sobre_reflexao_imagem" name="imagem_sobre_reflexao_imagem" class="w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0" accept="image/jpeg, image/png, image/gif">
+                <input type="hidden" name="conteudo[sobre_reflexao_imagem][imagem_atual]" value="<?php echo $imagem_atual; ?>">
+                <input type="file" id="sobre_reflexao_imagem" name="conteudo_imagem[sobre_reflexao_imagem]" class="w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0" accept="image/jpeg, image/png, image/gif">
             </div>
             <div class="border p-4 rounded-md mb-4 bg-gray-50">
-                <label for="imagem_sobre_psicologa_foto" class="block text-gray-700 font-medium mb-2">Nova Foto da Psicóloga</label>
+                <label for="sobre_psicologa_foto" class="block text-gray-700 font-medium mb-2">Nova Foto da Psicóloga</label>
                 <?php $imagem_atual = get_content('sobre_psicologa_foto', 'imagem'); ?>
                 <?php if ($imagem_atual): ?><img src="../../uploads/site/<?php echo $imagem_atual; ?>" class="w-48 h-auto rounded-md border mb-2"><?php endif; ?>
-                <input type="hidden" name="imagem_atual_sobre_psicologa_foto" value="<?php echo $imagem_atual; ?>">
-                <input type="file" id="imagem_sobre_psicologa_foto" name="imagem_sobre_psicologa_foto" class="w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0" accept="image/jpeg, image/png, image/gif">
+                <input type="hidden" name="conteudo[sobre_psicologa_foto][imagem_atual]" value="<?php echo $imagem_atual; ?>">
+                <input type="file" id="sobre_psicologa_foto" name="conteudo_imagem[sobre_psicologa_foto]" class="w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0" accept="image/jpeg, image/png, image/gif">
                 
                 <label for="sobre_mim_texto" class="block text-gray-700 font-medium mb-2 mt-4">Texto em itálico ao lado da foto</label>
-                <textarea id="sobre_mim_texto" name="conteudo_sobre_mim_texto_texto" rows="7" class="w-full px-3 py-2 border border-gray-300 rounded-md richtext"><?php echo get_content('sobre_mim_texto', 'texto'); ?></textarea>
+                <textarea id="sobre_mim_texto" name="conteudo[sobre_mim_texto][texto]" rows="7" class="w-full px-3 py-2 border border-gray-300 rounded-md richtext"><?php echo get_content('sobre_mim_texto', 'texto'); ?></textarea>
                 </div>
             <div class="border p-4 rounded-md mb-4 bg-gray-50">
                 <label for="sobre_quem_sou_titulo" class="block text-gray-700 font-medium mb-2">Título "Quem sou eu..."</label>
-                <input type="text" id="sobre_quem_sou_titulo" name="conteudo_sobre_quem_sou_titulo_titulo" value="<?php echo get_content('sobre_quem_sou_titulo', 'titulo'); ?>" class="w-full px-3 py-2 border border-gray-300 rounded-md mb-2">
+                <input type="text" id="sobre_quem_sou_titulo" name="conteudo[sobre_quem_sou_titulo][titulo]" value="<?php echo get_content('sobre_quem_sou_titulo', 'titulo'); ?>" class="w-full px-3 py-2 border border-gray-300 rounded-md mb-2">
                 <label for="sobre_quem_sou_texto" class="block text-gray-700 font-medium mb-2">Texto "Quem sou eu..."</label>
-                <textarea id="sobre_quem_sou_texto" name="conteudo_sobre_quem_sou_titulo_texto" rows="5" class="w-full px-3 py-2 border border-gray-300 rounded-md richtext"><?php echo get_content('sobre_quem_sou_titulo', 'texto'); ?></textarea>
+                <textarea id="sobre_quem_sou_texto" name="conteudo[sobre_quem_sou_titulo][texto]" rows="5" class="w-full px-3 py-2 border border-gray-300 rounded-md richtext"><?php echo get_content('sobre_quem_sou_titulo', 'texto'); ?></textarea>
             </div>
             <div class="border p-4 rounded-md mb-4 bg-gray-50">
                 <label for="sobre_especializacoes_titulo" class="block text-gray-700 font-medium mb-2">Título "Minhas especializações"</label>
-                <input type="text" id="sobre_especializacoes_titulo" name="conteudo_sobre_especializacoes_titulo_titulo" value="<?php echo get_content('sobre_especializacoes_titulo', 'titulo'); ?>" class="w-full px-3 py-2 border border-gray-300 rounded-md mb-2">
+                <input type="text" id="sobre_especializacoes_titulo" name="conteudo[sobre_especializacoes_titulo][titulo]" value="<?php echo get_content('sobre_especializacoes_titulo', 'titulo'); ?>" class="w-full px-3 py-2 border border-gray-300 rounded-md mb-2">
                 <label for="sobre_especializacoes_texto" class="block text-gray-700 font-medium mb-2">Texto "Minhas especializações"</label>
-                <textarea id="sobre_especializacoes_texto" name="conteudo_sobre_especializacoes_titulo_texto" rows="7" class="w-full px-3 py-2 border border-gray-300 rounded-md richtext"><?php echo get_content('sobre_especializacoes_titulo', 'texto'); ?></textarea>
+                <textarea id="sobre_especializacoes_texto" name="conteudo[sobre_especializacoes_titulo][texto]" rows="7" class="w-full px-3 py-2 border border-gray-300 rounded-md richtext"><?php echo get_content('sobre_especializacoes_titulo', 'texto'); ?></textarea>
             </div>
             <div class="border p-4 rounded-md mb-4 bg-gray-50">
                  <h3 class="text-xl font-semibold text-gray-700 mb-3">Modalidades de Atendimento</h3>
                 <?php for ($i = 1; $i <= 3; $i++): ?>
                 <div class="border-t pt-4 mt-4">
                     <h4 class="text-lg font-semibold text-gray-700 mb-2">Modalidade <?php echo $i; ?></h4>
-                    <label for="imagem_sobre_mod<?php echo $i; ?>_imagem" class="block text-gray-700 font-medium mb-2">Nova Imagem</label>
+                    <label for="mod<?php echo $i; ?>_imagem" class="block text-gray-700 font-medium mb-2">Nova Imagem</label>
                     <?php $imagem_atual = get_content("sobre_mod{$i}_imagem", 'imagem'); ?>
                     <?php if ($imagem_atual): ?><img src="../../uploads/site/<?php echo $imagem_atual; ?>" class="w-48 h-auto rounded-md border mb-2"><?php endif; ?>
-                    <input type="hidden" name="imagem_atual_sobre_mod<?php echo $i; ?>_imagem" value="<?php echo $imagem_atual; ?>">
-                    <input type="file" id="imagem_sobre_mod<?php echo $i; ?>_imagem" name="imagem_sobre_mod<?php echo $i; ?>_imagem" class="w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0" accept="image/jpeg, image/png, image/gif">
+                    <input type="hidden" name="conteudo[sobre_mod<?php echo $i; ?>_imagem][imagem_atual]" value="<?php echo $imagem_atual; ?>">
+                    <input type="file" id="mod<?php echo $i; ?>_imagem" name="conteudo_imagem[sobre_mod<?php echo $i; ?>_imagem]" class="w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0" accept="image/jpeg, image/png, image/gif">
                     <label for="mod<?php echo $i; ?>_titulo" class="block text-gray-700 font-medium mb-2 mt-4">Título</label>
-                    <input type="text" id="mod<?php echo $i; ?>_titulo" name="conteudo_sobre_mod<?php echo $i; ?>_imagem_titulo" value="<?php echo get_content("sobre_mod{$i}_imagem", 'titulo'); ?>" class="w-full px-3 py-2 border border-gray-300 rounded-md mb-2">
+                    <input type="text" id="mod<?php echo $i; ?>_titulo" name="conteudo[sobre_mod<?php echo $i; ?>_imagem][titulo]" value="<?php echo get_content("sobre_mod{$i}_imagem", 'titulo'); ?>" class="w-full px-3 py-2 border border-gray-300 rounded-md mb-2">
                     <label for="mod<?php echo $i; ?>_texto" class="block text-gray-700 font-medium mb-2">Texto</label>
-                    <textarea id="mod<?php echo $i; ?>_texto" name="conteudo_sobre_mod<?php echo $i; ?>_imagem_texto" rows="5" class="w-full px-3 py-2 border border-gray-300 rounded-md richtext"><?php echo get_content("sobre_mod{$i}_imagem", 'texto'); ?></textarea>
+                    <textarea id="mod<?php echo $i; ?>_texto" name="conteudo[sobre_mod<?php echo $i; ?>_imagem][texto]" rows="5" class="w-full px-3 py-2 border border-gray-300 rounded-md richtext"><?php echo get_content("sobre_mod{$i}_imagem", 'texto'); ?></textarea>
                 </div>
                 <?php endfor; ?>
             </div>
@@ -326,21 +326,21 @@ require_once 'templates/header.php';
             <h2 class="text-2xl font-semibold text-gray-700 mb-4">Página de Contato</h2>
             <div class="border p-4 rounded-md mb-4 bg-gray-50">
                 <label for="contato_titulo" class="block text-gray-700 font-medium mb-2">Título Principal</label>
-                <input type="text" id="contato_titulo" name="conteudo_contato_titulo_titulo" value="<?php echo get_content('contato_titulo', 'titulo'); ?>" class="w-full px-3 py-2 border border-gray-300 rounded-md mb-2">
+                <input type="text" id="contato_titulo" name="conteudo[contato_titulo][titulo]" value="<?php echo get_content('contato_titulo', 'titulo'); ?>" class="w-full px-3 py-2 border border-gray-300 rounded-md mb-2">
                 <label for="contato_texto" class="block text-gray-700 font-medium mb-2">Texto Introdutório</label>
-                <textarea id="contato_texto" name="conteudo_contato_titulo_texto" rows="4" class="w-full px-3 py-2 border border-gray-300 rounded-md richtext"><?php echo get_content('contato_titulo', 'texto'); ?></textarea>
+                <textarea id="contato_texto" name="conteudo[contato_titulo][texto]" rows="4" class="w-full px-3 py-2 border border-gray-300 rounded-md richtext"><?php echo get_content('contato_titulo', 'texto'); ?></textarea>
             </div>
             <div class="border p-4 rounded-md mb-4 bg-gray-50">
                 <label for="contato_endereco_sp" class="block text-gray-700 font-medium mb-2">Endereço (São Paulo)</label>
-                <input type="text" id="contato_endereco_sp" name="conteudo_contato_endereco_sp_texto" value="<?php echo get_content('contato_endereco_sp', 'texto'); ?>" class="w-full px-3 py-2 border border-gray-300 rounded-md">
+                <input type="text" id="contato_endereco_sp" name="conteudo[contato_endereco_sp][texto]" value="<?php echo get_content('contato_endereco_sp', 'texto'); ?>" class="w-full px-3 py-2 border border-gray-300 rounded-md">
             </div>
             <div class="border p-4 rounded-md mb-4 bg-gray-50">
                 <label for="contato_endereco_cwb" class="block text-gray-700 font-medium mb-2">Endereço (Curitiba)</label>
-                <input type="text" id="contato_endereco_cwb" name="conteudo_contato_endereco_cwb_texto" value="<?php echo get_content('contato_endereco_cwb', 'texto'); ?>" class="w-full px-3 py-2 border border-gray-300 rounded-md">
+                <input type="text" id="contato_endereco_cwb" name="conteudo[contato_endereco_cwb][texto]" value="<?php echo get_content('contato_endereco_cwb', 'texto'); ?>" class="w-full px-3 py-2 border border-gray-300 rounded-md">
             </div>
             <div class="border p-4 rounded-md mb-4 bg-gray-50">
                 <label for="contato_whatsapp" class="block text-gray-700 font-medium mb-2">Link do WhatsApp</label>
-                <input type="text" id="contato_whatsapp" name="conteudo_contato_whatsapp_texto" value="<?php echo get_content('contato_whatsapp', 'texto'); ?>" class="w-full px-3 py-2 border border-gray-300 rounded-md" placeholder="Ex: https://wa.me/5511999999999">
+                <input type="text" id="contato_whatsapp" name="conteudo[contato_whatsapp][texto]" value="<?php echo get_content('contato_whatsapp', 'texto'); ?>" class="w-full px-3 py-2 border border-gray-300 rounded-md" placeholder="Ex: https://wa.me/5511999999999">
             </div>
         </div>
 
