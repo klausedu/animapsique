@@ -37,16 +37,26 @@ function processar_upload($file_info, $imagem_atual) {
     }
 }
 
-// Lógica para reconstruir os dados do formulário a partir dos nomes "achatados"
+// ======================================================================
+// LÓGICA CORRIGIDA PARA PROCESSAR OS DADOS DO FORMULÁRIO
+// ======================================================================
 $dados_organizados = [];
 
 // 1. Processa os campos de texto (titulo, texto, etc.)
 foreach ($_POST as $key => $value) {
     if (strpos($key, 'conteudo_') === 0) {
-        $parts = explode('_', $key, 3);
-        if (count($parts) === 3) {
-            $secao = $parts[1];
-            $campo = $parts[2];
+        // Remove o prefixo 'conteudo_'
+        $key_sem_prefixo = substr($key, 9);
+        
+        // Encontra a posição do último underscore
+        $pos_ultimo_underscore = strrpos($key_sem_prefixo, '_');
+
+        if ($pos_ultimo_underscore !== false) {
+            // A secção é tudo antes do último underscore
+            $secao = substr($key_sem_prefixo, 0, $pos_ultimo_underscore);
+            // O campo é tudo depois do último underscore
+            $campo = substr($key_sem_prefixo, $pos_ultimo_underscore + 1);
+            
             $dados_organizados[$secao][$campo] = trim($value);
         }
     }
@@ -55,17 +65,17 @@ foreach ($_POST as $key => $value) {
 // 2. Processa as imagens (novas e atuais)
 foreach ($_FILES as $key => $file_info) {
     if (strpos($key, 'imagem_') === 0) {
-        $parts = explode('_', $key, 2);
-        if (count($parts) === 2) {
-            $secao = $parts[1];
-            $imagem_atual_key = 'imagem_atual_' . $secao;
-            $imagem_atual = $_POST[$imagem_atual_key] ?? null;
-            
-            $imagem_final = processar_upload($file_info, $imagem_atual);
-            $dados_organizados[$secao]['imagem'] = $imagem_final;
-        }
+        // A secção é o nome do campo sem o prefixo 'imagem_'
+        $secao = substr($key, 7);
+        
+        $imagem_atual_key = 'imagem_atual_' . $secao;
+        $imagem_atual = $_POST[$imagem_atual_key] ?? null;
+        
+        $imagem_final = processar_upload($file_info, $imagem_atual);
+        $dados_organizados[$secao]['imagem'] = $imagem_final;
     }
 }
+// ======================================================================
 
 try {
     $pdo = conectar();
@@ -80,9 +90,7 @@ try {
     
     $stmt = $pdo->prepare($sql);
 
-    // Itera sobre os dados já organizados
     foreach ($dados_organizados as $secao => $campos) {
-        // Garante que a imagem antiga é mantida se não houver um novo upload
         $imagem_final = $campos['imagem'] ?? ($_POST['imagem_atual_' . $secao] ?? null);
 
         $stmt->execute([
