@@ -1,1 +1,35 @@
-<?php/*===================================================================Conteúdo para: area_logada/psicologa/processa_atribuicao_quiz.php===================================================================*/require_once '../../config.php';require_once '../../includes/auth_psicologa.php';require_once '../../includes/db.php';require_once '../../includes/email.php';$quiz_id = filter_input(INPUT_POST, 'quiz_id', FILTER_VALIDATE_INT);$pacientes_ids = $_POST['pacientes_ids'] ?? [];$redirect_url = $quiz_id ? "atribuir_quiz.php?id=$quiz_id" : 'quizzes.php';if (!$quiz_id || empty($pacientes_ids)) {    $_SESSION['atribuicao_error'] = 'Você precisa selecionar pelo menos um paciente.';    header("Location: $redirect_url");    exit;}try {    $pdo = conectar();    $pdo->beginTransaction();    // Busca o título do quiz para o e-mail    $stmt_quiz = $pdo->prepare("SELECT titulo FROM quizzes WHERE id = ?");    $stmt_quiz->execute([$quiz_id]);    $quiz = $stmt_quiz->fetch();    $quiz_titulo = $quiz ? $quiz['titulo'] : 'um novo quiz';    $sql = "INSERT INTO quiz_atribuicoes (quiz_id, paciente_id, status) VALUES (?, ?, 'pendente')";    $stmt = $pdo->prepare($sql);    $atribuidos_count = 0;    foreach ($pacientes_ids as $paciente_id) {        if (filter_var($paciente_id, FILTER_VALIDATE_INT)) {            $check_stmt = $pdo->prepare("SELECT id FROM quiz_atribuicoes WHERE quiz_id = ? AND paciente_id = ?");            $check_stmt->execute([$quiz_id, $paciente_id]);            if (!$check_stmt->fetch()) {                $stmt->execute([$quiz_id, $paciente_id]);                $atribuidos_count++;                                // Busca os dados do paciente para enviar o e-mail                $stmt_paciente = $pdo->prepare("SELECT nome, email FROM pacientes WHERE id = ?");                $stmt_paciente->execute([$paciente_id]);                $paciente = $stmt_paciente->fetch();                if ($paciente) {                    $assunto_email = "Você tem um novo quiz para responder";                    $corpo_email = "<h1>Novo Quiz Disponível</h1><p>Olá, {$paciente['nome']}.</p><p>Um novo quiz chamado '{$quiz_titulo}' foi atribuído a você.</p><p style='margin-top: 20px; font-size: 12px; color: #888;'>Para responder, por favor, visite o portal:</p><a href='" . BASE_URL . "/login.php' style='display: inline-block; padding: 10px 20px; background-color: #0d9488; color: #ffffff; text-decoration: none; border-radius: 5px;'>Acessar ao Portal</a>";                    enviar_email($paciente['email'], $paciente['nome'], $assunto_email, $corpo_email);                }            }        }    }    $pdo->commit();        if ($atribuidos_count > 0) {        $_SESSION['atribuicao_success'] = "Quiz atribuído com sucesso para $atribuidos_count paciente(s). Eles serão notificados por e-mail.";    } else {        $_SESSION['atribuicao_error'] = "Nenhum quiz foi atribuído. Os pacientes selecionados talvez já tivessem este quiz pendente.";    }} catch (PDOException $e) {    if ($pdo->inTransaction()) {        $pdo->rollBack();    }    error_log("Erro ao atribuir quiz: " . $e->getMessage());    $_SESSION['atribuicao_error'] = 'Ocorreu um erro no servidor ao tentar atribuir o quiz.';}header("Location: $redirect_url");exit;?>
+<?php
+// Inicia a sessão para podermos ver as mensagens
+session_start();
+
+// Desativa a visualização de erros para o utilizador final, mas regista-os
+error_reporting(E_ALL);
+ini_set('display_errors', 0);
+ini_set('log_errors', 1);
+
+echo "<h1>Diagnóstico de Submissão</h1>";
+echo "<p>Se está a ver esta página, o acesso ao ficheiro PHP funcionou. O problema está nos dados enviados ou no processamento.</p>";
+
+echo "<h2>Dados Recebidos (\$_POST):</h2>";
+echo "<pre>";
+print_r($_POST);
+echo "</pre>";
+
+echo "<h2>Ficheiros Recebidos (\$_FILES):</h2>";
+echo "<pre>";
+print_r($_FILES);
+echo "</pre>";
+
+// Tenta uma operação simples de ficheiro para verificar permissões
+$teste_dir = __DIR__ . '/../../uploads/site/';
+echo "<h2>Teste de Escrita no Diretório:</h2>";
+echo "<p>A tentar escrever em: " . realpath($teste_dir) . "</p>";
+
+if (is_writable($teste_dir)) {
+    echo "<p style='color:green;'>Sucesso! O diretório tem permissão de escrita.</p>";
+} else {
+    echo "<p style='color:red;'>Falha! O diretório não tem permissão de escrita. Verifique as permissões (devem ser 755 ou 775).</p>";
+}
+
+exit;
+?>
