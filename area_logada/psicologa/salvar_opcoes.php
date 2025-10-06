@@ -1,34 +1,109 @@
 <?php
-// ======================================================================
-// CÓDIGO DE DIAGNÓSTICO
-// ======================================================================
-echo "<!DOCTYPE html><html lang='pt-br'><head><meta charset='UTF-8'><title>Debug de Dados Recebidos</title>";
-echo "<style>body { font-family: sans-serif; padding: 20px; background-color: #f4f4f9; } .container { background-color: white; padding: 20px; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); } h1 { color: #333; } pre { background-color: #eee; padding: 15px; border-radius: 5px; white-space: pre-wrap; word-wrap: break-word; }</style>";
-echo "</head><body><div class='container'>";
-echo "<h1>Debug dos Dados Recebidos</h1>";
-echo "<p>Estes são os dados que o formulário enviou para serem guardados. Se os campos da sua aba ativa estiverem aqui, o problema está na lógica de gravação. Se estiverem em falta, o problema está no JavaScript do formulário.</p>";
-
-echo "<h2>Dados de Texto (\$_POST):</h2>";
-echo "<pre>";
-print_r($_POST);
-echo "</pre>";
-
-echo "<h2>Dados de Ficheiros (\$_FILES):</h2>";
-echo "<pre>";
-print_r($_FILES);
-echo "</pre>";
-
-echo "</div></body></html>";
-
-// A execução para aqui intencionalmente para análise.
-exit;
-
-
-// ======================================================================
-// SEU CÓDIGO ORIGINAL (NÃO SERÁ EXECUTADO DURANTE O DEBUG)
-// ======================================================================
 require_once '../../config.php';
 require_once '../../includes/auth_psicologa.php';
 require_once '../../includes/db.php';
-// ... (o resto do seu ficheiro salvar_opcoes.php)
+
+if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
+    header('Location: configuracoes_site.php');
+    exit;
+}
+
+define('UPLOAD_DIR', __DIR__ . '/../../uploads/site/');
+
+function processar_upload($file_info, $imagem_atual) {
+    if (!isset($file_info['error']) || $file_info['error'] !== UPLOAD_ERR_OK) {
+        if (isset($file_info['error']) && $file_info['error'] !== UPLOAD_ERR_NO_FILE) {
+             $_SESSION['mensagem_erro'] = "Erro no upload da imagem: " . $file_info['error'];
+        }
+        return $imagem_atual;
+    }
+    $mime_type = mime_content_type($file_info['tmp_name']);
+    $allowed_types = ['image/jpeg', 'image/png', 'image/gif'];
+    if (!in_array($mime_type, $allowed_types)) {
+        $_SESSION['mensagem_erro'] = "Tipo de ficheiro inválido. Apenas JPG, PNG e GIF são permitidos.";
+        return $imagem_atual;
+    }
+    $extension = pathinfo($file_info['name'], PATHINFO_EXTENSION);
+    $novo_nome = uniqid('site_', true) . '.' . $extension;
+    $caminho_destino = UPLOAD_DIR . $novo_nome;
+    if (move_uploaded_file($file_info['tmp_name'], $caminho_destino)) {
+        if ($imagem_atual && file_exists(UPLOAD_DIR . $imagem_atual)) {
+            unlink(UPLOAD_DIR . $imagem_atual);
+        }
+        return $novo_nome;
+    } else {
+        $_SESSION['mensagem_erro'] = "Falha ao mover o ficheiro enviado.";
+        return $imagem_atual;
+    }
+}
+
+// Lógica para reconstruir os dados do formulário a partir dos nomes "achatados"
+$dados_organizados = [];
+
+// 1. Processa os campos de texto (titulo, texto, etc.)
+foreach ($_POST as $key => $value) {
+    if (strpos($key, 'conteudo_') === 0) {
+        $parts = explode('_', $key, 3);
+        if (count($parts) === 3) {
+            $secao = $parts[1];
+            $campo = $parts[2];
+            $dados_organizados[$secao][$campo] = trim($value);
+        }
+    }
+}
+
+// 2. Processa as imagens (novas e atuais)
+foreach ($_FILES as $key => $file_info) {
+    if (strpos($key, 'imagem_') === 0) {
+        $parts = explode('_', $key, 2);
+        if (count($parts) === 2) {
+            $secao = $parts[1];
+            $imagem_atual_key = 'imagem_atual_' . $secao;
+            $imagem_atual = $_POST[$imagem_atual_key] ?? null;
+            
+            $imagem_final = processar_upload($file_info, $imagem_atual);
+            $dados_organizados[$secao]['imagem'] = $imagem_final;
+        }
+    }
+}
+
+try {
+    $pdo = conectar();
+    $pdo->beginTransaction();
+
+    $sql = "INSERT INTO conteudo_site (secao, titulo, texto, imagem) 
+            VALUES (:secao, :titulo, :texto, :imagem)
+            ON DUPLICATE KEY UPDATE 
+                titulo = VALUES(titulo), 
+                texto = VALUES(texto), 
+                imagem = VALUES(imagem)";
+    
+    $stmt = $pdo->prepare($sql);
+
+    // Itera sobre os dados já organizados
+    foreach ($dados_organizados as $secao => $campos) {
+        // Garante que a imagem antiga é mantida se não houver um novo upload
+        $imagem_final = $campos['imagem'] ?? ($_POST['imagem_atual_' . $secao] ?? null);
+
+        $stmt->execute([
+            ':secao' => $secao,
+            ':titulo' => $campos['titulo'] ?? null,
+            ':texto' => $campos['texto'] ?? null,
+            ':imagem' => $imagem_final
+        ]);
+    }
+
+    $pdo->commit();
+    $_SESSION['mensagem_sucesso'] = "As configurações foram guardadas com sucesso!";
+
+} catch (Exception $e) {
+    if ($pdo && $pdo->inTransaction()) {
+        $pdo->rollBack();
+    }
+    $_SESSION['mensagem_erro'] = "Erro ao guardar as configurações: " . $e->getMessage();
+}
+
+$active_tab = isset($_POST['active_tab']) ? $_POST['active_tab'] : 'geral';
+header('Location: configuracoes_site.php?tab=' . urlencode($active_tab));
+exit;
 ?>
