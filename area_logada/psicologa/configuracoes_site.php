@@ -61,7 +61,7 @@ require_once 'templates/header.php';
         </nav>
     </div>
 
-    <form action="processa_configuracoes.php" method="POST" enctype="multipart/form-data" class="bg-white p-6 rounded-lg shadow-md">
+    <form action="salvar_opcoes.php" method="POST" enctype="multipart/form-data" class="bg-white p-6 rounded-lg shadow-md">
         <input type="hidden" name="active_tab" id="active_tab" value="geral">
 
         <div id="geral-content" class="tab-content">
