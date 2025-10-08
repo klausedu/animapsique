@@ -1,1 +1,110 @@
-<?phprequire_once '../../config.php';require_once '../../includes/auth_psicologa.php';require_once '../../includes/db.php';$page_title = 'Meus Pacientes';require_once 'templates/header.php';// Buscar todos os pacientes do banco de dadostry {    $pdo = conectar();    $stmt = $pdo->query("SELECT id, nome, email, telefone, ativo FROM pacientes ORDER BY nome ASC");    $pacientes = $stmt->fetchAll();} catch (PDOException $e) {    error_log("Erro ao buscar pacientes: " . $e->getMessage());    $pacientes = [];}?><div class="container mx-auto px-4 sm:px-6 lg:px-8">    <!-- Seção de Adicionar Novo Paciente -->    <div class="bg-white p-6 rounded-lg shadow-md mb-8">        <h2 class="text-2xl font-bold text-gray-800 mb-4">Adicionar Novo Paciente</h2>        <!-- Exibe mensagens de sucesso ou erro -->        <?php if (isset($_SESSION['success_message'])): ?>            <div class="bg-green-100 border-l-4 border-green-500 text-green-700 p-4 mb-4" role="alert">                <p class="font-bold">Sucesso!</p>                <p><?php echo $_SESSION['success_message']; unset($_SESSION['success_message']); ?></p>            </div>        <?php endif; ?>        <?php if (isset($_SESSION['error_message'])): ?>            <div class="bg-red-100 border-l-4 border-red-500 text-red-700 p-4 mb-4" role="alert">                <p class="font-bold">Erro!</p>                <p><?php echo $_SESSION['error_message']; unset($_SESSION['error_message']); ?></p>            </div>        <?php endif; ?>        <form action="processa_paciente.php" method="POST">            <input type="hidden" name="action" value="add_paciente">            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">                <div>                    <label for="nome" class="block text-sm font-medium text-gray-700">Nome Completo</label>                    <input type="text" name="nome" id="nome" required class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-teal-500 focus:ring-teal-500 sm:text-sm">                </div>                <div>                    <label for="email" class="block text-sm font-medium text-gray-700">E-mail</label>                    <input type="email" name="email" id="email" required class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-teal-500 focus:ring-teal-500 sm:text-sm">                </div>                <div class="flex items-end">                    <button type="submit" class="w-full justify-center rounded-md border border-transparent bg-teal-600 py-2 px-4 text-sm font-medium text-white shadow-sm hover:bg-teal-700 focus:outline-none focus:ring-2 focus:ring-teal-500 focus:ring-offset-2">                        Gerar Link de Cadastro                    </button>                </div>            </div>        </form>    </div>    <!-- Tabela de Pacientes Cadastrados -->    <div class="bg-white p-6 rounded-lg shadow-md">        <h2 class="text-2xl font-bold text-gray-800 mb-4">Lista de Pacientes</h2>        <div class="overflow-x-auto">            <table class="min-w-full divide-y divide-gray-200">                <thead class="bg-gray-50">                    <tr>                        <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Nome</th>                        <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Contato</th>                        <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Status</th>                        <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Ações</th>                    </tr>                </thead>                <tbody class="bg-white divide-y divide-gray-200">                    <?php if (empty($pacientes)): ?>                        <tr>                            <td colspan="4" class="px-6 py-4 whitespace-nowrap text-sm text-gray-500 text-center">Nenhum paciente cadastrado ainda.</td>                        </tr>                    <?php else: ?>                        <?php foreach ($pacientes as $paciente): ?>                            <tr>                                <td class="px-6 py-4 whitespace-nowrap">                                    <div class="text-sm font-medium text-gray-900"><?php echo htmlspecialchars($paciente['nome']); ?></div>                                </td>                                <td class="px-6 py-4 whitespace-nowrap">                                    <div class="text-sm text-gray-900"><?php echo htmlspecialchars($paciente['email']); ?></div>                                    <div class="text-sm text-gray-500"><?php echo htmlspecialchars($paciente['telefone'] ?? 'Telefone não informado'); ?></div>                                </td>                                <td class="px-6 py-4 whitespace-nowrap">                                    <?php if ($paciente['ativo']): ?>                                        <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800">Ativo</span>                                    <?php else: ?>                                        <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-yellow-100 text-yellow-800">Pendente</span>                                    <?php endif; ?>                                </td>                                <td class="px-6 py-4 whitespace-nowrap text-sm font-medium space-x-4">                                    <a href="prontuario_paciente.php?id=<?php echo $paciente['id']; ?>" class="text-teal-600 hover:text-teal-900">Prontuário</a>                                    <a href="diario_paciente.php?paciente_id=<?php echo $paciente['id']; ?>" class="text-indigo-600 hover:text-indigo-900">Diário</a>                                    <a href="documentos_paciente.php?paciente_id=<?php echo $paciente['id']; ?>" class="text-indigo-600 hover:text-indigo-900">Documentos</a>                                    <a href="recibos.php?paciente_id=<?php echo $paciente['id']; ?>" class="text-indigo-600 hover:text-indigo-900">Recibos</a>                                </td>                            </tr>                        <?php endforeach; ?>                    <?php endif; ?>                </tbody>            </table>        </div>    </div></div><?php require_once 'templates/footer.php'; ?>
+<?php
+require_once '../../config.php';
+require_once '../../includes/auth_psicologa.php';
+require_once '../../includes/db.php';
+
+$page_title = 'Meus Pacientes';
+require_once 'templates/header.php';
+
+// Buscar todos os pacientes do banco de dados
+try {
+    $pdo = conectar();
+    $stmt = $pdo->query("SELECT id, nome, email, telefone, ativo FROM pacientes ORDER BY nome ASC");
+    $pacientes = $stmt->fetchAll();
+} catch (PDOException $e) {
+    error_log("Erro ao buscar pacientes: " . $e->getMessage());
+    $pacientes = [];
+}
+?>
+
+<div class="container mx-auto px-4 sm:px-6 lg:px-8">
+
+    <!-- Seção de Adicionar Novo Paciente -->
+    <div class="bg-white p-6 rounded-lg shadow-md mb-8">
+        <h2 class="text-2xl font-bold text-gray-800 mb-4">Adicionar Novo Paciente</h2>
+
+        <!-- Exibe mensagens de sucesso ou erro -->
+        <?php if (isset($_SESSION['success_message'])): ?>
+            <div class="bg-green-100 border-l-4 border-green-500 text-green-700 p-4 mb-4" role="alert">
+                <p class="font-bold">Sucesso!</p>
+                <p><?php echo $_SESSION['success_message']; unset($_SESSION['success_message']); ?></p>
+            </div>
+        <?php endif; ?>
+        <?php if (isset($_SESSION['error_message'])): ?>
+            <div class="bg-red-100 border-l-4 border-red-500 text-red-700 p-4 mb-4" role="alert">
+                <p class="font-bold">Erro!</p>
+                <p><?php echo $_SESSION['error_message']; unset($_SESSION['error_message']); ?></p>
+            </div>
+        <?php endif; ?>
+
+        <form action="processa_paciente" method="POST">
+            <input type="hidden" name="action" value="add_paciente">
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                <div>
+                    <label for="nome" class="block text-sm font-medium text-gray-700">Nome Completo</label>
+                    <input type="text" name="nome" id="nome" required class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-teal-500 focus:ring-teal-500 sm:text-sm">
+                </div>
+                <div>
+                    <label for="email" class="block text-sm font-medium text-gray-700">E-mail</label>
+                    <input type="email" name="email" id="email" required class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-teal-500 focus:ring-teal-500 sm:text-sm">
+                </div>
+                <div class="flex items-end">
+                    <button type="submit" class="w-full justify-center rounded-md border border-transparent bg-teal-600 py-2 px-4 text-sm font-medium text-white shadow-sm hover:bg-teal-700 focus:outline-none focus:ring-2 focus:ring-teal-500 focus:ring-offset-2">
+                        Gerar Link de Cadastro
+                    </button>
+                </div>
+            </div>
+        </form>
+    </div>
+
+    <!-- Tabela de Pacientes Cadastrados -->
+    <div class="bg-white p-6 rounded-lg shadow-md">
+        <h2 class="text-2xl font-bold text-gray-800 mb-4">Lista de Pacientes</h2>
+        <div class="overflow-x-auto">
+            <table class="min-w-full divide-y divide-gray-200">
+                <thead class="bg-gray-50">
+                    <tr>
+                        <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Nome</th>
+                        <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Contato</th>
+                        <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Status</th>
+                        <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Ações</th>
+                    </tr>
+                </thead>
+                <tbody class="bg-white divide-y divide-gray-200">
+                    <?php if (empty($pacientes)): ?>
+                        <tr>
+                            <td colspan="4" class="px-6 py-4 whitespace-nowrap text-sm text-gray-500 text-center">Nenhum paciente cadastrado ainda.</td>
+                        </tr>
+                    <?php else: ?>
+                        <?php foreach ($pacientes as $paciente): ?>
+                            <tr>
+                                <td class="px-6 py-4 whitespace-nowrap">
+                                    <div class="text-sm font-medium text-gray-900"><?php echo htmlspecialchars($paciente['nome']); ?></div>
+                                </td>
+                                <td class="px-6 py-4 whitespace-nowrap">
+                                    <div class="text-sm text-gray-900"><?php echo htmlspecialchars($paciente['email']); ?></div>
+                                    <div class="text-sm text-gray-500"><?php echo htmlspecialchars($paciente['telefone'] ?? 'Telefone não informado'); ?></div>
+                                </td>
+                                <td class="px-6 py-4 whitespace-nowrap">
+                                    <?php if ($paciente['ativo']): ?>
+                                        <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800">Ativo</span>
+                                    <?php else: ?>
+                                        <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-yellow-100 text-yellow-800">Pendente</span>
+                                    <?php endif; ?>
+                                </td>
+                                <td class="px-6 py-4 whitespace-nowrap text-sm font-medium space-x-4">
+                                    <a href="prontuario_paciente?id=<?php echo $paciente['id']; ?>" class="text-teal-600 hover:text-teal-900">Prontuário</a>
+                                    <a href="diario_paciente?paciente_id=<?php echo $paciente['id']; ?>" class="text-indigo-600 hover:text-indigo-900">Diário</a>
+                                    <a href="documentos_paciente?paciente_id=<?php echo $paciente['id']; ?>" class="text-indigo-600 hover:text-indigo-900">Documentos</a>
+                                    <a href="recibos?paciente_id=<?php echo $paciente['id']; ?>" class="text-indigo-600 hover:text-indigo-900">Recibos</a>
+                                </td>
+                            </tr>
+                        <?php endforeach; ?>
+                    <?php endif; ?>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<?php require_once 'templates/footer.php'; ?>
