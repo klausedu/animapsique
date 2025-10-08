@@ -39,19 +39,19 @@ try {
             <div class="flex h-16 items-center justify-between">
                 <div class="flex items-center">
                     <div class="flex-shrink-0">
-                        <a href="painel.php">
-                            <img class="h-10" src="https://animapsique.com.br/wp-content/uploads/2022/03/animapsique_logo70perc.png" alt="AnimaPsique Logotipo">
+                        <a href="painel">
+                            <img class="h-10" src="https://animapsique.com.br/uploads/site/animapsique_logo70perc.png" alt="AnimaPsique Logotipo">
                         </a>
                     </div>
                     <div class="hidden md:block">
                         <div class="ml-10 flex items-baseline space-x-4">
-                            <a href="painel.php" class="text-gray-300 hover:bg-gray-700 hover:text-white rounded-md px-3 py-2 text-sm font-medium">Painel</a>
-                            <a href="agenda.php" class="text-gray-300 hover:bg-gray-700 hover:text-white rounded-md px-3 py-2 text-sm font-medium">Agenda</a>
-                            <a href="mensagens.php" class="text-gray-300 hover:bg-gray-700 hover:text-white rounded-md px-3 py-2 text-sm font-medium">Mensagens</a>
-                            <a href="quizzes.php" class="text-gray-300 hover:bg-gray-700 hover:text-white rounded-md px-3 py-2 text-sm font-medium">Quizzes</a>
-                            <a href="diario.php" class="text-gray-300 hover:bg-gray-700 hover:text-white rounded-md px-3 py-2 text-sm font-medium">Diário</a>
-                            <a href="documentos.php" class="text-gray-300 hover:bg-gray-700 hover:text-white rounded-md px-3 py-2 text-sm font-medium">Documentos</a>
-                            <a href="recibos.php" class="text-gray-300 hover:bg-gray-700 hover:text-white rounded-md px-3 py-2 text-sm font-medium">Recibos</a>
+                            <a href="painel" class="text-gray-300 hover:bg-gray-700 hover:text-white rounded-md px-3 py-2 text-sm font-medium">Painel</a>
+                            <a href="agenda" class="text-gray-300 hover:bg-gray-700 hover:text-white rounded-md px-3 py-2 text-sm font-medium">Agenda</a>
+                            <a href="mensagens" class="text-gray-300 hover:bg-gray-700 hover:text-white rounded-md px-3 py-2 text-sm font-medium">Mensagens</a>
+                            <a href="quizzes" class="text-gray-300 hover:bg-gray-700 hover:text-white rounded-md px-3 py-2 text-sm font-medium">Quizzes</a>
+                            <a href="diario" class="text-gray-300 hover:bg-gray-700 hover:text-white rounded-md px-3 py-2 text-sm font-medium">Diário</a>
+                            <a href="documentos" class="text-gray-300 hover:bg-gray-700 hover:text-white rounded-md px-3 py-2 text-sm font-medium">Documentos</a>
+                            <a href="recibos" class="text-gray-300 hover:bg-gray-700 hover:text-white rounded-md px-3 py-2 text-sm font-medium">Recibos</a>
                         </div>
                     </div>
                 </div>
@@ -65,8 +65,8 @@ try {
                                 </button>
                             </div>
                             <div x-show="userMenuOpen" @click.away="userMenuOpen = false" x-transition class="absolute right-0 z-10 mt-2 w-48 origin-top-right rounded-md bg-white py-1 shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none" role="menu" aria-orientation="vertical" aria-labelledby="user-menu-button" tabindex="-1">
-                                <a href="alterar_senha.php" class="block px-4 py-2 text-sm text-gray-700" role="menuitem" tabindex="-1">Alterar Senha</a>
-                                <a href="../../logout.php" class="block px-4 py-2 text-sm text-gray-700" role="menuitem" tabindex="-1">Sair</a>
+                                <a href="alterar_senha" class="block px-4 py-2 text-sm text-gray-700" role="menuitem" tabindex="-1">Alterar Senha</a>
+                                <a href="../../logout" class="block px-4 py-2 text-sm text-gray-700" role="menuitem" tabindex="-1">Sair</a>
                             </div>
                         </div>
                     </div>
@@ -82,18 +82,18 @@ try {
         </div>
         <div x-show="open" class="md:hidden" id="mobile-menu">
             <div class="space-y-1 px-2 pt-2 pb-3 sm:px-3">
-                 <a href="painel.php" class="text-gray-300 hover:bg-gray-700 hover:text-white block rounded-md px-3 py-2 text-base font-medium">Painel</a>
-                 <a href="agenda.php" class="text-gray-300 hover:bg-gray-700 hover:text-white block rounded-md px-3 py-2 text-base font-medium">Agenda</a>
-                 <a href="mensagens.php" class="text-gray-300 hover:bg-gray-700 hover:text-white block rounded-md px-3 py-2 text-base font-medium">Mensagens</a>
-                 <a href="quizzes.php" class="text-gray-300 hover:bg-gray-700 hover:text-white block rounded-md px-3 py-2 text-base font-medium">Quizzes</a>
-                 <a href="diario.php" class="text-gray-300 hover:bg-gray-700 hover:text-white block rounded-md px-3 py-2 text-base font-medium">Diário</a>
-                 <a href="documentos.php" class="text-gray-300 hover:bg-gray-700 hover:text-white block rounded-md px-3 py-2 text-base font-medium">Documentos</a>
-                 <a href="recibos.php" class="text-gray-300 hover:bg-gray-700 hover:text-white block rounded-md px-3 py-2 text-base font-medium">Recibos</a>
+                 <a href="painel" class="text-gray-300 hover:bg-gray-700 hover:text-white block rounded-md px-3 py-2 text-base font-medium">Painel</a>
+                 <a href="agenda" class="text-gray-300 hover:bg-gray-700 hover:text-white block rounded-md px-3 py-2 text-base font-medium">Agenda</a>
+                 <a href="mensagens" class="text-gray-300 hover:bg-gray-700 hover:text-white block rounded-md px-3 py-2 text-base font-medium">Mensagens</a>
+                 <a href="quizzes" class="text-gray-300 hover:bg-gray-700 hover:text-white block rounded-md px-3 py-2 text-base font-medium">Quizzes</a>
+                 <a href="diario" class="text-gray-300 hover:bg-gray-700 hover:text-white block rounded-md px-3 py-2 text-base font-medium">Diário</a>
+                 <a href="documentos" class="text-gray-300 hover:bg-gray-700 hover:text-white block rounded-md px-3 py-2 text-base font-medium">Documentos</a>
+                 <a href="recibos" class="text-gray-300 hover:bg-gray-700 hover:text-white block rounded-md px-3 py-2 text-base font-medium">Recibos</a>
             </div>
             <div class="border-t border-gray-700 pt-4 pb-3">
                 <div class="mt-3 space-y-1 px-2">
-                    <a href="alterar_senha.php" class="block rounded-md px-3 py-2 text-base font-medium text-gray-400 hover:bg-gray-700 hover:text-white">Alterar Senha</a>
-                    <a href="../../logout.php" class="block rounded-md px-3 py-2 text-base font-medium text-gray-400 hover:bg-gray-700 hover:text-white">Sair</a>
+                    <a href="alterar_senha" class="block rounded-md px-3 py-2 text-base font-medium text-gray-400 hover:bg-gray-700 hover:text-white">Alterar Senha</a>
+                    <a href="../../logout" class="block rounded-md px-3 py-2 text-base font-medium text-gray-400 hover:bg-gray-700 hover:text-white">Sair</a>
                 </div>
             </div>
         </div>
