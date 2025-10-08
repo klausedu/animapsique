@@ -1,1 +1,70 @@
-<?php// Inclui o config para iniciar a sessãorequire_once 'config.php';?><!DOCTYPE html><html lang="pt-BR"><head>    <meta charset="UTF-8">    <meta name="viewport" content="width=device-width, initial-scale=1.0">    <title>Login - Área do Paciente</title>    <script src="https://cdn.tailwindcss.com"></script>    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&display=swap" rel="stylesheet">    <style>        body { font-family: 'Inter', sans-serif; }    </style></head><body class="bg-gray-50">    <div class="min-h-screen flex items-center justify-center p-4">        <div class="max-w-md w-full bg-white p-8 rounded-lg shadow-lg">            <div class="text-center mb-8">                <h2 class="text-3xl font-bold text-teal-700">Acessar Plataforma</h2>                <p class="text-gray-600 mt-2">Bem-vindo(a) de volta!</p>            </div>            <?php            // Exibe mensagens de erro ou sucesso            if (isset($_SESSION['login_error'])) {                echo '<div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative mb-6" role="alert">';                echo '<strong class="font-bold">Erro!</strong> <span class="block sm:inline">' . htmlspecialchars($_SESSION['login_error']) . '</span>';                echo '</div>';                unset($_SESSION['login_error']);            }            if (isset($_SESSION['success_message'])) {                 echo '<div class="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded relative mb-6" role="alert">';                echo '<strong class="font-bold">Sucesso!</strong> <span class="block sm:inline">' . htmlspecialchars($_SESSION['success_message']) . '</span>';                echo '</div>';                unset($_SESSION['success_message']);            }            ?>            <form action="processa_login.php" method="POST">                <div class="mb-6">                    <label for="email" class="block text-gray-700 text-sm font-bold mb-2">E-mail</label>                    <input type="email" id="email" name="email" required class="shadow appearance-none border rounded w-full py-3 px-4 text-gray-700 leading-tight focus:outline-none focus:ring-2 focus:ring-teal-500" placeholder="seu.email@exemplo.com">                </div>                <div class="mb-6">                    <label for="senha" class="block text-gray-700 text-sm font-bold mb-2">Senha</label>                    <input type="password" id="senha" name="senha" required class="shadow appearance-none border rounded w-full py-3 px-4 text-gray-700 mb-3 leading-tight focus:outline-none focus:ring-2 focus:ring-teal-500" placeholder="************">                </div>                <div class="flex items-center justify-between">                    <button type="submit" class="w-full bg-teal-600 hover:bg-teal-700 text-white font-bold py-3 px-4 rounded focus:outline-none focus:shadow-outline transition duration-300">                        Entrar                    </button>                </div>                <div class="text-center mt-6 space-y-4">                    <a href="esqueci_senha.php" class="inline-block align-baseline font-bold text-sm text-teal-600 hover:text-teal-800">                        Esqueceu sua senha?                    </a>                    <!-- BOTÃO VOLTAR ADICIONADO -->                    <a href="index.php" class="block text-sm text-gray-500 hover:text-gray-700 transition duration-300">                        &larr; Voltar para o site                    </a>                </div>            </form>        </div>    </div></body></html>
+<?php
+// Inclui o config para iniciar a sessão
+require_once 'config.php';
+?>
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login - Área do Paciente</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: 'Inter', sans-serif; }
+    </style>
+</head>
+<body class="bg-gray-50">
+
+    <div class="min-h-screen flex items-center justify-center p-4">
+        <div class="max-w-md w-full bg-white p-8 rounded-lg shadow-lg">
+            <div class="text-center mb-8">
+                <h2 class="text-3xl font-bold text-teal-700">Acessar Plataforma</h2>
+                <p class="text-gray-600 mt-2">Bem-vindo(a) de volta!</p>
+            </div>
+
+            <?php
+            // Exibe mensagens de erro ou sucesso
+            if (isset($_SESSION['login_error'])) {
+                echo '<div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative mb-6" role="alert">';
+                echo '<strong class="font-bold">Erro!</strong> <span class="block sm:inline">' . htmlspecialchars($_SESSION['login_error']) . '</span>';
+                echo '</div>';
+                unset($_SESSION['login_error']);
+            }
+            if (isset($_SESSION['success_message'])) {
+                 echo '<div class="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded relative mb-6" role="alert">';
+                echo '<strong class="font-bold">Sucesso!</strong> <span class="block sm:inline">' . htmlspecialchars($_SESSION['success_message']) . '</span>';
+                echo '</div>';
+                unset($_SESSION['success_message']);
+            }
+            ?>
+
+            <form action="processa_login" method="POST">
+                <div class="mb-6">
+                    <label for="email" class="block text-gray-700 text-sm font-bold mb-2">E-mail</label>
+                    <input type="email" id="email" name="email" required class="shadow appearance-none border rounded w-full py-3 px-4 text-gray-700 leading-tight focus:outline-none focus:ring-2 focus:ring-teal-500" placeholder="seu.email@exemplo.com">
+                </div>
+                <div class="mb-6">
+                    <label for="senha" class="block text-gray-700 text-sm font-bold mb-2">Senha</label>
+                    <input type="password" id="senha" name="senha" required class="shadow appearance-none border rounded w-full py-3 px-4 text-gray-700 mb-3 leading-tight focus:outline-none focus:ring-2 focus:ring-teal-500" placeholder="************">
+                </div>
+                <div class="flex items-center justify-between">
+                    <button type="submit" class="w-full bg-teal-600 hover:bg-teal-700 text-white font-bold py-3 px-4 rounded focus:outline-none focus:shadow-outline transition duration-300">
+                        Entrar
+                    </button>
+                </div>
+                <div class="text-center mt-6 space-y-4">
+                    <a href="esqueci_senha" class="inline-block align-baseline font-bold text-sm text-teal-600 hover:text-teal-800">
+                        Esqueceu sua senha?
+                    </a>
+                    <!-- BOTÃO VOLTAR ADICIONADO -->
+                    <a href="index" class="block text-sm text-gray-500 hover:text-gray-700 transition duration-300">
+                        &larr; Voltar para o site
+                    </a>
+                </div>
+            </form>
+        </div>
+    </div>
+
+</body>
+</html>
