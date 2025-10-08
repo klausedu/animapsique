@@ -36,7 +36,7 @@ try {
                 <div class="flex items-center">
                     <div class="flex-shrink-0">
                         <a href="painel">
-                            <img class="h-10" src="https://animapsique.com.br/wp-content/uploads/2022/03/animapsique_logo70perc.png" alt="AnimaPsique Logotipo">
+                            <img class="h-10" src="https://animapsique.com.br/uploads/site/animapsique_logo70perc.png" alt="AnimaPsique Logotipo">
                         </a>
                     </div>
                     <div class="hidden md:block">
