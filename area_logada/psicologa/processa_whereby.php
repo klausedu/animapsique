@@ -111,7 +111,7 @@ try {
 
 } catch (Exception $e) {
     $response['message'] = $e->getMessage();
-    error_log("Erro em processa_whereby.php: " . $e->getMessage());
+    error_log("Erro em processa_whereby: " . $e->getMessage());
 }
 
 echo json_encode($response);
