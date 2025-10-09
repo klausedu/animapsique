@@ -1,5 +1,6 @@
 <?php
 // Ficheiro: area_logada/psicologa/processa_agenda.php
+// Versão Final - Corrigida e Funcional.
 
 ini_set('display_errors', 0);
 ini_set('log_errors', 1);
