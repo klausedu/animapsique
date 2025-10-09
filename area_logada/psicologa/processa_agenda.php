@@ -82,7 +82,7 @@ try {
         $pdo->rollBack();
     }
     $response['message'] = $e->getMessage();
-    error_log("Erro em processa_agenda.php: " . $e->getMessage());
+    error_log("Erro em processa_agenda: " . $e->getMessage());
 }
 
 echo json_encode($response);
