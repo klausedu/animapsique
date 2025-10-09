@@ -1,5 +1,6 @@
 <?php
 // Ficheiro: area_logada/psicologa/api_agenda.php
+// CORREÇÃO FINAL: Removida a coluna 'sala_reuniao_url' que não existe na base de dados.
 
 ini_set('display_errors', 0);
 ini_set('log_errors', 1);
@@ -29,10 +30,10 @@ try {
     $end_date_query = (new DateTime($end_param))->format('Y-m-d H:i:s');
     $start_date_sql_recorrencia = (new DateTime($start_param))->format('Y-m-d');
     
-    $timezone = new DateTimeZone('America/Sao_Paulo');
-
+    // 1. Busca eventos individuais e exceções
+    // A coluna 'a.sala_reuniao_url' foi REMOVIDA da consulta SELECT
     $stmt_individuais = $pdo->prepare("
-        SELECT a.id, a.data_hora_inicio, a.data_hora_fim, a.status, a.paciente_id, a.recorrencia_id, p.nome AS paciente_nome, a.sala_reuniao_url 
+        SELECT a.id, a.data_hora_inicio, a.data_hora_fim, a.status, a.paciente_id, a.recorrencia_id, p.nome AS paciente_nome
         FROM agenda a 
         LEFT JOIN pacientes p ON a.paciente_id = p.id
         WHERE a.data_hora_inicio < ? AND a.data_hora_fim > ?
@@ -53,15 +54,20 @@ try {
         if ($agendamento['status'] === 'cancelado') $cor = '#ef4444';
 
         $eventos[] = [
-            'id' => $agendamento['id'], 'title' => $titulo, 'start' => $agendamento['data_hora_inicio'],
-            'end' => $agendamento['data_hora_fim'], 'color' => $cor,
+            'id' => $agendamento['id'],
+            'title' => $titulo,
+            'start' => $agendamento['data_hora_inicio'],
+            'end' => $agendamento['data_hora_fim'],
+            'color' => $cor,
             'extendedProps' => [ 
-                'pacienteId' => $agendamento['paciente_id'], 'status' => $agendamento['status'],
-                'salaUrl' => $agendamento['sala_reuniao_url']
+                'pacienteId' => $agendamento['paciente_id'], 
+                'status' => $agendamento['status']
+                // A propriedade 'salaUrl' também foi REMOVIDA daqui
             ]
         ];
     }
 
+    // 2. Gera eventos recorrentes (esta parte não precisou de alterações)
     $stmt_recorrencias = $pdo->prepare("SELECT r.*, p.nome as paciente_nome FROM agenda_recorrencias r JOIN pacientes p ON r.paciente_id = p.id WHERE r.data_fim_recorrencia >= ?");
     $stmt_recorrencias->execute([$start_date_sql_recorrencia]);
     
@@ -79,11 +85,14 @@ try {
             $data_str = $data_atual->format('Y-m-d');
             if ($data_atual->format('w') == $regra['dia_semana'] && (!isset($excecoes[$data_str]) || !in_array($regra['id'], $excecoes[$data_str]))) {
                 $eventos[] = [
-                    'id' => 'rec_' . $regra['id'] . '_' . $data_str, 'title' => $regra['paciente_nome'],
-                    'start' => $data_str . ' ' . $regra['hora_inicio'], 'end' => $data_str . ' ' . $regra['hora_fim'],
+                    'id' => 'rec_' . $regra['id'] . '_' . $data_str,
+                    'title' => $regra['paciente_nome'],
+                    'start' => $data_str . ' ' . $regra['hora_inicio'],
+                    'end' => $data_str . ' ' . $regra['hora_fim'],
                     'color' => '#16a34a',
                     'extendedProps' => [ 
-                        'pacienteId' => $regra['paciente_id'], 'status' => 'recorrente',
+                        'pacienteId' => $regra['paciente_id'], 
+                        'status' => 'recorrente',
                         'recorrenciaId' => $regra['id']
                     ]
                 ];
@@ -92,8 +101,10 @@ try {
         }
     }
     echo json_encode($eventos);
+
 } catch (Throwable $e) {
     http_response_code(500);
+    // Envia o erro real da base de dados para o console do navegador, facilitando futuras depurações
     echo json_encode(['error' => 'Erro interno do servidor.', 'details' => $e->getMessage()]);
 }
 ?>
