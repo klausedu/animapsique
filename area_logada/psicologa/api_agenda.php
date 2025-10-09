@@ -31,7 +31,6 @@ try {
     
     $timezone = new DateTimeZone('America/Sao_Paulo');
 
-    // 1. Busca eventos individuais e exceções
     $stmt_individuais = $pdo->prepare("
         SELECT a.id, a.data_hora_inicio, a.data_hora_fim, a.status, a.paciente_id, a.recorrencia_id, p.nome AS paciente_nome, a.sala_reuniao_url 
         FROM agenda a 
@@ -49,25 +48,20 @@ try {
         }
         
         $titulo = ($agendamento['status'] === 'livre' || !$agendamento['paciente_nome']) ? 'Horário Livre' : $agendamento['paciente_nome'];
-        $cor = '#3b82f6'; // Azul
-        if ($agendamento['status'] === 'livre') $cor = '#0d9488'; // Teal
-        if ($agendamento['status'] === 'cancelado') $cor = '#ef4444'; // Vermelho
+        $cor = '#3b82f6';
+        if ($agendamento['status'] === 'livre') $cor = '#0d9488';
+        if ($agendamento['status'] === 'cancelado') $cor = '#ef4444';
 
         $eventos[] = [
-            'id' => $agendamento['id'],
-            'title' => $titulo,
-            'start' => $agendamento['data_hora_inicio'],
-            'end' => $agendamento['data_hora_fim'],
-            'color' => $cor,
+            'id' => $agendamento['id'], 'title' => $titulo, 'start' => $agendamento['data_hora_inicio'],
+            'end' => $agendamento['data_hora_fim'], 'color' => $cor,
             'extendedProps' => [ 
-                'pacienteId' => $agendamento['paciente_id'], 
-                'status' => $agendamento['status'],
+                'pacienteId' => $agendamento['paciente_id'], 'status' => $agendamento['status'],
                 'salaUrl' => $agendamento['sala_reuniao_url']
             ]
         ];
     }
 
-    // 2. Gera eventos recorrentes
     $stmt_recorrencias = $pdo->prepare("SELECT r.*, p.nome as paciente_nome FROM agenda_recorrencias r JOIN pacientes p ON r.paciente_id = p.id WHERE r.data_fim_recorrencia >= ?");
     $stmt_recorrencias->execute([$start_date_sql_recorrencia]);
     
@@ -85,14 +79,11 @@ try {
             $data_str = $data_atual->format('Y-m-d');
             if ($data_atual->format('w') == $regra['dia_semana'] && (!isset($excecoes[$data_str]) || !in_array($regra['id'], $excecoes[$data_str]))) {
                 $eventos[] = [
-                    'id' => 'rec_' . $regra['id'] . '_' . $data_str,
-                    'title' => $regra['paciente_nome'],
-                    'start' => $data_str . ' ' . $regra['hora_inicio'],
-                    'end' => $data_str . ' ' . $regra['hora_fim'],
-                    'color' => '#16a34a', // Verde
+                    'id' => 'rec_' . $regra['id'] . '_' . $data_str, 'title' => $regra['paciente_nome'],
+                    'start' => $data_str . ' ' . $regra['hora_inicio'], 'end' => $data_str . ' ' . $regra['hora_fim'],
+                    'color' => '#16a34a',
                     'extendedProps' => [ 
-                        'pacienteId' => $regra['paciente_id'], 
-                        'status' => 'recorrente',
+                        'pacienteId' => $regra['paciente_id'], 'status' => 'recorrente',
                         'recorrenciaId' => $regra['id']
                     ]
                 ];
