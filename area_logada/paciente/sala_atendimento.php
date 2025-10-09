@@ -3,8 +3,7 @@
 require_once '../../config.php'; // Carrega as configurações, incluindo BASE_URL
 
 // **INÍCIO DA CORREÇÃO**
-// Este bloco de código garante que a página está a ser acedida através do domínio correto
-// que está autorizado no Whereby.
+// Este bloco de código garante que a página está a ser acedida através do domínio correto.
 
 // Obtém o domínio correto a partir da sua configuração (ex: 'animapsique.com.br')
 $correct_host = parse_url(BASE_URL, PHP_URL_HOST); 
@@ -24,22 +23,22 @@ if ($current_host !== $correct_host) {
 
 
 // O resto do seu código original continua aqui
-require_once '../../includes/auth_paciente.php';
-require_once '../../includes/db.php';
+require_once '../../includes/auth_paciente.php'; //
+require_once '../../includes/db.php'; //
 
-$page_title = 'Sala de Atendimento';
-require_once 'templates/header.php';
+$page_title = 'Sala de Atendimento'; //
+require_once 'templates/header.php'; //
 
-$roomUrl = '';
-$paciente_nome = $_SESSION['user_nome'] ?? 'Convidado';
+$roomUrl = ''; //
+$paciente_nome = $_SESSION['user_nome'] ?? 'Convidado'; //
 
 try {
-    $pdo = conectar();
-    $stmt = $pdo->prepare("SELECT whereby_room_url FROM pacientes WHERE id = ?");
-    $stmt->execute([$_SESSION['user_id']]);
-    $paciente = $stmt->fetch();
-    if ($paciente && !empty($paciente['whereby_room_url'])) {
-        $roomUrl = $paciente['whereby_room_url'];
+    $pdo = conectar(); //
+    $stmt = $pdo->prepare("SELECT whereby_room_url FROM pacientes WHERE id = ?"); //
+    $stmt->execute([$_SESSION['user_id']]); //
+    $paciente = $stmt->fetch(); //
+    if ($paciente && !empty($paciente['whereby_room_url'])) { //
+        $roomUrl = $paciente['whereby_room_url']; //
     }
 } catch (PDOException $e) {
     // Lidar com o erro, se necessário
