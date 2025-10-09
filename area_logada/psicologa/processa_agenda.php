@@ -18,10 +18,7 @@ if (!isset($_SESSION['logged_in']) || $_SESSION['user_type'] !== 'psicologa') {
 }
 require_once $base_path . '/includes/db.php';
 
-// CORREÇÃO: Lê o corpo da requisição em formato JSON
 $input = json_decode(file_get_contents('php://input'), true);
-
-// A ação vem agora do corpo do JSON
 $action = $input['action'] ?? '';
 
 if (empty($action)) {
@@ -31,17 +28,14 @@ if (empty($action)) {
 
 try {
     $pdo = conectar();
-
     switch ($action) {
         case 'create':
             $start = $input['start'] ?? null;
             $end = $input['end'] ?? null;
-            $pacienteId = $input['pacienteId'] ?: null; // Permite null
+            $pacienteId = $input['pacienteId'] ?: null;
             $status = $pacienteId ? 'confirmado' : 'livre';
 
-            if (!$start || !$end) {
-                throw new Exception("Data de início e fim são obrigatórias.");
-            }
+            if (!$start || !$end) throw new Exception("Data de início e fim são obrigatórias.");
 
             $stmt = $pdo->prepare("INSERT INTO agenda (data_hora_inicio, data_hora_fim, paciente_id, status) VALUES (?, ?, ?, ?)");
             $stmt->execute([$start, $end, $pacienteId, $status]);
@@ -54,24 +48,18 @@ try {
             $pacienteId = $input['pacienteId'] ?: null;
             $status = $pacienteId ? 'confirmado' : 'livre';
             
-            if (!$id) {
-                throw new Exception("ID do evento é obrigatório para atualizar.");
-            }
+            if (!$id) throw new Exception("ID do evento é obrigatório para atualizar.");
 
             $stmt = $pdo->prepare("UPDATE agenda SET paciente_id = ?, status = ? WHERE id = ?");
             $stmt->execute([$pacienteId, $status, $id]);
-
             echo json_encode(['success' => true]);
             break;
             
         case 'delete':
             $id = $input['id'] ?? null;
-            if (!$id) {
-                throw new Exception("ID do evento é obrigatório para apagar.");
-            }
+            if (!$id) throw new Exception("ID do evento é obrigatório para apagar.");
             $stmt = $pdo->prepare("DELETE FROM agenda WHERE id = ?");
             $stmt->execute([$id]);
-
             echo json_encode(['success' => true]);
             break;
         
@@ -79,14 +67,10 @@ try {
             $recorrenciaId = $input['recorrenciaId'] ?? null;
             $dataEvento = $input['start'] ?? null;
 
-            if (!$recorrenciaId || !$dataEvento) {
-                throw new Exception("Dados insuficientes para cancelar a ocorrência.");
-            }
+            if (!$recorrenciaId || !$dataEvento) throw new Exception("Dados insuficientes para cancelar.");
 
-            // Insere um evento 'cancelado' para sobrepor a recorrência
             $stmt = $pdo->prepare("INSERT INTO agenda (recorrencia_id, data_hora_inicio, status) VALUES (?, ?, 'cancelado')");
             $stmt->execute([$recorrenciaId, $dataEvento]);
-
             echo json_encode(['success' => true, 'message' => 'Ocorrência cancelada.']);
             break;
 
@@ -94,7 +78,6 @@ try {
             echo json_encode(['success' => false, 'message' => 'Ação desconhecida: ' . htmlspecialchars($action)]);
             break;
     }
-
 } catch (Throwable $e) {
     http_response_code(500);
     echo json_encode(['success' => false, 'message' => 'Erro de servidor: ' . $e->getMessage()]);
