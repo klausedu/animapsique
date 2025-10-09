@@ -1,6 +1,5 @@
 <?php
-// Ficheiro: area_logada/psicologa/api_agenda.php
-// Versão Definitiva - Criado de novo para evitar cache do servidor.
+// Versão Final Definitiva - Compatível com a base de dados corrigida.
 
 ini_set('display_errors', 0);
 ini_set('log_errors', 1);
