@@ -217,7 +217,7 @@ document.addEventListener('DOMContentLoaded', function() {
             modal.classList.remove('hidden');
         },
 
-        events: 'api_agenda.php'
+        events: 'api_agenda'
     });
 
     calendar.render();
@@ -230,7 +230,7 @@ document.addEventListener('DOMContentLoaded', function() {
             e.preventDefault();
             const formData = new FormData(form);
             
-            fetch('processa_agenda.php', { method: 'POST', body: formData })
+            fetch('processa_agenda', { method: 'POST', body: formData })
             .then(response => response.json())
             .then(data => {
                 if(data.success) {
@@ -281,7 +281,7 @@ document.addEventListener('DOMContentLoaded', function() {
             formData.append(key, data[key]);
         }
 
-        fetch('processa_agenda.php', { method: 'POST', body: formData })
+        fetch('processa_agenda', { method: 'POST', body: formData })
         .then(response => response.json())
         .then(result => {
             if (result.success) {
