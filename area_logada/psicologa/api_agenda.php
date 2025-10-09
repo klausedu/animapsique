@@ -1,6 +1,6 @@
 <?php
 // Ficheiro: area_logada/psicologa/api_agenda.php
-// CORREÇÃO FINAL: Removida a coluna 'sala_reuniao_url' que não existe na base de dados.
+// CORREÇÃO FINAL E VERIFICADA: Removida a coluna 'sala_reuniao_url' que não existe na base de dados.
 
 ini_set('display_errors', 0);
 ini_set('log_errors', 1);
@@ -62,12 +62,11 @@ try {
             'extendedProps' => [ 
                 'pacienteId' => $agendamento['paciente_id'], 
                 'status' => $agendamento['status']
-                // A propriedade 'salaUrl' também foi REMOVIDA daqui
             ]
         ];
     }
 
-    // 2. Gera eventos recorrentes (esta parte não precisou de alterações)
+    // 2. Gera eventos recorrentes
     $stmt_recorrencias = $pdo->prepare("SELECT r.*, p.nome as paciente_nome FROM agenda_recorrencias r JOIN pacientes p ON r.paciente_id = p.id WHERE r.data_fim_recorrencia >= ?");
     $stmt_recorrencias->execute([$start_date_sql_recorrencia]);
     
@@ -104,7 +103,6 @@ try {
 
 } catch (Throwable $e) {
     http_response_code(500);
-    // Envia o erro real da base de dados para o console do navegador, facilitando futuras depurações
     echo json_encode(['error' => 'Erro interno do servidor.', 'details' => $e->getMessage()]);
 }
 ?>
