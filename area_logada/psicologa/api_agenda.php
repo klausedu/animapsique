@@ -1,5 +1,6 @@
 <?php
-// Versão Final Definitiva - Compatível com a base de dados corrigida.
+// Ficheiro: area_logada/psicologa/api_agenda.php
+// Versão Final - Corrigida e Funcional.
 
 ini_set('display_errors', 0);
 ini_set('log_errors', 1);
@@ -28,7 +29,6 @@ try {
     $start_date_query = (new DateTime($start_param))->format('Y-m-d H:i:s');
     $end_date_query = (new DateTime($end_param))->format('Y-m-d H:i:s');
     
-    // A consulta foi corrigida para não incluir a coluna 'a.sala_reuniao_url'
     $stmt_individuais = $pdo->prepare("
         SELECT a.id, a.data_hora_inicio, a.data_hora_fim, a.status, a.paciente_id, a.recorrencia_id, p.nome AS paciente_nome
         FROM agenda a 
@@ -44,10 +44,12 @@ try {
             if (!isset($excecoes[$data_excecao])) { $excecoes[$data_excecao] = []; }
             $excecoes[$data_excecao][] = $agendamento['recorrencia_id'];
         }
+        
         $titulo = ($agendamento['status'] === 'livre' || !$agendamento['paciente_nome']) ? 'Horário Livre' : $agendamento['paciente_nome'];
         $cor = '#3b82f6';
         if ($agendamento['status'] === 'livre') $cor = '#0d9488';
         if ($agendamento['status'] === 'cancelado') $cor = '#ef4444';
+
         $eventos[] = [
             'id' => $agendamento['id'], 'title' => $titulo, 'start' => $agendamento['data_hora_inicio'],
             'end' => $agendamento['data_hora_fim'], 'color' => $cor,
