@@ -1,50 +1,39 @@
 <?php
-// Ficheiro: area_logada/paciente/sala_atendimento.php
-require_once '../../config.php'; // Carrega as configurações, incluindo BASE_URL
+require_once '../../config.php';
+require_once '../../includes/auth_paciente.php';
+require_once '../../includes/db.php';
 
-// **INÍCIO DA CORREÇÃO**
-// Este bloco de código garante que a página está a ser acedida através do domínio correto.
+$page_title = 'Sala de Atendimento';
+require_once 'templates/header.php';
 
-// Obtém o domínio correto a partir da sua configuração (ex: 'animapsique.com.br')
-$correct_host = parse_url(BASE_URL, PHP_URL_HOST); 
-
-// Obtém o domínio que o utilizador está a usar atualmente para aceder à página
-$current_host = $_SERVER['HTTP_HOST'];
-
-// Se o domínio atual for diferente do correto, redireciona para a URL correta.
-if ($current_host !== $correct_host) {
-    // Monta a URL completa e correta
-    $redirect_url = BASE_URL . $_SERVER['REQUEST_URI'];
-    // Envia o cabeçalho de redirecionamento permanente
-    header('Location: ' . $redirect_url, true, 301);
-    exit; // Termina a execução para que o redirecionamento aconteça
-}
-// **FIM DA CORREÇÃO**
-
-
-// O resto do seu código original continua aqui
-require_once '../../includes/auth_paciente.php'; //
-require_once '../../includes/db.php'; //
-
-$page_title = 'Sala de Atendimento'; //
-require_once 'templates/header.php'; //
-
-$roomUrl = ''; //
-$paciente_nome = $_SESSION['user_nome'] ?? 'Convidado'; //
+$roomUrl = '';
+$paciente_nome = $_SESSION['user_nome'] ?? 'Convidado';
 
 try {
-    $pdo = conectar(); //
-    $stmt = $pdo->prepare("SELECT whereby_room_url FROM pacientes WHERE id = ?"); //
-    $stmt->execute([$_SESSION['user_id']]); //
-    $paciente = $stmt->fetch(); //
-    if ($paciente && !empty($paciente['whereby_room_url'])) { //
-        $roomUrl = $paciente['whereby_room_url']; //
+    $pdo = conectar();
+    $stmt = $pdo->prepare("SELECT whereby_room_url FROM pacientes WHERE id = ?");
+    $stmt->execute([$_SESSION['user_id']]);
+    $paciente = $stmt->fetch();
+    if ($paciente && !empty($paciente['whereby_room_url'])) {
+        $roomUrl = $paciente['whereby_room_url'];
     }
 } catch (PDOException $e) {
     // Lidar com o erro, se necessário
 }
 ?>
 
+<script>
+    // Obtém o domínio correto a partir da configuração do PHP
+    const correctHost = '<?php echo parse_url(BASE_URL, PHP_URL_HOST); ?>';
+    
+    // Se o anfitrião atual no navegador for diferente do correto, redireciona.
+    if (window.location.hostname !== correctHost) {
+        // Monta a nova URL com o anfitrião correto e o resto do caminho
+        const newUrl = `https://${correctHost}${window.location.pathname}${window.location.search}`;
+        // Redireciona o navegador do utilizador
+        window.location.replace(newUrl);
+    }
+</script>
 <main class="flex-grow">
     <div class="container mx-auto px-4 sm:px-6 lg:px-8 py-8">
         <div class="bg-white p-6 rounded-lg shadow-md text-center">
