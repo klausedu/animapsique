@@ -1,71 +1,73 @@
 <?php
-require_once '../../config.php';
-require_once '../../includes/auth_paciente.php'; // Segurança e dados do paciente
+// Ficheiro: area_logada/paciente/sala_atendimento.php
+require_once '../../config.php'; // Carrega as configurações, incluindo BASE_URL
+
+// **INÍCIO DA CORREÇÃO**
+// Este bloco de código garante que a página está a ser acedida através do domínio correto
+// que está autorizado no Whereby.
+
+// Obtém o domínio correto a partir da sua configuração (ex: 'animapsique.com.br')
+$correct_host = parse_url(BASE_URL, PHP_URL_HOST); 
+
+// Obtém o domínio que o utilizador está a usar atualmente para aceder à página
+$current_host = $_SERVER['HTTP_HOST'];
+
+// Se o domínio atual for diferente do correto, redireciona para a URL correta.
+if ($current_host !== $correct_host) {
+    // Monta a URL completa e correta
+    $redirect_url = BASE_URL . $_SERVER['REQUEST_URI'];
+    // Envia o cabeçalho de redirecionamento permanente
+    header('Location: ' . $redirect_url, true, 301);
+    exit; // Termina a execução para que o redirecionamento aconteça
+}
+// **FIM DA CORREÇÃO**
+
+
+// O resto do seu código original continua aqui
+require_once '../../includes/auth_paciente.php';
 require_once '../../includes/db.php';
 
-$roomUrl = null;
+$page_title = 'Sala de Atendimento';
+require_once 'templates/header.php';
+
+$roomUrl = '';
+$paciente_nome = $_SESSION['user_nome'] ?? 'Convidado';
 
 try {
     $pdo = conectar();
     $stmt = $pdo->prepare("SELECT whereby_room_url FROM pacientes WHERE id = ?");
-    $stmt->execute([$paciente_id]); // $paciente_id vem de auth_paciente.php
-    $paciente_db = $stmt->fetch();
-    if ($paciente_db) {
-        $roomUrl = $paciente_db['whereby_room_url'];
+    $stmt->execute([$_SESSION['user_id']]);
+    $paciente = $stmt->fetch();
+    if ($paciente && !empty($paciente['whereby_room_url'])) {
+        $roomUrl = $paciente['whereby_room_url'];
     }
-} catch(Exception $e) {
-    die('Erro ao buscar a sala de atendimento.');
+} catch (PDOException $e) {
+    // Lidar com o erro, se necessário
 }
-
-// Validação para garantir que a URL existe
-if (!$roomUrl || !preg_match('/^https:\/\/.*\.whereby\.com\/.*/', $roomUrl)) {
-    die('URL da sala inválida ou não encontrada. Por favor, contacte o seu psicólogo.');
-}
-
-// Adiciona os parâmetros de forma segura
-$finalRoomUrl = htmlspecialchars($roomUrl . '?embed&screenshare=on&chat=on&displayName=' . urlencode($paciente_nome));
-
-$page_title = 'Sala de Atendimento';
-require_once 'templates/header.php';
 ?>
 
-<div class="container mx-auto px-4 sm:px-6 lg:px-8">
-    <div class="bg-white p-6 rounded-lg shadow-md">
-        <div class="flex justify-between items-center mb-4">
-            <h1 class="text-2xl font-bold text-gray-800">Sessão Online</h1>
-            <button id="fullscreen-btn" class="inline-flex items-center rounded-md border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-700 shadow-sm hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-teal-500 focus:ring-offset-2">
-                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                  <path stroke-linecap="round" stroke-linejoin="round" d="M4 8V4m0 0h4M4 4l5 5m11-1V4m0 0h-4m4 0l-5 5M4 16v4m0 0h4m-4 0l5-5m11 5v-4m0 4h-4m4 0l-5-5" />
-                </svg>
-                Tela Cheia
-            </button>
-            </div>
-        <p class="text-gray-600 mb-6">Sua sessão está prestes a começar. Permita o acesso à sua câmera e microfone quando solicitado pelo navegador.</p>
+<main class="flex-grow">
+    <div class="container mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        <div class="bg-white p-6 rounded-lg shadow-md text-center">
+            <h1 class="text-3xl font-bold text-gray-800 mb-4">Sala de Atendimento Virtual</h1>
 
-        <div class="w-full" style="height: 75vh;">
-             <iframe id="whereby-iframe" class="w-full h-full border-0 rounded-lg" src="<?php echo $finalRoomUrl; ?>" allow="camera; microphone; fullscreen; speaker; display-capture" allowfullscreen></iframe>
+            <?php if ($roomUrl): ?>
+                <p class="text-gray-600 mb-6">A sua sessão está pronta. A sala de vídeo irá carregar abaixo.</p>
+                
+                <div class="aspect-w-16 aspect-h-9 border rounded-lg overflow-hidden">
+                    <iframe
+                        src="<?php echo htmlspecialchars($roomUrl . '?displayName=' . urlencode($paciente_nome)); ?>"
+                        allow="camera; microphone; fullscreen; speaker; display-capture"
+                        class="w-full h-full"
+                        style="min-height: 500px;"
+                    ></iframe>
+                </div>
+            <?php else: ?>
+                <p class="text-red-500 font-semibold">Não foi possível encontrar a sua sala de atendimento. Por favor, entre em contacto com a sua psicóloga.</p>
+            <?php endif; ?>
+
         </div>
     </div>
-</div>
+</main>
 
-<script>
-document.addEventListener('DOMContentLoaded', function() {
-    const fullscreenButton = document.getElementById('fullscreen-btn');
-    const wherebyIframe = document.getElementById('whereby-iframe');
-
-    if (fullscreenButton && wherebyIframe) {
-        fullscreenButton.addEventListener('click', function() {
-            if (wherebyIframe.requestFullscreen) {
-                wherebyIframe.requestFullscreen();
-            } else if (wherebyIframe.mozRequestFullScreen) { /* Firefox */
-                wherebyIframe.mozRequestFullScreen();
-            } else if (wherebyIframe.webkitRequestFullscreen) { /* Chrome, Safari & Opera */
-                wherebyIframe.webkitRequestFullscreen();
-            } else if (wherebyIframe.msRequestFullscreen) { /* IE/Edge */
-                wherebyIframe.msRequestFullscreen();
-            }
-        });
-    }
-});
-</script>
 <?php require_once 'templates/footer.php'; ?>
