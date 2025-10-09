@@ -1,7 +1,6 @@
 <?php
 // Ficheiro: area_logada/psicologa/api_agenda.php
 
-// Configurações de erro para ambiente de produção
 ini_set('display_errors', 0);
 ini_set('log_errors', 1);
 error_reporting(E_ALL);
@@ -26,15 +25,13 @@ try {
     $start_param = $_GET['start'] ?? date('Y-m-01');
     $end_param = $_GET['end'] ?? date('Y-m-t');
 
-    // Converte as datas recebidas para o formato correto, garantindo a compatibilidade
     $start_date_query = (new DateTime($start_param))->format('Y-m-d H:i:s');
     $end_date_query = (new DateTime($end_param))->format('Y-m-d H:i:s');
     $start_date_sql_recorrencia = (new DateTime($start_param))->format('Y-m-d');
     
     $timezone = new DateTimeZone('America/Sao_Paulo');
 
-    // 1. Busca eventos individuais e exceções de recorrência
-    // CORREÇÃO: Usa uma lógica de sobreposição de intervalos, que é mais fiável
+    // 1. Busca eventos individuais e exceções
     $stmt_individuais = $pdo->prepare("
         SELECT a.id, a.data_hora_inicio, a.data_hora_fim, a.status, a.paciente_id, a.recorrencia_id, p.nome AS paciente_nome, a.sala_reuniao_url 
         FROM agenda a 
@@ -52,9 +49,9 @@ try {
         }
         
         $titulo = ($agendamento['status'] === 'livre' || !$agendamento['paciente_nome']) ? 'Horário Livre' : $agendamento['paciente_nome'];
-        $cor = '#3b82f6'; // Azul para 'confirmado'
-        if ($agendamento['status'] === 'livre') $cor = '#0d9488'; // Teal para 'livre'
-        if ($agendamento['status'] === 'cancelado') $cor = '#ef4444'; // Vermelho para 'cancelado'
+        $cor = '#3b82f6'; // Azul
+        if ($agendamento['status'] === 'livre') $cor = '#0d9488'; // Teal
+        if ($agendamento['status'] === 'cancelado') $cor = '#ef4444'; // Vermelho
 
         $eventos[] = [
             'id' => $agendamento['id'],
@@ -92,7 +89,7 @@ try {
                     'title' => $regra['paciente_nome'],
                     'start' => $data_str . ' ' . $regra['hora_inicio'],
                     'end' => $data_str . ' ' . $regra['hora_fim'],
-                    'color' => '#16a34a', // Verde para recorrentes
+                    'color' => '#16a34a', // Verde
                     'extendedProps' => [ 
                         'pacienteId' => $regra['paciente_id'], 
                         'status' => 'recorrente',
@@ -103,9 +100,7 @@ try {
             $data_atual->modify('+1 day');
         }
     }
-
     echo json_encode($eventos);
-
 } catch (Throwable $e) {
     http_response_code(500);
     echo json_encode(['error' => 'Erro interno do servidor.', 'details' => $e->getMessage()]);
