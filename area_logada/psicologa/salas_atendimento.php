@@ -1,6 +1,6 @@
 <?php
 require_once '../../config.php';
-require_once '../../includes/auth_psicologa.php'; // Fornece a variável $psicologa_nome
+require_once '../../includes/auth_psicologa.php';
 require_once '../../includes/db.php';
 
 $page_title = 'Salas de Atendimento';
@@ -8,6 +8,7 @@ require_once 'templates/header.php';
 
 try {
     $pdo = conectar();
+    // A variável $psicologa_nome é definida em auth_psicologa.php a partir de $_SESSION['user_nome']
     $stmt = $pdo->query("SELECT id, nome, whereby_room_url FROM pacientes WHERE ativo = 1 ORDER BY nome ASC");
     $pacientes = $stmt->fetchAll();
 } catch (PDOException $e) {
@@ -36,7 +37,9 @@ try {
                         <div class="shrink-0 flex flex-wrap items-center gap-x-4 gap-y-2">
                             <?php if (!empty($paciente['whereby_room_url'])): ?>
                                 <?php
-                                    $sala_url_psicologa = htmlspecialchars($paciente['whereby_room_url'] . '&displayName=' . urlencode($psicologa_nome));
+                                    // Garante que $psicologa_nome existe e está definido
+                                    $nome_psicologa_encoded = isset($psicologa_nome) ? urlencode($psicologa_nome) : '';
+                                    $sala_url_psicologa = htmlspecialchars($paciente['whereby_room_url'] . '?displayName=' . $nome_psicologa_encoded);
                                 ?>
                                 <a href="<?php echo $sala_url_psicologa; ?>" target="_blank" class="entrar-sala-link inline-flex items-center rounded-md bg-teal-600 px-3 py-1.5 text-sm font-medium text-white shadow-sm hover:bg-teal-700">
                                     Entrar na Sala
@@ -63,51 +66,100 @@ try {
 <script>
 document.addEventListener('DOMContentLoaded', function() {
     
-    function handleHabilitarClick(event) {
-        // ... (código existente, não precisa de ser alterado)
+    // **INÍCIO DO CÓDIGO CORRIGIDO**
+
+    // Função para enviar os pedidos para o backend
+    async function sendRequest(data) {
+        const formData = new FormData();
+        for (const key in data) {
+            formData.append(key, data[key]);
+        }
+
+        try {
+            const response = await fetch('processa_whereby.php', {
+                method: 'POST',
+                body: formData
+            });
+            if (!response.ok) {
+                throw new Error(`Erro HTTP: ${response.status}`);
+            }
+            return await response.json();
+        } catch (error) {
+            console.error("Erro na comunicação com o servidor:", error);
+            alert("Ocorreu um erro de comunicação. Por favor, tente novamente.");
+            return null;
+        }
     }
 
-    function handleRemoverClick(event) {
-        // ... (código existente, não precisa de ser alterado)
+    // Função para lidar com o clique no botão "Habilitar"
+    async function handleHabilitarClick(button) {
+        const pacienteId = button.dataset.pacienteId;
+        button.disabled = true;
+        button.textContent = 'A habilitar...';
+
+        const result = await sendRequest({ action: 'create_room', paciente_id: pacienteId });
+
+        if (result && result.success) {
+            alert('Sala habilitada com sucesso!');
+            location.reload(); // Recarrega a página para mostrar o novo estado
+        } else {
+            alert('Erro: ' + (result ? result.message : 'Não foi possível habilitar a sala.'));
+            button.disabled = false;
+            button.textContent = 'Habilitar Sala Whereby';
+        }
     }
 
-    // INÍCIO DA MUDANÇA: Lógica para o botão Copiar
-    function handleCopiarClick(event) {
-        if (!event.target.classList.contains('copiar-link-btn')) return;
+    // Função para lidar com o clique no botão "Remover"
+    async function handleRemoverClick(button) {
+        if (!confirm('Tem a certeza de que deseja remover a sala deste paciente?')) {
+            return;
+        }
+        
+        const pacienteId = button.dataset.pacienteId;
+        button.disabled = true;
+        button.textContent = 'A remover...';
 
-        const button = event.target;
+        const result = await sendRequest({ action: 'remove_room', paciente_id: pacienteId });
+
+        if (result && result.success) {
+            alert('Sala removida com sucesso!');
+            location.reload(); // Recarrega a página
+        } else {
+            alert('Erro: ' + (result ? result.message : 'Não foi possível remover a sala.'));
+            button.disabled = false;
+            button.textContent = 'Remover';
+        }
+    }
+
+    // Função para lidar com o clique no botão "Copiar"
+    function handleCopiarClick(button) {
         const urlParaCopiar = button.dataset.url;
-
         navigator.clipboard.writeText(urlParaCopiar).then(() => {
-            // Feedback visual para o utilizador
             const originalText = button.textContent;
             button.textContent = 'Copiado!';
-            setTimeout(() => {
-                button.textContent = originalText;
-            }, 2000); // Volta ao texto original após 2 segundos
+            setTimeout(() => { button.textContent = originalText; }, 2000);
         }).catch(err => {
             console.error('Erro ao copiar o link: ', err);
             alert('Não foi possível copiar o link.');
         });
     }
-    // FIM DA MUDANÇA
 
+    // "Ouvinte" de eventos principal
     const listContainer = document.querySelector('ul[role="list"]');
     if (listContainer) {
-        // ... (código existente)
-        // INÍCIO DA MUDANÇA: Adiciona o "ouvinte" para o novo botão
-        listContainer.addEventListener('click', handleCopiarClick);
-        // FIM DA MUDANÇA
-    }
-
-    // O resto do script para Habilitar e Remover permanece igual
-    if (listContainer) {
         listContainer.addEventListener('click', function(event) {
-            handleHabilitarClick(event);
-            handleRemoverClick(event);
-            handleCopiarClick(event);
+            const target = event.target;
+            if (target.classList.contains('habilitar-sala-btn')) {
+                handleHabilitarClick(target);
+            } else if (target.classList.contains('remover-sala-btn')) {
+                handleRemoverClick(target);
+            } else if (target.classList.contains('copiar-link-btn')) {
+                handleCopiarClick(target);
+            }
         });
     }
+
+    // **FIM DO CÓDIGO CORRIGIDO**
 });
 </script>
 
