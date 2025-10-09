@@ -1,6 +1,6 @@
 <?php
-// Versão Definitiva - Corrigida em 2024-10-09 para remover a coluna 'sala_reuniao_url'.
-// Se este erro persistir, o problema é o cache do servidor.
+// Ficheiro: area_logada/psicologa/api_agenda.php
+// Versão Definitiva - Criado de novo para evitar cache do servidor.
 
 ini_set('display_errors', 0);
 ini_set('log_errors', 1);
@@ -38,7 +38,6 @@ try {
     ");
     $stmt_individuais->execute([$end_date_query, $start_date_query]);
     
-    // O resto do código processa os resultados... (está correto)
     $excecoes = [];
     while ($agendamento = $stmt_individuais->fetch(PDO::FETCH_ASSOC)) {
         if ($agendamento['recorrencia_id'] && $agendamento['status'] === 'cancelado') {
@@ -81,6 +80,7 @@ try {
         }
     }
     echo json_encode($eventos);
+
 } catch (Throwable $e) {
     http_response_code(500);
     echo json_encode(['error' => 'Erro interno do servidor.', 'details' => $e->getMessage()]);
