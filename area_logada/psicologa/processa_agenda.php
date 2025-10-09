@@ -1,89 +1,85 @@
 <?php
-header('Content-Type: application/json');
-require_once '../../config.php';
-require_once '../../includes/auth_psicologa.php';
-require_once '../../includes/db.php';
+// Ficheiro: area_logada/psicologa/processa_agenda.php
 
-$response = ['success' => false, 'message' => 'Ação inválida.'];
-$action = $_POST['action'] ?? '';
+ini_set('display_errors', 0);
+ini_set('log_errors', 1);
+error_reporting(E_ALL);
+
+header('Content-Type: application/json');
+$base_path = realpath(dirname(__FILE__) . '/../../');
+
+require_once $base_path . '/config.php';
+if (session_status() == PHP_SESSION_NONE) { session_start(); }
+
+if (!isset($_SESSION['logged_in']) || $_SESSION['user_type'] !== 'psicologa') {
+    http_response_code(403);
+    echo json_encode(['success' => false, 'message' => 'Acesso não autorizado.']);
+    exit;
+}
+require_once $base_path . '/includes/db.php';
+
+// Recebe os dados como JSON
+$input = json_decode(file_get_contents('php://input'), true);
+$action = $input['action'] ?? '';
+
+if (!$action) {
+    echo json_encode(['success' => false, 'message' => 'Ação não especificada.']);
+    exit;
+}
 
 try {
     $pdo = conectar();
-    $pdo->beginTransaction();
 
-    if ($action === 'create') {
-        $paciente_id = $_POST['paciente_id'];
-        $data = $_POST['data'];
-        $hora_inicio = $_POST['hora_inicio'];
-        $hora_fim = $_POST['hora_fim'];
-        $status = $_POST['status'] ?? 'planejado';
-        $is_recorrente = isset($_POST['recorrente']);
+    switch ($action) {
+        case 'create':
+            $start = $input['start'];
+            $end = $input['end'];
+            $pacienteId = $input['pacienteId'] ?: null;
+            $status = $pacienteId ? 'confirmado' : 'livre';
 
-        if (empty($paciente_id) || empty($data) || empty($hora_inicio) || empty($hora_fim)) {
-            throw new Exception('Paciente, data e horários são obrigatórios.');
-        }
+            $stmt = $pdo->prepare("INSERT INTO agenda (data_hora_inicio, data_hora_fim, paciente_id, status) VALUES (?, ?, ?, ?)");
+            $stmt->execute([$start, $end, $pacienteId, $status]);
+            
+            echo json_encode(['success' => true, 'id' => $pdo->lastInsertId()]);
+            break;
 
-        $stmt_paciente = $pdo->prepare("SELECT nome FROM pacientes WHERE id = ?");
-        $stmt_paciente->execute([$paciente_id]);
-        $paciente = $stmt_paciente->fetch();
-        $titulo = $paciente ? $paciente['nome'] : 'Agendamento';
+        case 'update':
+            $id = $input['id'];
+            $pacienteId = $input['pacienteId'] ?: null;
+            $status = $pacienteId ? 'confirmado' : 'livre';
+            
+            $stmt = $pdo->prepare("UPDATE agenda SET paciente_id = ?, status = ? WHERE id = ?");
+            $stmt->execute([$pacienteId, $status, $id]);
 
-        if ($is_recorrente) {
-            $data_fim_recorrencia = $_POST['data_fim_recorrencia'];
-            $dia_semana = (new DateTime($data))->format('w');
-            $sql = "INSERT INTO agenda_recorrencias (paciente_id, titulo, hora_inicio, hora_fim, dia_semana, data_inicio_recorrencia, data_fim_recorrencia) VALUES (?, ?, ?, ?, ?, ?, ?)";
-            $stmt = $pdo->prepare($sql);
-            $stmt->execute([$paciente_id, $titulo, $hora_inicio, $hora_fim, $dia_semana, $data, $data_fim_recorrencia]);
-        } else {
-            $data_hora_inicio = $data . ' ' . $hora_inicio;
-            $data_hora_fim = $data . ' ' . $hora_fim;
-            $sql = "INSERT INTO agenda (paciente_id, data_hora_inicio, data_hora_fim, status) VALUES (?, ?, ?, ?)";
-            $stmt = $pdo->prepare($sql);
-            $stmt->execute([$paciente_id, $data_hora_inicio, $data_hora_fim, $status]);
-        }
-        $response = ['success' => true];
+            echo json_encode(['success' => true]);
+            break;
+            
+        case 'delete':
+            $id = $input['id'];
+            $stmt = $pdo->prepare("DELETE FROM agenda WHERE id = ?");
+            $stmt->execute([$id]);
 
-    } elseif ($action === 'delete_evento') {
-        $eventId = $_POST['eventId'];
-        $stmt = $pdo->prepare("DELETE FROM agenda WHERE id = ?");
-        $stmt->execute([$eventId]);
-        $response = ['success' => true];
-
-    } elseif ($action === 'delete_serie') {
-        $recorrenciaId = $_POST['recorrenciaId'];
-        $stmt = $pdo->prepare("DELETE FROM agenda_recorrencias WHERE id = ?");
-        $stmt->execute([$recorrenciaId]);
-        $response = ['success' => true];
-
-    } elseif ($action === 'delete_ocorrencia') {
-        $recorrenciaId = $_POST['recorrenciaId'];
-        $dataOcorrencia = $_POST['data'];
+            echo json_encode(['success' => true]);
+            break;
         
-        $stmt_regra = $pdo->prepare("SELECT * FROM agenda_recorrencias WHERE id = ?");
-        $stmt_regra->execute([$recorrenciaId]);
-        $regra = $stmt_regra->fetch();
+        case 'cancel_recorrencia':
+            // Cancela uma ocorrência de um evento recorrente
+            $recorrenciaId = $input['recorrenciaId'];
+            $dataEvento = $input['start']; // A data/hora de início da ocorrência a cancelar
 
-        if ($regra) {
-            $data_hora_inicio = $dataOcorrencia . ' ' . $regra['hora_inicio'];
-            $data_hora_fim = $dataOcorrencia . ' ' . $regra['hora_fim'];
-            $sql = "INSERT INTO agenda (paciente_id, data_hora_inicio, data_hora_fim, status, recorrencia_id) VALUES (?, ?, ?, 'cancelado', ?)";
-            $stmt = $pdo->prepare($sql);
-            $stmt->execute([$regra['paciente_id'], $data_hora_inicio, $data_hora_fim, $recorrenciaId]);
-        }
-        $response = ['success' => true];
-    } else {
-         throw new Exception('Ação desconhecida.');
+            $stmt = $pdo->prepare("INSERT INTO agenda (recorrencia_id, data_hora_inicio, status) VALUES (?, ?, 'cancelado')");
+            $stmt->execute([$recorrenciaId, $dataEvento]);
+
+            echo json_encode(['success' => true, 'message' => 'Ocorrência cancelada.']);
+            break;
+
+        default:
+            echo json_encode(['success' => false, 'message' => 'Ação desconhecida.']);
+            break;
     }
 
-    $pdo->commit();
-
-} catch (Exception $e) {
-    if ($pdo->inTransaction()) {
-        $pdo->rollBack();
-    }
-    $response['message'] = $e->getMessage();
-    error_log("Erro em processa_agenda: " . $e->getMessage());
+} catch (Throwable $e) {
+    http_response_code(500);
+    echo json_encode(['success' => false, 'message' => 'Erro de servidor: ' . $e->getMessage()]);
 }
-
-echo json_encode($response);
 ?>
