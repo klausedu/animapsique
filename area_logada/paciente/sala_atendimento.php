@@ -4,8 +4,8 @@ require_once '../../includes/auth_paciente.php';
 require_once '../../includes/db.php';
 
 $page_title = 'Sala de Atendimento';
-require_once 'templates/header.php';
 
+// --- Lógica do Servidor para obter a URL da sala ---
 $roomUrl = '';
 $paciente_nome = $_SESSION['user_nome'] ?? 'Convidado';
 
@@ -20,20 +20,35 @@ try {
 } catch (PDOException $e) {
     // Lidar com o erro, se necessário
 }
+// --- Fim da Lógica do Servidor ---
 ?>
-
-<script>
-    // Obtém o domínio correto a partir da configuração do PHP
-    const correctHost = '<?php echo parse_url(BASE_URL, PHP_URL_HOST); ?>';
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title><?php echo $page_title; ?></title>
     
-    // Se o anfitrião atual no navegador for diferente do correto, redireciona.
-    if (window.location.hostname !== correctHost) {
-        // Monta a nova URL com o anfitrião correto e o resto do caminho
-        const newUrl = `https://${correctHost}${window.location.pathname}${window.location.search}`;
-        // Redireciona o navegador do utilizador
-        window.location.replace(newUrl);
-    }
-</script>
+    <script>
+        // Este script é executado imediatamente para garantir que o domínio está correto ANTES de carregar o resto da página.
+        const correctHost = '<?php echo parse_url(BASE_URL, PHP_URL_HOST); ?>';
+        const currentHost = window.location.hostname;
+
+        if (currentHost !== correctHost) {
+            const newUrl = `https://${correctHost}${window.location.pathname}${window.location.search}`;
+            // replace() impede que o utilizador possa voltar para a página com o URL errado.
+            window.location.replace(newUrl);
+        }
+    </script>
+    <?php
+        // Inclui o resto do cabeçalho (CSS, etc.) DEPOIS do script de verificação.
+        // Isto assume que o seu ficheiro header.php não tem a tag <html> ou <head>, mas sim o conteúdo que vai dentro delas.
+        // Se o header.php tiver a estrutura completa, esta abordagem precisa ser adaptada.
+        require_once 'templates/header.php';
+    ?>
+</head>
+<body>
+
 <main class="flex-grow">
     <div class="container mx-auto px-4 sm:px-6 lg:px-8 py-8">
         <div class="bg-white p-6 rounded-lg shadow-md text-center">
@@ -59,3 +74,5 @@ try {
 </main>
 
 <?php require_once 'templates/footer.php'; ?>
+</body>
+</html>
