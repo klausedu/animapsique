@@ -40,7 +40,7 @@ define('DB_USER', 'u811529511_adminuser');
 
 // Senha do banco de dados
 
-define('DB_PASS', 'Gostodoce00!');
+define('DB_PASS', '');
 
 // Charset da conexão
 
@@ -64,7 +64,7 @@ define('SMTP_USER', 'contato@animapsique.com.br');
 
 // Senha do seu e-mail
 
-define('SMTP_PASS', 'Gostodoce00!123');
+define('SMTP_PASS', '');
 
 // Porta SMTP (587 para TLS é o mais comum)
 
@@ -102,10 +102,10 @@ date_default_timezone_set('America/Sao_Paulo');
 
 // Use um gerador de chaves online para criar uma string aleatória e segura
 
-define('SECRET_KEY', '$2y$10$0ve.bxEgeCpjx226L6RYIeDEmAvRLlHaog4Qtqf2td0wSS9RxZH3G');
+define('SECRET_KEY', '');
 
 // --- CONFIGURAÇÕES DO WHEREBY EMBEDDED---
 // Obtenha sua chave de API em https://whereby.com/user/api-keys
-//define('WHEREBY_API_KEY', 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJodHRwczovL2FjY291bnRzLmFwcGVhci5pbiIsImF1ZCI6Imh0dHBzOi8vYXBpLmFwcGVhci5pbi92MSIsImV4cCI6OTAwNzE5OTI1NDc0MDk5MSwiaWF0IjoxNzU3MDkxMjk4LCJvcmdhbml6YXRpb25JZCI6MzI0MjAzLCJqdGkiOiI1Nzk2MmQ0ZC05YWY1LTQ1NDctODE0MS04NmZlMDljYjE0NDIifQ.w5J6YPkpiShWZFZtEaD6N3_PGZsuz9FdvKMCPcebpHc');
-define('WHEREBY_API_KEY', 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJodHRwczovL2FjY291bnRzLmFwcGVhci5pbiIsImF1ZCI6Imh0dHBzOi8vYXBpLmFwcGVhci5pbi92MSIsImV4cCI6OTAwNzE5OTI1NDc0MDk5MSwiaWF0IjoxNzYwMDE5NTg1LCJvcmdhbml6YXRpb25JZCI6MTgzODgwLCJqdGkiOiIxOTgzYjI2YS1lZmUwLTQxMDktYjYwNC1mNzEyMTRkOTgxNGMifQ.TCx2hSvqrT1n5KnFmu_frXg0vJY-TWl37_tsUaAbLss');
+define('WHEREBY_API_KEY', '');
 ?>
+
