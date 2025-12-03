@@ -64,4 +64,4 @@ User-agent: Amazonbot
 Allow: /
 
 # Sitemap
-Sitemap: https://maroon-oyster-227506.hostingersite.com/sitemap.xml
+Sitemap: https://animapsique.com.br/sitemap.xml
