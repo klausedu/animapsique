@@ -1,0 +1,62 @@
+# Arquivos de Configuração Sensíveis
+config.php
+*.env
+.env
+.env.local
+
+# Senhas e Credenciais
+secrets.php
+credentials.php
+
+# Uploads de Usuários (dados sensíveis)
+uploads/documentos/
+uploads/recibos/
+
+# Banco de Dados
+*.sql
+*.sqlite
+*.db
+Database/*.sql
+
+# Logs
+*.log
+error_log
+debug.log
+
+# Cache e Temporários
+cache/
+tmp/
+temp/
+*.tmp
+*.cache
+
+# Dependências (Composer)
+/vendor/
+composer.lock
+
+# IDEs e Editores
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+.DS_Store
+Thumbs.db
+
+# Arquivos do Sistema
+*.bak
+*.backup
+*.old
+
+# Node modules (se usar)
+node_modules/
+package-lock.json
+
+# Arquivos de sessão PHP
+sessions/
+*.sess
+
+# Arquivos de debug
+phpinfo.php
+test.php
+debug.php
