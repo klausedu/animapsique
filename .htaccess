@@ -1,8 +1,23 @@
 # Ativa o motor de reescrita de URL
 RewriteEngine On
 
-# Redirecionamento de URLs antigas (Legado)
+# --- REDIRECIONAMENTOS DE LEGADO (301) ---
+# Redireciona URLs antigas para as novas páginas correspondentes
+
+# Autor -> Sobre
 RewriteRule ^author/nara-silva/?$ /sobre [R=301,L]
+
+# Profissionais -> Sobre
+RewriteRule ^profissionais/?$ /sobre [R=301,L]
+
+# Portfolio (Psicoterapia) -> Executivos (Página de Vendas)
+RewriteRule ^portfolio-items/psicoterapia-on-line/?$ /executivos.php [R=301,L]
+
+# Loja e Produtos -> Home (Já que não existe mais loja)
+RewriteRule ^loja/?.*$ / [R=301,L]
+RewriteRule ^categoria-produto/?.*$ / [R=301,L]
+
+# --- FIM REDIRECIONAMENTOS ---
 
 # Ignora reescrita para diretórios e arquivos que já existem
 RewriteCond %{REQUEST_FILENAME} -s [OR]
