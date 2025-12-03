@@ -67,10 +67,16 @@ if ($enviado_psicologa) {
     $redirect = filter_input(INPUT_POST, 'redirect', FILTER_SANITIZE_URL);
     
     if ($redirect) {
+        // Verifica se já tem parâmetros na URL
+        $separator = (strpos($redirect, '?') !== false) ? '&' : '?';
+        // Se não tiver origem definida, adiciona padrão
+        if (strpos($redirect, 'origem=') === false) {
+            $redirect .= $separator . "origem=formulario";
+        }
         header("Location: $redirect");
     } else {
         // Padrão: ir para página de confirmação
-        header('Location: confirmacao.php');
+        header('Location: confirmacao.php?origem=formulario');
     }
 } else {
     // Se falhar, redireciona com uma mensagem de erro genérica

@@ -449,7 +449,7 @@ require_once 'templates/header_publico.php';
             </p>
             
             <form action="processa_contato.php" method="POST" class="space-y-6">
-                <input type="hidden" name="redirect" value="confirmacao.php">
+                <input type="hidden" name="redirect" value="confirmacao.php?origem=formulario_executivos">
                 
                 <div>
                     <label for="nome" class="block text-sm font-medium text-gray-700 mb-1">Nome Completo</label>

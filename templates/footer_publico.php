@@ -16,7 +16,7 @@ document.addEventListener('DOMContentLoaded', function() {
             
             // Redireciona a página atual para a confirmação após um breve delay
             setTimeout(() => {
-                window.location.href = 'confirmacao.php';
+                window.location.href = 'confirmacao.php?origem=whatsapp';
             }, 1000); // 1 segundo de delay para garantir que a nova aba abra
         });
     });
