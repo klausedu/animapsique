@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
+        xmlns:image="http://www.google.com/schemas/sitemap-image/1.1">
+  
+  <!-- Página Inicial -->
+  <url>
+    <loc>https://maroon-oyster-227506.hostingersite.com/index.php</loc>
+    <lastmod>2025-12-02</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>1.0</priority>
+  </url>
+  
+  <!-- Sobre a Psicóloga -->
+  <url>
+    <loc>https://maroon-oyster-227506.hostingersite.com/sobre.php</loc>
+    <lastmod>2025-12-02</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.9</priority>
+  </url>
+  
+  <!-- Áreas de Atuação -->
+  <url>
+    <loc>https://maroon-oyster-227506.hostingersite.com/atuacao.php</loc>
+    <lastmod>2025-12-02</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.9</priority>
+  </url>
+  
+  <!-- Publicações -->
+  <url>
+    <loc>https://maroon-oyster-227506.hostingersite.com/publicacoes.php</loc>
+    <lastmod>2025-12-02</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  
+  <!-- Contato -->
+  <url>
+    <loc>https://maroon-oyster-227506.hostingersite.com/contato.php</loc>
+    <lastmod>2025-12-02</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.9</priority>
+  </url>
+  
+  <!-- Agenda Pública -->
+  <url>
+    <loc>https://maroon-oyster-227506.hostingersite.com/agenda_publica.php</loc>
+    <lastmod>2025-12-02</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.7</priority>
+  </url>
+
+</urlset>

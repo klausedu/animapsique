@@ -1,0 +1,56 @@
+========================================
+Data/Hora: 2025-10-09 12:33:09
+Método da Requisição: POST
+Query String: action=delete&id=1
+Dados GET: Array
+(
+    [action] => delete
+    [id] => 1
+)
+
+Dados POST: Array
+(
+)
+
+Input Raw: 
+========================================
+
+========================================
+Data/Hora: 2025-10-09 12:33:26
+Método da Requisição: POST
+Query String: action=add
+Dados GET: Array
+(
+    [action] => add
+)
+
+Dados POST: Array
+(
+    [id] => 
+    [nome] => klaus kirner
+    [email] => klaus.kirner@gmail.com
+    [telefone] => 119940134374
+    [senha] => Italia2018
+)
+
+Input Raw: 
+========================================
+
+========================================
+Data/Hora: 2025-10-09 12:33:32
+Método da Requisição: POST
+Query String: action=toggle_status&id=3&status=1
+Dados GET: Array
+(
+    [action] => toggle_status
+    [id] => 3
+    [status] => 1
+)
+
+Dados POST: Array
+(
+)
+
+Input Raw: 
+========================================
+

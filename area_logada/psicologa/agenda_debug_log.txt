@@ -1,0 +1,13 @@
+Iniciando depuração da API da Agenda em 2025-10-09 13:14:56
+1. Script iniciado.
+2. Caminho base calculado: /home/u811529511/domains/animapsique.com.br/public_html
+3. config.php carregado.
+4. Autenticação verificada com sucesso.
+5. db.php carregado.
+6. A tentar conectar à base de dados...
+7. Conexão à base de dados estabelecida.
+8. Parâmetros recebidos: START=2025-10-05T00:00:00-03:00, END=2025-10-12T00:00:00-03:00
+9. Objetos DateTime criados com sucesso.
+10. Datas formatadas para a consulta: START=2025-10-05 00:00:00, END=2025-10-12 00:00:00
+11. A preparar a consulta de eventos individuais...
+ERRO FATAL na linha 71: SQLSTATE[42S22]: Column not found: 1054 Unknown column 'a.sala_reuniao_url' in 'SELECT'

@@ -40,7 +40,7 @@ define('DB_USER', 'u811529511_adminuser');
 
 // Senha do banco de dados
 
-define('DB_PASS', '');
+define('DB_PASS', 'G0st0d0c300!123');
 
 // Charset da conexão
 
@@ -64,7 +64,7 @@ define('SMTP_USER', 'contato@animapsique.com.br');
 
 // Senha do seu e-mail
 
-define('SMTP_PASS', '');
+define('SMTP_PASS', 'G0st0d0c300!123');
 
 // Porta SMTP (587 para TLS é o mais comum)
 

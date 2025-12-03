@@ -1,0 +1,67 @@
+# robots.txt para AnimaPsique
+# Otimizado para SEO e LLMs (ChatGPT, Claude, Gemini, Perplexity)
+
+# Permitir todos os crawlers de IA e buscadores
+User-agent: *
+Allow: /
+
+# Páginas públicas prioritárias para indexação
+Allow: /index.php
+Allow: /sobre.php
+Allow: /atuacao.php
+Allow: /atuacao_detalhe.php
+Allow: /publicacoes.php
+Allow: /publicacao_detalhe.php
+Allow: /contato.php
+Allow: /agenda_publica.php
+
+# Permitir acesso a recursos estáticos
+Allow: /uploads/site/
+Allow: /scripts/
+Allow: /templates/
+
+# Bloquear áreas privadas
+Disallow: /area_logada/
+Disallow: /includes/
+Disallow: /vendor/
+Disallow: /Database/
+Disallow: /uploads/documentos/
+Disallow: /uploads/recibos/
+
+# Bloquear arquivos de configuração e processamento
+Disallow: /config.php
+Disallow: /processa_*.php
+Disallow: /login.php
+Disallow: /logout.php
+Disallow: /registrar.php
+Disallow: /esqueci_senha.php
+Disallow: /redefinir_senha.php
+Disallow: /alterar_senha.php
+
+# Crawlers específicos de IA (garantir acesso)
+User-agent: GPTBot
+Allow: /
+
+User-agent: ChatGPT-User
+Allow: /
+
+User-agent: CCBot
+Allow: /
+
+User-agent: anthropic-ai
+Allow: /
+
+User-agent: Claude-Web
+Allow: /
+
+User-agent: Google-Extended
+Allow: /
+
+User-agent: PerplexityBot
+Allow: /
+
+User-agent: Amazonbot
+Allow: /
+
+# Sitemap
+Sitemap: https://maroon-oyster-227506.hostingersite.com/sitemap.xml

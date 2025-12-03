@@ -1,0 +1,17 @@
+# Ativa o motor de reescrita de URL
+RewriteEngine On
+
+# Ignora reescrita para diretórios e arquivos que já existem
+RewriteCond %{REQUEST_FILENAME} -s [OR]
+RewriteCond %{REQUEST_FILENAME} -l [OR]
+RewriteCond %{REQUEST_FILENAME} -d
+RewriteRule ^.*$ - [NC,L]
+
+# Reescrita para remover a extensão .php (APENAS para arquivos .php)
+# A flag [QSA] (Query String Append) é crucial aqui.
+RewriteCond %{REQUEST_FILENAME}\.php -f
+RewriteRule ^(.*)$ $1.php [QSA,L]
+
+# Redireciona permanentemente qualquer tentativa de acessar a URL com .php
+RewriteCond %{THE_REQUEST} "^GET .*\.php" [NC]
+RewriteRule ^(.*)\.php$ /$1 [R=301,L]
