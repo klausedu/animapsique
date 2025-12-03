@@ -9,7 +9,7 @@ Conteúdo para: processa_contato.php
 ini_set('display_errors', 1);
 error_reporting(E_ALL);
 
-require_once 'config.example.php'; // Usando example por enquanto
+require_once 'config.php'; // Usando config real
 require_once 'includes/email.php';
 
 if ($_SERVER['REQUEST_METHOD'] !== 'POST') {

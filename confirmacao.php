@@ -1,5 +1,4 @@
 <?php
-require_once 'config.example.php'; // Usando example por enquanto pois config.php não está no git
 require_once 'templates/header_publico.php';
 ?>
 
