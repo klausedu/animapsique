@@ -45,7 +45,8 @@ function enviar_email(string $para_email, string $para_nome, string $assunto, st
         $mail->CharSet    = 'UTF-8';
 
         // Remetente e Destinatário
-        $mail->setFrom(EMAIL_FROM, EMAIL_FROM_NAME);
+        // Hostinger exige que o remetente seja o mesmo usuário autenticado
+        $mail->setFrom(SMTP_USER, EMAIL_FROM_NAME);
         $mail->addAddress($para_email, $para_nome);
         $mail->addReplyTo(SMTP_USER, 'Contato Plataforma');
 

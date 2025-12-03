@@ -47,7 +47,7 @@ try {
     $mail->CharSet    = 'UTF-8';
 
     // Remetente e Destinatário
-    $mail->setFrom(EMAIL_FROM, 'Teste Diagnostico');
+    $mail->setFrom(SMTP_USER, 'Teste Diagnostico');
     $mail->addAddress(SMTP_USER); // Envia para o próprio remetente para testar
 
     // Conteúdo
