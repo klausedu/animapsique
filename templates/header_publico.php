@@ -28,6 +28,15 @@ try {
     <!-- Google Search Console Verification -->
     <meta name="google-site-verification" content="d7T7-akptQs0JCMbRpqoBj0dDx2tl4OOMbjvAZ-h8o4" />
     
+    <!-- Google Analytics 4 -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-7VQM4Y1DSZ"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+      gtag('config', 'G-7VQM4Y1DSZ');
+    </script>
+    
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>AnimaPsique - Psicologia Clínica</title>
