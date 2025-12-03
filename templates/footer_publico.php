@@ -5,5 +5,23 @@
     </div>
 </footer>
 
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Seleciona todos os links que apontam para WhatsApp
+    const whatsappLinks = document.querySelectorAll('a[href*="wa.me"], a[href*="whatsapp.com"]');
+    
+    whatsappLinks.forEach(link => {
+        link.addEventListener('click', function(e) {
+            // Permite que o link abra em nova aba (comportamento padrão se tiver target="_blank")
+            
+            // Redireciona a página atual para a confirmação após um breve delay
+            setTimeout(() => {
+                window.location.href = 'confirmacao.php';
+            }, 1000); // 1 segundo de delay para garantir que a nova aba abra
+        });
+    });
+});
+</script>
+
 </body>
 </html>

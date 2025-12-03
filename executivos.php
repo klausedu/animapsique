@@ -403,6 +403,57 @@ require_once 'templates/header_publico.php';
     </div>
 </section>
 
+<!-- Formulário de Contato -->
+<section id="contato" class="py-16 bg-gray-50">
+    <div class="container mx-auto px-6">
+        <div class="max-w-2xl mx-auto bg-white p-8 rounded-lg shadow-lg">
+            <h2 class="text-3xl font-bold text-center mb-8 text-gray-800">
+                Solicite um Contato
+            </h2>
+            <p class="text-center text-gray-600 mb-8">
+                Preencha o formulário abaixo e entrarei em contato para agendar sua primeira sessão.
+            </p>
+            
+            <form action="processa_contato.php" method="POST" class="space-y-6">
+                <input type="hidden" name="redirect" value="confirmacao.php">
+                
+                <div>
+                    <label for="nome" class="block text-sm font-medium text-gray-700 mb-1">Nome Completo</label>
+                    <input type="text" name="nome" id="nome" required 
+                           class="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-purple-500 focus:border-purple-500">
+                </div>
+                
+                <div>
+                    <label for="email" class="block text-sm font-medium text-gray-700 mb-1">E-mail Corporativo ou Pessoal</label>
+                    <input type="email" name="email" id="email" required 
+                           class="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-purple-500 focus:border-purple-500">
+                </div>
+                
+                <div>
+                    <label for="telefone" class="block text-sm font-medium text-gray-700 mb-1">WhatsApp</label>
+                    <input type="tel" name="telefone" id="telefone" required placeholder="(11) 99999-9999"
+                           class="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-purple-500 focus:border-purple-500">
+                </div>
+                
+                <div>
+                    <label for="motivo" class="block text-sm font-medium text-gray-700 mb-1">Como posso ajudar? (Opcional)</label>
+                    <textarea name="motivo" id="motivo" rows="3" 
+                              class="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-purple-500 focus:border-purple-500"></textarea>
+                </div>
+                
+                <button type="submit" style="background-color: var(--cor-botao-bg);" 
+                        class="w-full text-white font-bold py-3 px-4 rounded-md hover:opacity-90 transition-opacity">
+                    Solicitar Agendamento
+                </button>
+                
+                <p class="text-xs text-center text-gray-500 mt-4">
+                    Seus dados são protegidos e mantidos em absoluto sigilo.
+                </p>
+            </form>
+        </div>
+    </div>
+</section>
+
 <!-- CTA Final -->
 <section id="agendar" class="py-16 bg-gradient-to-r from-purple-900 to-indigo-900 text-white">
     <div class="container mx-auto px-6">
