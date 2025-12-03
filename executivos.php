@@ -6,9 +6,9 @@ require_once 'config.php';
 require_once 'includes/db.php';
 
 // Meta tags otimizadas para SEO e LLMs
-$page_title = "Psicoterapia Online para Executivos | Alta Performance | Dra. Nara Helena Lopes";
-$page_description = "Psicoterapia especializada para executivos, líderes e profissionais de alta performance. Atendimento online com horários flexíveis. Pós-Doutorado USP. Formação Internacional. Sessões a partir de R$450.";
-$page_keywords = "psicoterapia executivos, psicologo alta performance, terapia online executivos, burnout executivo, psicologia para lideres, terapia para empreendedores, psicologo sao paulo online, atendimento psicologico vip, psicologo para ceo, terapia para diretores";
+$page_title = "Psicoterapia para Executivos e Brasileiros no Exterior | Dra. Nara Helena Lopes";
+$page_description = "Psicoterapia online especializada para executivos e brasileiros vivendo no exterior. Atendimento em fuso horário flexível. Pós-Doutorado USP e vivência internacional.";
+$page_keywords = "psicologo brasileiro online, terapia para brasileiros no exterior, psicoterapia executivos, burnout executivo, psicologo brasileiro em londres, psicologo brasileiro em nova york, terapia online internacional";
 
 require_once 'templates/header_publico.php';
 ?>
@@ -18,15 +18,33 @@ require_once 'templates/header_publico.php';
 {
   "@context": "https://schema.org",
   "@type": "MedicalBusiness",
-  "name": "AnimaPsique - Psicoterapia para Executivos",
-  "description": "Psicoterapia especializada para executivos e profissionais de alta performance",
+  "name": "AnimaPsique - Psicoterapia para Executivos e Expatriados",
+  "description": "Psicoterapia especializada para executivos e brasileiros vivendo no exterior",
   "url": "<?php echo BASE_URL; ?>/executivos.php",
   "telephone": "+55-11-96626-7779",
   "priceRange": "R$450-R$600",
-  "areaServed": {
-    "@type": "Country",
-    "name": "Brasil"
-  },
+  "areaServed": [
+    {
+      "@type": "Country",
+      "name": "Brasil"
+    },
+    {
+      "@type": "Country",
+      "name": "Estados Unidos"
+    },
+    {
+      "@type": "Country",
+      "name": "Portugal"
+    },
+    {
+      "@type": "Country",
+      "name": "Reino Unido"
+    },
+    {
+      "@type": "Continent",
+      "name": "Europa"
+    }
+  ],
   "availableLanguage": "Portuguese",
   "provider": {
     "@type": "Physician",
@@ -55,7 +73,7 @@ require_once 'templates/header_publico.php';
   },
   "offers": {
     "@type": "Offer",
-    "name": "Sessão de Psicoterapia Online",
+    "name": "Sessão de Psicoterapia Online Internacional",
     "price": "450",
     "priceCurrency": "BRL",
     "availability": "https://schema.org/InStock"
@@ -69,6 +87,22 @@ require_once 'templates/header_publico.php';
   "@context": "https://schema.org",
   "@type": "FAQPage",
   "mainEntity": [
+    {
+      "@type": "Question",
+      "name": "Você atende brasileiros que moram em outros fusos horários?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Sim. A agenda é adaptada para atender brasileiros na Europa, EUA e Ásia. Oferecemos horários estendidos (início da manhã e noite no Brasil) para casar com seu fuso local."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Como funciona o pagamento em moeda estrangeira?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "O pagamento pode ser feito via transferência internacional (Wise, PayPal) ou PIX (se você mantiver conta no Brasil). Os valores são em Reais, o que torna o investimento muito atrativo para quem ganha em Dólar, Euro ou Libra."
+      }
+    },
     {
       "@type": "Question",
       "name": "Quanto custa uma sessão de psicoterapia para executivos?",
@@ -119,10 +153,10 @@ require_once 'templates/header_publico.php';
     <div class="container mx-auto px-6 relative z-10">
         <div class="max-w-4xl mx-auto text-center">
             <h1 class="text-4xl md:text-5xl font-bold mb-6">
-                Psicoterapia Especializada para Executivos e Profissionais de Alta Performance
+                Psicoterapia para Executivos e Brasileiros no Exterior
             </h1>
             <p class="text-xl md:text-2xl mb-8 text-gray-200">
-                Atendimento Online | Horários Flexíveis | Confidencialidade Absoluta
+                Atendimento Online Especializado | Fuso Horário Flexível | Cultura Brasileira
             </p>
             <p class="text-lg mb-8">
                 <strong>Dra. Nara Helena Lopes</strong> - CRP 06/73462 | CRP 08/IS-787<br>
