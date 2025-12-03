@@ -1,6 +1,9 @@
 # Ativa o motor de reescrita de URL
 RewriteEngine On
 
+# Redirecionamento de URLs antigas (Legado)
+RewriteRule ^author/nara-silva/?$ /sobre [R=301,L]
+
 # Ignora reescrita para diretórios e arquivos que já existem
 RewriteCond %{REQUEST_FILENAME} -s [OR]
 RewriteCond %{REQUEST_FILENAME} -l [OR]
