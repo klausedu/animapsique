@@ -25,6 +25,9 @@ try {
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
+    <!-- Google Search Console Verification -->
+    <meta name="google-site-verification" content="d7T7-akptQs0JCMbRpqoBj0dDx2tl4OOMbjvAZ-h8o4" />
+    
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>AnimaPsique - Psicologia Clínica</title>
