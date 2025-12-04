@@ -72,7 +72,7 @@ require_once 'templates/header_publico.php';
   "logo": "<?php echo BASE_URL; ?>/uploads/site/animapsique_logo70perc.png",
   "contactPoint": {
     "@type": "ContactPoint",
-    "telephone": "+55-11-96626-7779",
+    "telephone": "+55-11-96626-7778",
     "contactType": "customer service",
     "areaServed": "BR",
     "availableLanguage": "Portuguese"

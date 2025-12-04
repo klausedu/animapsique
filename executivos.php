@@ -1,27 +1,6 @@
-<?php
-// =================================================================
-// Página Especializada: Psicoterapia para Executivos
-// =================================================================
-require_once 'config.php';
-require_once 'includes/db.php';
-
-// Meta tags otimizadas para SEO e LLMs
-$page_title = "Psicoterapia para Executivos e Brasileiros no Exterior | Dra. Nara Helena Lopes";
-$page_description = "Psicoterapia online especializada para executivos e brasileiros vivendo no exterior. Atendimento em fuso horário flexível. Pós-Doutorado USP e vivência internacional.";
-$page_keywords = "psicologo brasileiro online, terapia para brasileiros no exterior, psicoterapia executivos, burnout executivo, psicologo brasileiro em londres, psicologo brasileiro em nova york, terapia online internacional";
-
-require_once 'templates/header_publico.php';
-?>
-
-<!-- Schema Markup para SEO -->
-<script type="application/ld+json">
-{
-  "@context": "https://schema.org",
-  "@type": "MedicalBusiness",
-  "name": "AnimaPsique - Psicoterapia para Executivos e Expatriados",
   "description": "Psicoterapia especializada para executivos e brasileiros vivendo no exterior",
   "url": "<?php echo BASE_URL; ?>/executivos.php",
-  "telephone": "+55-11-96626-7779",
+  "telephone": "+55-11-96626-7778",
   "priceRange": "R$450-R$600",
   "areaServed": [
     {
@@ -171,7 +150,7 @@ require_once 'templates/header_publico.php';
                    onclick="gtag('event', 'conversion', {'send_to': '<?php echo GOOGLE_ADS_CONVERSION_ID; ?>/<?php echo GOOGLE_ADS_CONVERSION_LABEL; ?>'});"
                    <?php endif; ?>
                    class="inline-block px-8 py-4 bg-green-600 text-white rounded-full hover:bg-green-700 transition-colors text-lg font-semibold">
-                    WhatsApp: (11) 96626-7779
+                    WhatsApp: (11) 96626-7778
                 </a>
             </div>
         </div>
@@ -512,7 +491,7 @@ require_once 'templates/header_publico.php';
                        onclick="gtag('event', 'conversion', {'send_to': '<?php echo GOOGLE_ADS_CONVERSION_ID; ?>/<?php echo GOOGLE_ADS_CONVERSION_LABEL; ?>'});"
                        <?php endif; ?>
                        class="block w-full bg-green-600 text-white py-4 px-6 rounded-lg hover:bg-green-700 transition-colors font-semibold text-lg">
-                        📱 WhatsApp: (11) 96626-7779
+                        📱 WhatsApp: (11) 96626-7778
                     </a>
                     
                     <a href="mailto:nara.helena@gmail.com" class="block w-full bg-purple-600 text-white py-4 px-6 rounded-lg hover:bg-purple-700 transition-colors font-semibold text-lg">
