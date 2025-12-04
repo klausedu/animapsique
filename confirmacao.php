@@ -3,17 +3,19 @@ require_once 'templates/header_publico.php';
 ?>
 
 <!-- Google Ads Conversion Tracking -->
+<!-- Google Ads Conversion Tracking -->
+<?php if (defined('GOOGLE_ADS_CONVERSION_ID') && defined('GOOGLE_ADS_CONVERSION_LABEL') && GOOGLE_ADS_CONVERSION_ID !== 'AW-CONVERSION_ID'): ?>
 <script>
-  // Ensure gtag is defined (it should be from header_publico.php)
+  // Ensure gtag is defined
   window.dataLayer = window.dataLayer || [];
   function gtag(){dataLayer.push(arguments);}
   
-  // Evento de Conversão do Google Ads (Placeholder)
-  // Substitua 'AW-CONVERSION_ID/CONVERSION_LABEL' pelos valores reais da sua conta
+  // Evento de Conversão do Google Ads
   gtag('event', 'conversion', {
-      'send_to': 'AW-CONVERSION_ID/CONVERSION_LABEL'
+      'send_to': '<?php echo GOOGLE_ADS_CONVERSION_ID; ?>/<?php echo GOOGLE_ADS_CONVERSION_LABEL; ?>'
   });
 </script>
+<?php endif; ?>
 
 
 <main class="pt-24 pb-16">

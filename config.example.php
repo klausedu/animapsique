@@ -69,4 +69,10 @@ date_default_timezone_set('America/Sao_Paulo');
 // Exemplo: https://randomkeygen.com/
 define('SECRET_KEY', 'GERE_UMA_CHAVE_ALEATORIA_AQUI');
 
+// --- GOOGLE ADS ---
+// Preencha com o ID e Label da sua conversão (ex: AW-123456789/AbCdEfGhIjK)
+// Se não tiver, deixe vazio ou com null
+define('GOOGLE_ADS_CONVERSION_ID', 'AW-17777197300'); 
+define('GOOGLE_ADS_CONVERSION_LABEL', '2ZE2CI2ZjcwbEPSB6pxC');
+
 ?>
