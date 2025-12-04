@@ -55,8 +55,34 @@ $slides_data = [
     ['imagem' => get_image_url('slide3', 'https://images.unsplash.com/photo-1542856391-a9f2393b2b7e?q=80&w=2874&auto=format&fit=crop'), 'texto' => get_content('slide3', 'texto', 'Citação do slide 3'), 'titulo' => get_content('slide3', 'titulo', 'Autor 3')]
 ];
 
+// Meta tags específicas da Home
+$page_title = "AnimaPsique | Psicóloga Online - Terapia Fenomenológica e Autoconhecimento";
+$page_description = "Psicoterapia online com abordagem fenomenológica. Um espaço de acolhimento para ansiedade, depressão e busca por autoconhecimento. Agende sua sessão com Dra. Nara Helena Lopes.";
+
 require_once 'templates/header_publico.php';
 ?>
+
+<!-- Schema Markup Organization -->
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Organization",
+  "name": "AnimaPsique",
+  "url": "<?php echo BASE_URL; ?>",
+  "logo": "<?php echo BASE_URL; ?>/uploads/site/animapsique_logo70perc.png",
+  "contactPoint": {
+    "@type": "ContactPoint",
+    "telephone": "+55-11-96626-7779",
+    "contactType": "customer service",
+    "areaServed": "BR",
+    "availableLanguage": "Portuguese"
+  },
+  "sameAs": [
+    "https://www.instagram.com/animapsique",
+    "https://www.facebook.com/animapsique"
+  ]
+}
+</script>
 <section class="relative text-white py-64" 
          style="background-image: url('<?php echo get_image_url('banner_inicio', 'https://images.unsplash.com/photo-1557804506-669a67965ba0?q=80&w=2874&auto=format&fit=crop'); ?>');
                 background-attachment: fixed;

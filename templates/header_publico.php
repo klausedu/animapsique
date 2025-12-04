@@ -39,7 +39,8 @@ try {
     
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AnimaPsique - Psicologia Clínica</title>
+    <title><?php echo isset($page_title) ? $page_title : 'Psicólogo Online | Terapia para Ansiedade e Autoconhecimento - AnimaPsique'; ?></title>
+    <meta name="description" content="<?php echo isset($page_description) ? $page_description : 'Atendimento psicológico online especializado em ansiedade, depressão e autoconhecimento. Agende sua sessão de terapia com psicóloga experiente. Acolhimento e transformação.'; ?>">
     <script src="https://cdn.tailwindcss.com"></script>
     <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
     <style>

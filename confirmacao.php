@@ -2,6 +2,20 @@
 require_once 'templates/header_publico.php';
 ?>
 
+<!-- Google Ads Conversion Tracking -->
+<script>
+  // Ensure gtag is defined (it should be from header_publico.php)
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  
+  // Evento de Conversão do Google Ads (Placeholder)
+  // Substitua 'AW-CONVERSION_ID/CONVERSION_LABEL' pelos valores reais da sua conta
+  gtag('event', 'conversion', {
+      'send_to': 'AW-CONVERSION_ID/CONVERSION_LABEL'
+  });
+</script>
+
+
 <main class="pt-24 pb-16">
     <div class="container mx-auto px-4 text-center">
         <!-- Ícone de Sucesso -->

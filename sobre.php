@@ -42,6 +42,10 @@ function get_image_url($secao, $fallback_url) {
     return $fallback_url;
 }
 
+// Meta tags específicas da página Sobre
+$page_title = "Dra. Nara Helena Lopes | Psicóloga Clínica - Pós-Doutorado USP";
+$page_description = "Conheça a Dra. Nara Helena Lopes. Psicóloga com Pós-Doutorado pela USP e especialização internacional. Atendimento clínico com foco em fenomenologia e saúde mental digital.";
+
 require_once 'templates/header_publico.php';
 ?>
 <div class="bg-white">
